@@ -1,7 +1,7 @@
 {
   "name": "Nikflix",
   "description": "Bypass the account-sharing restrictions on Netflix.",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "manifest_version": 3,
   "action": {
     "default_icon": "icons/Nikflix-48.png",

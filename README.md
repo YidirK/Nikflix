@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/4000-users.png" alt="3000 users" width="600"/>
+  <img src="assets/6000-users.png" alt="3000 users" width="600"/>
 </p>
 
 # Netflix Password-Sharing (household) Bypass Extension
@@ -29,10 +29,11 @@ If you like this project, consider giving it a star ⭐
 -  Get Around the Netflix Password-Sharing Ban (Netflix household).
 
 # 📝 Changelog
-## [1.8.2] - 2025-06-11
+## [1.8.3] - 2025-06-21
 
 ### Fixes
- - 🔘 Removal of the unnecessary permission.
+- 🔘 Fixed a bug where the controls UI would remain stuck on the screen after using the override button, with no way to go back. Thanks to [@elesbb](https://github.com/elesbb) for providing the solution through an issue.
+- 📍 Updated the icon for the "Change Episode" button.
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
@@ -53,3 +54,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 ### ⭐ If you find this extension helpful, please consider giving it a star! ⭐
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S61G68F3)
