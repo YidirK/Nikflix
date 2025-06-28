@@ -3,8 +3,9 @@ const CLASSES_TO_REMOVE = [
   "default-ltr-cache-1sfbp89 e1qcljkj0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
+  "nf-modal uma-modal two-section-uma",
+  "nf-modal extended-diacritics-language interstitial-full-screen"
 ];
-
 // State object that contains all controller elements and state
 let state = {
   progressionIntervalId: null,

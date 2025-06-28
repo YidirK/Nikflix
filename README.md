@@ -29,11 +29,17 @@ If you like this project, consider giving it a star ⭐
 -  Get Around the Netflix Password-Sharing Ban (Netflix household).
 
 # 📝 Changelog
-## [1.8.3] - 2025-06-21
+## [1.8.4] - 2025-06-28
 
-### Fixes
-- 🔘 Fixed a bug where the controls UI would remain stuck on the screen after using the override button, with no way to go back. Thanks to [@elesbb](https://github.com/elesbb) for providing the solution through an issue.
-- 📍 Updated the icon for the "Change Episode" button.
+### 🛠️ Fix
+
+- New modal types are appearing on Netflix.  
+  We're adding the classes to be removed, such as:  
+  `"nf-modal extended-diacritics-language interstitial-full-screen"` 
+and  
+  `"nf-modal uma-modal two-section-uma"`.  
+  If you notice any other modals that are affecting you, please let us know in the [issues](https://github.com/YidirK/Nikflix/issues) so we can fix them accordingly.  
+  Thanks to [@hans2356](https://github.com/hans2356) for reporting it!
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
@@ -53,5 +59,5 @@ This extension may violate Netflix's terms of service. Use at your own risk.
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
-### ⭐ If you find this extension helpful, please consider giving it a star! ⭐
+### ⭐ Enjoying the extension? Show your support with a star — or a tip if you feel generous! ⭐
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S61G68F3)
