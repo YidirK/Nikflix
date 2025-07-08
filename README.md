@@ -29,17 +29,11 @@ If you like this project, consider giving it a star ⭐
 -  Get Around the Netflix Password-Sharing Ban (Netflix household).
 
 # 📝 Changelog
-## [1.8.4] - 2025-06-28
+## [1.8.5] - 2025-07-08
 
 ### 🛠️ Fix
 
-- New modal types are appearing on Netflix.  
-  We're adding the classes to be removed, such as:  
-  `"nf-modal extended-diacritics-language interstitial-full-screen"` 
-and  
-  `"nf-modal uma-modal two-section-uma"`.  
-  If you notice any other modals that are affecting you, please let us know in the [issues](https://github.com/YidirK/Nikflix/issues) so we can fix them accordingly.  
-  Thanks to [@hans2356](https://github.com/hans2356) for reporting it!
+- fix subtitles button 
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
