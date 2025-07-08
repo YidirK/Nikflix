@@ -478,8 +478,7 @@ function createSubtitleSettings() {
             <span class="subtitle-settings-label">Subtitles</span>
             <div class="subtitle-settings-control">
                 <label class="subtitle-toggle-switch">
-                    <input type="checkbox" id="subtitle-toggle-checkbox" ${state.subtitleEnabled ? "checked" : ""
-  }>
+                    <input type="checkbox" id="subtitle-toggle-checkbox">
                     <span class="subtitle-toggle-slider"></span>
                 </label>
             </div>
@@ -508,12 +507,24 @@ function createSubtitleSettings() {
 
   document.body.appendChild(panel);
 
-  // Add event listeners for settings controls
+// Add event listeners for settings controls
   panel
       .querySelector("#subtitle-toggle-checkbox")
       .addEventListener("change", (e) => {
         state.subtitleEnabled = e.target.checked;
+
+        const event = new CustomEvent("netflixSubtitleChange", {
+          detail: state.subtitleEnabled ? 1 : 0,
+        });
+
+        window.dispatchEvent(event);
+
+        setTimeout(() => {
+          doYourJob();
+          showMessage(`${state.subtitleEnabled ? "Subtitles enabled" : "Subtitles disabled"}`, 2000);
+        }, 500);
       });
+
 
 
   panel
@@ -533,14 +544,27 @@ function createSubtitleSettings() {
   panel
       .querySelector("#subtitle-language-select")
       .addEventListener("change", (e) => {
-        state.substitleLanguage = e.target.value;
+        const selectedValue = e.target.value;
+        state.subtitleLanguage = selectedValue;
+
         window.dispatchEvent(
-            new CustomEvent("netflixSubtitleChange", { detail: e.target.value })
+            new CustomEvent("netflixSubtitleChange", { detail: selectedValue })
         );
-        console.log("izan", state.availableSubtitleTracks[e.target.value].displayName)
+
+        console.log("izan", state.availableSubtitleTracks[selectedValue]);
+        console.log("caca de vache", state.subtitleEnabled);
+
         setTimeout(() => {
-          doYourJob()
-          showMessage(`Subtitle changed to ${state.availableSubtitleTracks[e.target.value].displayName} `, 2000);
+          doYourJob();
+          state.subtitleEnabled = selectedValue !== "0";
+
+          // change checkbox etat
+          panel.querySelector("#subtitle-toggle-checkbox").checked = state.subtitleEnabled;
+
+          showMessage(
+              `Subtitle changed to ${state.availableSubtitleTracks[selectedValue]?.displayName || "Unknown"}`,
+              2000
+          );
         }, 500);
       });
   return panel;
