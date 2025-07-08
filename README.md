@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/6000-users.png" alt="3000 users" width="600"/>
+  <img src="assets/8000-users.png" alt="3000 users" width="600"/>
 </p>
 
 # Netflix Password-Sharing (household) Bypass Extension
