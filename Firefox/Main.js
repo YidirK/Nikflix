@@ -403,7 +403,9 @@ function showController() {
   if (!state.controllerElement) return;
 
   state.controllerElement.classList.remove("hidden");
-  state.backButton.style.opacity = "1";
+  if (state.backButton) {
+    state.backButton.style.opacity = "1";
+  }
   state.isControllerVisible = true;
 
   // Show cursor when controls are visible
@@ -423,7 +425,11 @@ function showController() {
         !state.subtitleSettingsOpen
     ) {
       state.controllerElement.classList.add("hidden");
-      state.backButton.style.opacity = "0";
+
+      if (state.backButton) {
+        state.backButton.style.opacity = "0";
+      }
+
       state.isControllerVisible = false;
 
       // Hide cursor when controls are hidden
