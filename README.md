@@ -50,7 +50,7 @@ If you like this project, consider giving it a star ⭐ or a tip if you feel gen
 </a> 
 
 ## 💬 Note
-Several people have contacted me to inform me about a technique that directly blocks Apple’s API, which is used to check whether you are part of the Netflix household.
+Several people have contacted me to inform me about a technique that directly blocks Netflix API, which is used to check whether you are part of the Netflix household.
 However, I prefer not to use this method for two reasons:
 - It doesn’t always work, and its effectiveness depends on the region.
 - From a legal standpoint, my extension is less risky because we simply modify the content that has already been sent and add our own content on top. We don’t block any requests, which is legally safer. I wanted to avoid any legal issues for myself and also protect my users from being banned.
