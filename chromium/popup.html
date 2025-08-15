@@ -1,89 +1,171 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <title>Nikflix | Bypass the account-sharing restrictions</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            width: 280px;
-            height: 460px;
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #f0f2f5, #e2e6ea);
+            width: 350px;
+            height: 600px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            color: #222;
-            border-radius: 10px;
+            color: #ffffff;
+            border-radius: 16px;
             overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(52, 211, 153, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         header {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: 600;
-            color: #111;
+            margin-top: 24px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
             text-align: center;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
         }
 
         main {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 16px;
+            margin-top: 24px;
+            position: relative;
+            z-index: 1;
         }
 
         button {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px 16px;
+            gap: 10px;
+            padding: 14px 20px;
             border: none;
-            border-radius: 8px;
-            background-color: #5865F2;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             font-size: 14px;
-            font-weight: 500;
-            width: 200px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, background-color 0.3s ease;
+            font-weight: 600;
+            width: 220px;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
         }
 
         button:hover {
-            background-color: #4752c4;
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.6);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Update message styles */
+        .update-message {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            width: 280px;
+            margin: 8px 0;
+            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+            display: none;
+            position: relative;
+            z-index: 1;
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .marquee-container {
-            margin: 10px 0;
+            margin: 16px 0;
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
             box-sizing: border-box;
+            position: relative;
+            z-index: 1;
         }
 
         .marquee-text {
             display: inline-block;
             padding-left: 100%;
-            animation: scroll-left 12s linear infinite;
-            color: #333;
+            animation: scroll-left 15s linear infinite;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 13px;
+            font-weight: 400;
         }
 
         .marquee-text a {
-            color: #5865F2;
+            color: #10b981;
             text-decoration: none;
             font-weight: 500;
+            transition: color 0.3s ease;
         }
 
         .marquee-text a:hover {
+            color: #34d399;
             text-decoration: underline;
         }
 
@@ -98,41 +180,203 @@
 
         footer {
             font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: #10b981;
+            text-decoration: none;
         }
 
         .bug-info {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin: 10px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin: 16px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            gap: 10px;
-            width: 230px;
+            gap: 14px;
+            width: 240px;
             font-size: 13px;
-            color: #333;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s ease;
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
         }
 
         .bug-info:hover {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .bug-icon {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 28px;
+            min-width: 32px;
         }
 
         .bug-text {
-            line-height: 1.4;
+            line-height: 1.5;
             font-weight: 500;
+        }
+
+
+        .controller-toggle {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 12px 18px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+            width: 240px;
+        }
+
+        .controller-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            flex: 1;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #2d3748, #4a5568);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: linear-gradient(135deg, #ffffff, #f7fafc);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.6);
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            min-width: 60px;
+            text-align: right;
+            transition: all 0.3s ease;
+        }
+
+        .status-active {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        main {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .bug-info {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .controller-toggle {
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+
+        input:checked + .slider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: translate(-50%, -50%) scale(1.5);
+            }
         }
     </style>
 </head>
@@ -145,6 +389,11 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
 -->
 <header>🎬 Nikflix</header>
 
+<!-- Update Message -->
+<div class="update-message" id="update-message">
+    🎉 New version available! Please update your extension.
+</div>
+
 <main>
     <button id="code-btn">📂 Check code on GitHub</button>
     <button id="coffee-btn">☕ Buy me a coffee</button>
@@ -153,13 +402,13 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
 
 <div class="bug-info">
     <div class="bug-icon">
-        <svg viewBox="0 0 24 24" fill="none" height="25" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 24 24" fill="none" height="28" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
-                <path d="M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V13C12.75 13.4142 12.4142 13.75 12 13.75C11.5858 13.75 11.25 13.4142 11.25 13V8C11.25 7.58579 11.5858 7.25 12 7.25Z" fill="#ff0000"></path>
-                <path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="#ff0000"></path>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.2944 4.47643C9.36631 3.11493 10.5018 2.25 12 2.25C13.4981 2.25 14.6336 3.11493 15.7056 4.47643C16.7598 5.81544 17.8769 7.79622 19.3063 10.3305L19.7418 11.1027C20.9234 13.1976 21.8566 14.8523 22.3468 16.1804C22.8478 17.5376 22.9668 18.7699 22.209 19.8569C21.4736 20.9118 20.2466 21.3434 18.6991 21.5471C17.1576 21.75 15.0845 21.75 12.4248 21.75H11.5752C8.91552 21.75 6.84239 21.75 5.30082 21.5471C3.75331 21.3434 2.52637 20.9118 1.79099 19.8569C1.03318 18.7699 1.15218 17.5376 1.65314 16.1804C2.14334 14.8523 3.07658 13.1977 4.25818 11.1027L4.69361 10.3307C6.123 7.79629 7.24019 5.81547 8.2944 4.47643ZM9.47297 5.40432C8.49896 6.64148 7.43704 8.51988 5.96495 11.1299L5.60129 11.7747C4.37507 13.9488 3.50368 15.4986 3.06034 16.6998C2.6227 17.8855 2.68338 18.5141 3.02148 18.9991C3.38202 19.5163 4.05873 19.8706 5.49659 20.0599C6.92858 20.2484 8.9026 20.25 11.6363 20.25H12.3636C15.0974 20.25 17.0714 20.2484 18.5034 20.0599C19.9412 19.8706 20.6179 19.5163 20.9785 18.9991C21.3166 18.5141 21.3773 17.8855 20.9396 16.6998C20.4963 15.4986 19.6249 13.9488 18.3987 11.7747L18.035 11.1299C16.5629 8.51987 15.501 6.64148 14.527 5.40431C13.562 4.17865 12.8126 3.75 12 3.75C11.1874 3.75 10.4379 4.17865 9.47297 5.40432Z" fill="#ff0000"></path>
+                <path d="M12 7.25C12.4142 7.25 12.75 7.58579 12.75 8V13C12.75 13.4142 12.4142 13.75 12 13.75C11.5858 13.75 11.25 13.4142 11.25 13V8C11.25 7.58579 11.5858 7.25 12 7.25Z" fill="#ff6b6b"></path>
+                <path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="#ff6b6b"></path>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.2944 4.47643C9.36631 3.11493 10.5018 2.25 12 2.25C13.4981 2.25 14.6336 3.11493 15.7056 4.47643C16.7598 5.81544 17.8769 7.79622 19.3063 10.3305L19.7418 11.1027C20.9234 13.1976 21.8566 14.8523 22.3468 16.1804C22.8478 17.5376 22.9668 18.7699 22.209 19.8569C21.4736 20.9118 20.2466 21.3434 18.6991 21.5471C17.1576 21.75 15.0845 21.75 12.4248 21.75H11.5752C8.91552 21.75 6.84239 21.75 5.30082 21.5471C3.75331 21.3434 2.52637 20.9118 1.79099 19.8569C1.03318 18.7699 1.15218 17.5376 1.65314 16.1804C2.14334 14.8523 3.07658 13.1977 4.25818 11.1027L4.69361 10.3307C6.123 7.79629 7.24019 5.81547 8.2944 4.47643ZM9.47297 5.40432C8.49896 6.64148 7.43704 8.51988 5.96495 11.1299L5.60129 11.7747C4.37507 13.9488 3.50368 15.4986 3.06034 16.6998C2.6227 17.8855 2.68338 18.5141 3.02148 18.9991C3.38202 19.5163 4.05873 19.8706 5.49659 20.0599C6.92858 20.2484 8.9026 20.25 11.6363 20.25H12.3636C15.0974 20.25 17.0714 20.2484 18.5034 20.0599C19.9412 19.8706 20.6179 19.5163 20.9785 18.9991C21.3166 18.5141 21.3773 17.8855 20.9396 16.6998C20.4963 15.4986 19.6249 13.9488 18.3987 11.7747L18.035 11.1299C16.5629 8.51987 15.501 6.64148 14.527 5.40431C13.562 4.17865 12.8126 3.75 12 3.75C11.1874 3.75 10.4379 4.17865 9.47297 5.40432Z" fill="#ff6b6b"></path>
             </g>
         </svg>
     </div>
@@ -176,13 +425,18 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
         <a href="https://github.com/IshaanM8" target="_blank">@IshaanM8</a> •
         <a href="https://github.com/mrobeidat" target="_blank">@mrobeidat</a> •
         <a href="https://github.com/Ajexsen" target="_blank">@Ajexsen</a> •
-        <a href="https://github.com/vinodhelambe" target="_blank">@vinodhelambe</a>
+        <a href="https://github.com/vinodhelambe" target="_blank">@vinodhelambe</a> •
+        <a href="https://github.com/Yorcal" target="_blank">@Yorcal</a>
     </div>
 </div>
-<div style="margin-bottom: 6px;">
-    <a href="https://addons.mozilla.org/fr/firefox/addon/nikflix/" target="_blank" rel="noopener noreferrer">
-        <img src="https://img.shields.io/amo/v/nikflix?style=plastic" alt="Mozilla Add-on Version">
-    </a>
+
+<div class="controller-toggle" style="margin-bottom: 8px;">
+    <span class="toggle-label">Controller</span>
+    <label class="toggle-switch">
+        <input type="checkbox" id="controllerToggle" checked>
+        <span class="slider"></span>
+    </label>
+    <span class="status-text" id="statusText">Enable</span>
 </div>
 
 <footer>Made with ❤️ by <a href="https://github.com/YidirK" target="_blank">@yidirk</a> • <span id="version"></span></footer>

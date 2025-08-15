@@ -11,3 +11,5 @@ window.addEventListener("netflixSeekTo", (e) => {
 		console.error("[Netflix Ext] Seek failed", err);
 	}
 });
+
+

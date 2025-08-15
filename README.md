@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/8000-users.png" alt="3000 users" width="600"/>
+  <img src="assets/11k-users.png" alt="11 000 users" width="600"/>
 </p>
 
 # Netflix Password-Sharing (household) Bypass Extension
 
 An extension that allows bypassing Netflix's password-sharing restrictions.
-If you like this project, consider giving it a star ⭐
+If you like this project, consider giving it a star ⭐ or a tip if you feel generous!
 
 
 ## 📥 Installation on Chrome, Edge, Brave , or any other Chromium-based browser
@@ -27,19 +27,33 @@ If you like this project, consider giving it a star ⭐
 - Bypasses Netflix account-sharing restrictions
 - Works directly in the browser with no complex configuration
 -  Get Around the Netflix Password-Sharing Ban (Netflix household).
+<p align="center">
+  <img src="assets/demo.png" alt="11 000 users" width="300"/>
+</p>
+
+----
 
 # 📝 Changelog
-## [1.8.5] - 2025-07-08
+## [1.8.6] - 2025-08-15
 
 ### 🛠️ Fix
 
-- fix subtitles button 
+- We have updated the interface to make it more modern and visually appealing.
 
+- We have added a button to enable or disable our extension’s controller, based on user requests submitted through GitHub issues (in certain specific cases, the original Netflix controller remains present).
+
+- From now on, if you are using an older version of the extension, the extension will inform you, as I noticed that several people were still using an outdated version.
+- I have also added a small button for tips.
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
-</a>  
+</a> 
 
+## 💬 Note
+Several people have contacted me to inform me about a technique that directly blocks Apple’s API, which is used to check whether you are part of the Netflix household.
+However, I prefer not to use this method for two reasons:
+- It doesn’t always work, and its effectiveness depends on the region.
+- From a legal standpoint, my extension is less risky because we simply modify the content that has already been sent and add our own content on top. We don’t block any requests, which is legally safer. I wanted to avoid any legal issues for myself and also protect my users from being banned.
 ##  🤝 Contributing
 Contributions are welcome! Feel free to submit a Pull Request or report an issue.
 

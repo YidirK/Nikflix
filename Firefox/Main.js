@@ -29,6 +29,7 @@ let state = {
   messageTimer: null,
   seekAmount: 10, // seconds to seek with arrow keys
   backButton: null, // New property to track the back button element
+  tipsButton:null,
 
   // Subtitle-related state
   subtitleEnabled: true,
@@ -353,6 +354,11 @@ function cleanController() {
     state.backButton.remove();
   }
 
+  //tips button
+  if (state.tipsButton){
+    state.tipsButton.remove();
+  }
+
   // Remove keyboard event listener if exists
   if (state.keyboardListener) {
     document.removeEventListener("keydown", state.keyboardListener);
@@ -406,6 +412,9 @@ function showController() {
   if (state.backButton) {
     state.backButton.style.opacity = "1";
   }
+  if(state.tipsButton){
+    state.tipsButton.style.opacity="1";
+  }
   state.isControllerVisible = true;
 
   // Show cursor when controls are visible
@@ -428,6 +437,9 @@ function showController() {
 
       if (state.backButton) {
         state.backButton.style.opacity = "0";
+      }
+      if(state.tipsButton){
+        state.tipsButton.style.opacity="0"
       }
 
       state.isControllerVisible = false;
@@ -1038,6 +1050,7 @@ function addMediaController() {
       doYourJob()
       showMessage("bypassed successfully")
       createBackButton();
+      createTipsButton();
     }
   };
 
@@ -1245,6 +1258,8 @@ function addMediaController() {
   // If subtitles were previously enabled, re-enable them
   // Create and add back button
   createBackButton();
+  //create and add tips button
+  createTipsButton();
 }
 
 /**
@@ -1347,7 +1362,6 @@ if (document.readyState === "loading") {
  */
 function createBackButton() {
   if (state.backButton) return; // Don't create if it already exists
-
   state.backButton = document.createElement("button");
   state.backButton.id = "netflix-back-button";
   state.backButton.innerHTML =
@@ -1430,7 +1444,75 @@ function createBackButton() {
   });
 
   document.body.appendChild(state.backButton);
+  // Connect to controller visibility changes
+  const originalShowController = showController;
+  showController = function () {
+    originalShowController();
+  };
 
+  // Handle controller hide timer completion
+  const originalControllerHideTimer = state.controllerHideTimer;
+  if (originalControllerHideTimer) {
+    clearTimeout(originalControllerHideTimer);
+    state.controllerHideTimer = setTimeout(() => {
+      if (
+          state.controllerElement &&
+          !state.videoElement.paused &&
+          !state.subtitleSettingsOpen
+      ) {
+        state.controllerElement.classList.add("hidden");
+        state.isControllerVisible = false;
+        state.backButton.style.opacity = "0";
+        state.tipsButton.style.opacity="0";
+      }
+    }, CONTROLLER_HIDE_DELAY);
+  }
+}
+
+/**
+ * Create and add tips button
+ */
+function createTipsButton() {
+  if (state.tipsButton) return; // Don't create if it already exists
+  state.tipsButton = document.createElement("button");
+  state.tipsButton.id = "nikflix-tips-button";
+  state.tipsButton.innerHTML =
+      '<svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M566 268.4v66.3H353.9v-66.3h-66.3v-79.5h357.9v79.5H566z" fill="#FFFFFF"></path><path d="M558.5 319.2l98.7 86.4c72.6 50.6 115.8 133.5 115.8 222 0 88-63.7 163-150.5 177.4-55 9.1-110.1 13.6-165.1 13.6s-110.1-4.5-165.1-13.6c-86.8-14.3-150.5-89.4-150.5-177.4 0-88.5 43.3-171.3 115.8-221.9l113.7-86.4h187.2z" fill="#FFFFFF"></path><path d="M457.4 845.1c-56.2 0-113.2-4.7-169.4-14C188 814.6 115.3 729 115.3 627.6c0-97.1 47.5-188.2 127.2-243.7l119.9-91.2h206l105.1 92c78.9 55.6 126 146.2 126 242.8 0 101.4-72.6 187-172.7 203.5-56.1 9.4-113.1 14.1-169.4 14.1z m-77.2-499.4l-106.5 81c-66.3 46.2-105.4 121.1-105.4 200.8 0 75.3 54 138.9 128.3 151.2 106.7 17.6 214.9 17.6 321.6 0 74.3-12.3 128.3-75.9 128.3-151.2 0-79.7-39.1-154.6-104.5-200.2l-2.3-1.8-91.2-79.8H380.2z" fill="#333333"></path><path d="M354 305l-66.7-57.3c-13.8-8.9-21-22.7-20.7-36.7m395.1 0.1c0 14.7-8.3 28.4-22.1 36.5L561.9 308" fill="#FFFFFF"></path><path d="M561.9 334.5c-7.9 0-15.7-3.5-21-10.3-9-11.6-6.9-28.2 4.7-37.2l80.5-62.2c5.7-3.3 9-8.5 9-13.7 0-14.6 11.9-26.5 26.5-26.5s26.5 11.9 26.5 26.5c0 23.6-12.5 45.3-33.6 58.4l-76.6 59.4c-4.6 3.8-10.3 5.6-16 5.6z m-208-3c-6.1 0-12.3-2.1-17.3-6.4l-65.4-56.3c-20-13.6-31.6-35.3-31.2-58.4 0.3-14.6 12.8-26.4 27-26 14.6 0.3 26.3 12.4 26 27-0.1 5.3 3 10.4 8.5 13.9l2.9 2.2 66.7 57.3c11.1 9.5 12.4 26.3 2.8 37.4-5.1 6.2-12.5 9.3-20 9.3z" fill="#333333"></path><path d="M365.4 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.9 26.5-26.5 26.5zM562.9 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9-13.1 0-22.9 7.4-22.9 13.9 0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34.1-67 75.9-67s75.9 30 75.9 67c0.1 14.7-11.8 26.5-26.5 26.5z" fill="#333333"></path><path d="M661.7 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.8-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.8 26.5-26.5 26.5zM464.2 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.9 26.5-26.5 26.5z" fill="#333333"></path><path d="M679.1 621.5m-205.1 0a205.1 205.1 0 1 0 410.2 0 205.1 205.1 0 1 0-410.2 0Z" fill="#9dff5c"></path><path d="M679.1 853.1c-127.7 0-231.6-103.9-231.6-231.6 0-127.7 103.9-231.6 231.6-231.6s231.6 103.9 231.6 231.6c0 127.7-103.9 231.6-231.6 231.6z m0-410.2C580.6 442.9 500.4 523 500.4 621.5S580.5 800.1 679 800.1 857.7 720 857.7 621.5s-80.2-178.6-178.6-178.6z" fill="#333333"></path><path d="M720.47 621.453l-41.436 41.436-41.437-41.436 41.436-41.437z" fill="#FFFFFF"></path><path d="M679.079 737.919l-116.46-116.46 116.46-116.461 116.46 116.46-116.46 116.46z m-41.508-116.46l41.437 41.436 41.436-41.437-41.436-41.436-41.437 41.436z" fill="#333333"></path><path d="M591.6 302.3l76-20.4c14.1-3.8 28.7 4.6 32.5 18.7 3.8 14.1-4.6 28.7-18.7 32.5l-76 20.4c-14.1 3.8-28.7-4.6-32.5-18.7-3.8-14.2 4.6-28.7 18.7-32.5z" fill="#333333"></path></g></svg>';
+
+  // Style the back button
+  state.tipsButton.style.position = "fixed";
+  state.tipsButton.style.top = "20px";
+  state.tipsButton.style.right = "20px";
+  state.tipsButton.style.zIndex = "10000";
+  state.tipsButton.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+  state.tipsButton.style.border = "none";
+  state.tipsButton.style.borderRadius = "50%";
+  state.tipsButton.style.width = "40px";
+  state.tipsButton.style.height = "40px";
+  state.tipsButton.style.cursor = "pointer";
+  state.tipsButton.style.display = "flex";
+  state.tipsButton.style.alignItems = "center";
+  state.tipsButton.style.justifyContent = "center";
+  state.tipsButton.style.transition = "all 0.2s ease, opacity 0.3s ease";
+  state.tipsButton.style.opacity = "0"
+
+  // Add hover effect
+  state.tipsButton.addEventListener("mouseover", () => {
+    state.tipsButton.style.backgroundColor = "rgba(229, 9, 20, 0.8)";
+    state.tipsButton.style.transform = "scale(1.1)";
+  });
+
+  state.tipsButton.addEventListener("mouseout", () => {
+    state.tipsButton.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+    state.tipsButton.style.transform = "scale(1)";
+  });
+
+  // Add click event
+  state.tipsButton.addEventListener("click", () => {
+    window.open("https://ko-fi.com/yidirk", '_blank').focus();
+  });
+
+  document.body.appendChild(state.tipsButton);
 
   // Connect to controller visibility changes
   const originalShowController = showController;
@@ -1451,6 +1533,7 @@ function createBackButton() {
         state.controllerElement.classList.add("hidden");
         state.isControllerVisible = false;
         state.backButton.style.opacity = "0";
+        state.tipsButton.style.opacity="0";
       }
     }, CONTROLLER_HIDE_DELAY);
   }
@@ -1525,3 +1608,19 @@ function jumpToNextEpisode() {
       });
   console.log("Next episode triggered....");
 }
+
+// disable controller (Firefox)
+browser.runtime.onMessage.addListener((message, sender) => {
+
+  const controller = document.getElementById('mon-controleur-netflix');
+
+  if (message.message === "enable") {
+    controller.style.display = "flex";
+    showMessage("Controller Enabled");
+  } else if (message.message === "disable") {
+    controller.style.display = "none";
+    showMessage("Controller Disabled");
+    console.log("Disabled");
+  }
+});
+
