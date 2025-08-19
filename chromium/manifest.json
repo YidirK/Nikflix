@@ -27,6 +27,6 @@
     }
   ],
   "background": {
-    "service_worker": "main.js"
+    "service_worker": "Main.js"
   }
 }
