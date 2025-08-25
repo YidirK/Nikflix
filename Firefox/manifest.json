@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
   "name": "Nikflix",
-  "version": "1.8.6",
+  "version": "1.8.7",
   "icons": {
     "48": "icons/Nikflix-48.png"
   },
   "permissions": [
-    "<all_urls>"
+    "storage"
   ],
   "browser_action": {
     "default_icon": "icons/Nikflix-48.png",

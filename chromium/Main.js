@@ -1613,14 +1613,25 @@ function jumpToNextEpisode() {
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
     const controller = document.getElementById('mon-controleur-netflix');
+    const overlayArea = document.getElementById("netflix-video-area-overlay");
+    const overlay = document.getElementById("netflix-video-overlay")
 
     if (message.message === "enable") {
         controller.style.display = "flex";
+        overlayArea.style.display="flex";
+        overlay.style.display="flex";
         showMessage("Controller Enabled");
     } else if (message.message === "disable") {
         controller.style.display = "none";
+        overlayArea.style.display="none";
+        overlay.style.display="none";
         showMessage("Controller Disabled");
         console.log("Disabled");
+    }else if (message.message === "debug"){
+        doYourJob()
+        showMessage("bypassed successfully")
+        createBackButton();
+        createTipsButton();
     }
 });
 

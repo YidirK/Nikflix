@@ -13,8 +13,8 @@
         body {
             margin: 0;
             padding: 0;
-            width: 350px;
-            height: 600px;
+            width: 380px;
+            height: 500px;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             display: flex;
@@ -41,8 +41,8 @@
         }
 
         header {
-            margin-top: 24px;
-            font-size: 24px;
+            margin-top: 16px;
+            font-size: 22px;
             font-weight: 700;
             color: #ffffff;
             text-align: center;
@@ -59,8 +59,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
-            margin-top: 24px;
+            gap: 10px;
+            margin-top: 12px;
             position: relative;
             z-index: 1;
         }
@@ -69,16 +69,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 14px 20px;
+            gap: 8px;
+            padding: 10px 16px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            width: 220px;
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+            width: 200px;
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
@@ -101,8 +101,8 @@
         }
 
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.6);
         }
 
         button:active {
@@ -113,14 +113,14 @@
         .update-message {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
             text-align: center;
-            width: 280px;
-            margin: 8px 0;
-            box-shadow: 0 8px 32px rgba(255, 107, 107, 0.4);
+            width: 260px;
+            margin: 4px 0;
+            box-shadow: 0 6px 24px rgba(255, 107, 107, 0.4);
             display: none;
             position: relative;
             z-index: 1;
@@ -139,7 +139,7 @@
         }
 
         .marquee-container {
-            margin: 16px 0;
+            margin: 8px 0;
             overflow: hidden;
             white-space: nowrap;
             width: 100%;
@@ -153,7 +153,7 @@
             padding-left: 100%;
             animation: scroll-left 15s linear infinite;
             color: rgba(255, 255, 255, 0.8);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
         }
 
@@ -179,9 +179,9 @@
         }
 
         footer {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             position: relative;
             z-index: 1;
         }
@@ -194,25 +194,27 @@
         .bug-info {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 16px 18px;
-            margin: 16px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
-            gap: 14px;
-            width: 240px;
-            font-size: 13px;
+            gap: 10px;
+            width: 220px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 1;
+            cursor: pointer;
+            text-align: left;
         }
 
         .bug-info:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             background: rgba(255, 255, 255, 0.12);
         }
 
@@ -220,40 +222,96 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 32px;
+            min-width: 24px;
         }
 
         .bug-text {
-            line-height: 1.5;
+            line-height: 1.4;
             font-weight: 500;
         }
 
+        .bug-info:focus {
+            outline: 2px solid #ff6b6b;
+            outline-offset: 3px;
+        }
+
+        .contact-info {
+            background: rgba(59, 130, 246, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin: 4px 0;
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 220px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .contact-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+            background: rgba(59, 130, 246, 0.12);
+        }
+
+        .contact-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+        }
+
+        .contact-text {
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .contact-email {
+            color: #3b82f6;
+            font-weight: 600;
+            text-decoration: underline;
+            margin-top: 1px;
+            font-size: 11px;
+        }
+
+        .contact-info:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 3px;
+        }
 
         .controller-toggle {
             display: flex;
             align-items: center;
-            gap: 14px;
-            margin-bottom: 6px;
+            gap: 12px;
+            margin-bottom: 4px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 12px 18px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 8px 14px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             z-index: 1;
-            width: 240px;
+            width: 220px;
         }
 
         .controller-toggle:hover {
             background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
         .toggle-label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: rgba(255, 255, 255, 0.95);
             flex: 1;
@@ -262,8 +320,8 @@
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 24px;
+            width: 42px;
+            height: 20px;
         }
 
         .toggle-switch input {
@@ -281,38 +339,38 @@
             bottom: 0;
             background: linear-gradient(135deg, #2d3748, #4a5568);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 24px;
+            border-radius: 20px;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
             background: linear-gradient(135deg, #ffffff, #f7fafc);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 50%;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
         }
 
         input:checked + .slider {
             background: linear-gradient(135deg, #10b981, #059669);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
         }
 
         input:checked + .slider:before {
-            transform: translateX(24px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.6);
+            transform: translateX(22px);
+            box-shadow: 0 3px 8px rgba(16, 185, 129, 0.6);
         }
 
         .status-text {
-            font-size: 12px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.7);
             font-weight: 500;
-            min-width: 60px;
+            min-width: 50px;
             text-align: right;
             transition: all 0.3s ease;
         }
@@ -326,11 +384,10 @@
             color: rgba(255, 255, 255, 0.5);
         }
 
-
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -350,18 +407,21 @@
             animation: fadeInUp 1s ease-out;
         }
 
+        .contact-info {
+            animation: fadeInUp 1.1s ease-out;
+        }
+
         .controller-toggle {
             animation: fadeInUp 1.2s ease-out;
         }
-
 
         input:checked + .slider::after {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
             transform: translate(-50%, -50%);
@@ -377,6 +437,12 @@
                 opacity: 0.4;
                 transform: translate(-50%, -50%) scale(1.5);
             }
+        }
+
+        /* Icons plus petites */
+        .bug-icon svg, .contact-icon svg {
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -400,9 +466,9 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
     <button id="bug-btn">🐞 Report a bug</button>
 </main>
 
-<div class="bug-info">
+<div class="bug-info" id="bug-info">
     <div class="bug-icon">
-        <svg viewBox="0 0 24 24" fill="none" height="28" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 24 24" fill="none" height="20" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
             <g id="SVGRepo_iconCarrier">
@@ -413,7 +479,24 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
         </svg>
     </div>
     <div class="bug-text">
-        If you have a bug, use the button with this icon.
+        If you have a bug, use the button with this icon in the controller.(or click here)
+    </div>
+</div>
+
+<div class="contact-info" onclick="window.open('mailto:yidirk@hergol.me', '_blank')">
+    <div class="contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" height="20" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+                <path d="M1.5 8.67V18C1.5 20.5 3.5 22.5 6 22.5H18C20.5 22.5 22.5 20.5 22.5 18V8.67L13.42 15.64C12.58 16.26 11.42 16.26 10.58 15.64L1.5 8.67Z" fill="#3b82f6"></path>
+                <path d="M22.5 6.908V6C22.5 3.5 20.5 1.5 18 1.5H6C3.5 1.5 1.5 3.5 1.5 6V6.908L11.58 14.64C11.83 14.84 12.17 14.84 12.42 14.64L22.5 6.908Z" fill="#3b82f6"></path>
+            </g>
+        </svg>
+    </div>
+    <div class="contact-text">
+        <div>Want to contact the developer?</div>
+        <div class="contact-email">yidirk@hergol.me</div>
     </div>
 </div>
 
@@ -430,7 +513,7 @@ __  __    __    ____  ____    ____  _  _    _   _  __  __  __  __    __    _  _ 
     </div>
 </div>
 
-<div class="controller-toggle" style="margin-bottom: 8px;">
+<div class="controller-toggle" style="margin-bottom: 4px;">
     <span class="toggle-label">Controller</span>
     <label class="toggle-switch">
         <input type="checkbox" id="controllerToggle" checked>

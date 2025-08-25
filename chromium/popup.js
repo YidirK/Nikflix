@@ -71,30 +71,51 @@ async function getData() {
 }
 
 
-//logique enable disable controller:
+// send message to main.js
+function sendMessage(message) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {message: message});
+    });
+}
+
+
 const toggle = document.getElementById('controllerToggle');
 const statusText = document.getElementById('statusText');
 
 toggle.addEventListener('change', function() {
+
     this.parentElement.style.transform = 'scale(0.95)';
     setTimeout(() => {
         this.parentElement.style.transform = 'scale(1)';
     }, 150);
 
-    if (this.checked) {
-        statusText.textContent = 'Enable';
-        statusText.className = 'status-text status-active';
-        chrome.tabs.query({active: true , currentWindow:true},function (tabs){
-            chrome.tabs.sendMessage(tabs[0].id, {message:"enable"})
-        })
-        console.log("enable")
-    } else {
-        statusText.textContent = 'Disable';
-        statusText.className = 'status-text status-inactive';
-        chrome.tabs.query({active: true , currentWindow:true},function (tabs){
-            chrome.tabs.sendMessage(tabs[0].id, {message:"disable"})
-        })
-        console.log("disable")
-    }
+
+    const message = this.checked ? "enable" : "disable";
+    statusText.textContent = this.checked ? "Enable" : "Disable";
+    statusText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
+
+
+    sendMessage(message);
+    chrome.storage.session.set({ status: message });
 });
 
+// Logique du bouton debug
+const debug = document.getElementById('bug-info');
+
+debug.addEventListener('click', function() {
+    sendMessage("debug");
+    console.log("debug");
+});
+
+
+
+//state for enable controller buttun
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.storage.session.get(["status"], function(result) {
+        const status = result.status || "enable";
+
+        toggle.checked = (status === "enable");
+        statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
+        statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
+    });
+});
