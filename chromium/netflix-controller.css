@@ -710,3 +710,38 @@ input:checked + .subtitle-toggle-slider:before {
 #netflix-speed-toggle:active {
     transform: scale(0.95);
 }
+
+#netflix-progress-tooltip {
+    position: fixed;                 /* was absolute */
+    top: -32px;                      /* JS will override */
+    left: 0;                         /* JS will override */
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 10002;
+  }
+  
+  #netflix-progress-tooltip::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+  }
+  
+  #netflix-progress-tooltip[data-visible="1"] {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
+  
