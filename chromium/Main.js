@@ -1,6 +1,7 @@
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
+    "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
   "nf-modal uma-modal two-section-uma",
@@ -42,13 +43,7 @@ let state = {
   subtitleContainer: null,
   subtitleSettingsOpen: false,
   subtitleSettingsPanel: null,
-  primaryLanguage: "en", // Default primary language
-  secondaryLanguage: "es", // Default secondary language
-  subtitlePosition: "bottom", // Can be "bottom" or "top"
-  subtitleSize: "medium", // Can be "small", "medium", "large"
-  primaryColor: "white",
-  secondaryColor: "#FFD700", // Gold color for secondary language
-  subtitleBackgroundOpacity: 0.5,
+
 
   //Audio
   availableAudioTracks: [],
@@ -411,12 +406,9 @@ function cleanController() {
     subtitleEnabled: state.subtitleEnabled,
     bilingualEnabled: state.bilingualEnabled,
     primaryLanguage: state.primaryLanguage,
-    secondaryLanguage: state.secondaryLanguage,
     subtitlePosition: state.subtitlePosition,
-    subtitleSize: state.subtitleSize,
-    primaryColor: state.primaryColor,
-    secondaryColor: state.secondaryColor,
-    subtitleBackgroundOpacity: state.subtitleBackgroundOpacity,
+
+
 
     primarySubtitleTrack: null,
     secondarySubtitleTrack: null,
@@ -1368,6 +1360,9 @@ function doYourJob() {
     state.controllerTimerId = setTimeout(() => {
       addMediaController();
       state.controllerTimerId = null;
+      state.videoElement.play();
+      state.buttonPlayPause.innerHTML =
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
     }, CONTROLLER_INIT_DELAY);
   } else {
     removeElementsByClasses(CLASSES_TO_REMOVE);

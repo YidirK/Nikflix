@@ -1,6 +1,7 @@
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
+  "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
   "nf-modal uma-modal two-section-uma",
@@ -42,13 +43,7 @@ let state = {
   subtitleContainer: null,
   subtitleSettingsOpen: false,
   subtitleSettingsPanel: null,
-  primaryLanguage: "en", // Default primary language
-  secondaryLanguage: "es", // Default secondary language
-  subtitlePosition: "bottom", // Can be "bottom" or "top"
-  subtitleSize: "medium", // Can be "small", "medium", "large"
-  primaryColor: "white",
-  secondaryColor: "#FFD700", // Gold color for secondary language
-  subtitleBackgroundOpacity: 0.5,
+
 
   //Audio
   availableAudioTracks: [],
@@ -57,7 +52,8 @@ let state = {
   // Episodes list state
   episodesListOpen: false,
 
-
+  // Tooltip state
+  progressTooltip: null,
 };
 
 // Constants
@@ -363,6 +359,12 @@ function cleanController() {
   if (state.keyboardListener) {
     document.removeEventListener("keydown", state.keyboardListener);
     state.keyboardListener = null;
+  }
+
+  // Remove progress tooltip if exists
+  if (state.progressTooltip) {
+    state.progressTooltip.remove();
+    state.progressTooltip = null;
   }
 
   state = {
@@ -976,6 +978,39 @@ function addMediaController() {
   state.progressionBar = document.createElement("div");
   state.progressionBar.id = "netflix-barre-progression";
 
+  // --- Progress tooltip (hover time) ---
+  const progressTooltip = document.createElement("div");
+  progressTooltip.id = "netflix-progress-tooltip";
+  progressTooltip.textContent = "00:00";
+  document.body.appendChild(progressTooltip); // <— attach to body
+  state.progressTooltip = progressTooltip;
+
+  function updateTooltipPosition(e) {
+    if (!state.videoElement || !state.videoElement.duration) return;
+
+    const rect = barreContainer.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    x = Math.max(0, Math.min(rect.width, x)); // clamp within bar
+
+    const pct = x / rect.width;
+    const seconds = pct * state.videoElement.duration;
+
+    // position in viewport coords (center over the cursor)
+    progressTooltip.style.left = `${rect.left + x}px`;
+    // keep it just above the bar; tweak 32 if you want tighter spacing
+    progressTooltip.style.top = `${rect.top - 32}px`;
+    progressTooltip.textContent = timeFormat(seconds);
+  }
+
+  barreContainer.addEventListener("mousemove", updateTooltipPosition);
+  barreContainer.addEventListener("mouseenter", (e) => {
+    updateTooltipPosition(e); // show correct value immediately
+    progressTooltip.setAttribute("data-visible", "1");
+  });
+  barreContainer.addEventListener("mouseleave", () => {
+    progressTooltip.removeAttribute("data-visible");
+  });
+
   state.screenTime = document.createElement("div");
   state.screenTime.id = "netflix-temps";
 
@@ -1300,6 +1335,9 @@ function doYourJob() {
     state.controllerTimerId = setTimeout(() => {
       addMediaController();
       state.controllerTimerId = null;
+      state.videoElement.play();
+      state.buttonPlayPause.innerHTML =
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
     }, CONTROLLER_INIT_DELAY);
   } else {
     removeElementsByClasses(CLASSES_TO_REMOVE);

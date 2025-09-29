@@ -34,24 +34,43 @@ If you like this project, consider giving it a star ⭐ or a tip if you feel gen
 ----
 
 # 📝 Changelog
-## [1.8.7] - 2025-08-25
+## [1.8.8] - 2025-09-29
 
 ### 🛠️ Fix
 
-- The player now starts playing content automatically when you launch an episode.  [issues #23](https://github.com/YidirK/Nikflix/issues/23)
+- Fix bug with  playing content automatically when you launch an episode.
+### New Features
+- We added a tooltip to the controller, allowing you to see your current progress or even pick a specific time to start your episode. ( thanks to [Michael Yan Petra](https://github.com/myanpetra99))
+- We now have an online website, available at [nikflix.hergol.me](). It’s accessible in English and French, and you can add your own language if you want. I’ll soon add a translation system to make this easier.
 
-- Added a toggle state to the button for enabling or disabling the extension's controller. [issues #45](https://github.com/YidirK/Nikflix/issues/45)
-
-- Added a new button in the extension popup to help if you encounter a bug. [issues #48](https://github.com/YidirK/Nikflix/issues/48)
-
-- Added my email in the popup so you can contact me in case of issues.
-
-- Now, when you disable the controller using the popup button, it allows you to click on the button to view the credits. [issues #41](https://github.com/YidirK/Nikflix/issues/41)
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
 </a> 
+
+## 📊 Extension Statistics (Chromium Browsers)
+
+| **Metric**                | **Value**        |
+|---------------------------|-----------------|
+| **Total Installations**   | **17.7k**       |
+| **Uninstalls**            | 3.26k          |
+| **Daily Active Users**    | **12k**        |
+
+### 🌍 Distribution by Country
+| Country      | Percentage |
+|-------------|-------------|
+| 🇺🇸 USA      | 21%         |
+| 🇧🇷 Brazil   | 9%          |
+| …           | …           |
+
+### 🗣️ Distribution by Language
+| Language    | Percentage |
+|------------|-------------|
+| 🇬🇧 English | 53%         |
+| 🇵🇹 Portuguese | 8%      |
+| …          | …           |
+
 
 ## 💬 Note
 Several people have contacted me to inform me about a technique that directly blocks Netflix API, which is used to check whether you are part of the Netflix household.
