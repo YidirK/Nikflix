@@ -39,9 +39,10 @@ If you like this project, consider giving it a star ⭐ or a tip if you feel gen
 ### 🛠️ Fix
 
 - Fix bug with  playing content automatically when you launch an episode.
+
 ### New Features
 - We added a tooltip to the controller, allowing you to see your current progress or even pick a specific time to start your episode. ( thanks to [Michael Yan Petra](https://github.com/myanpetra99))
-- We now have an online website, available at [nikflix.hergol.me](). It’s accessible in English and French, and you can add your own language if you want. I’ll soon add a translation system to make this easier.
+- We now have an online website, available at [nikflix.hergol.me](https://nikflix.hergol.me/). It’s accessible in English and French, and you can add your own language if you want. I’ll soon add a translation system to make this easier.
 
 
 ## 👥 Contributors
