@@ -100,6 +100,7 @@
 #netflix-play-pause,
 #netflix-plein-ecran,
 #netflix-next-episode,
+#netflix-autoplay-toggle,
 #netflix-subtitle-toggle,
 #netflix-remove-toggle {
     background-color: transparent;
@@ -118,6 +119,7 @@
 
 #netflix-play-pause:hover,
 #netflix-plein-ecran:hover,
+#netflix-autoplay-toggle:hover,
 #netflix-subtitle-toggle:hover,
 #netflix-remove-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -126,6 +128,7 @@
 
 #netflix-play-pause:active,
 #netflix-plein-ecran:active,
+#netflix-autoplay-toggle:active,
 #netflix-subtitle-toggle:active,
 #netflix-remove-toggle:active {
     transform: scale(0.95);
