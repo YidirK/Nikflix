@@ -54,6 +54,9 @@ let state = {
 
   // Tooltip state
   progressTooltip: null,
+
+  // Autoplay next episode state
+  autoplayNextEpisode: false,
 };
 
 // Constants
@@ -1163,7 +1166,42 @@ function addMediaController() {
   // Append to right controls bar
   controlsRight.appendChild(speedToggleButton);
 
-  // === End of Video Speed Control Integration ===
+  // === Autoplay Next Episode Toggle ===
+  const autoplayToggleButton = document.createElement("button");
+  autoplayToggleButton.id = "netflix-autoplay-toggle";
+  autoplayToggleButton.title = "Autoplay: OFF";
+  autoplayToggleButton.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960"><path fill="white" d="M380-300v-360l280 180zM480-40q-108 0-202.5-49.5T120-228v108H40v-240h240v80h-98q51 75 129.5 117.5T480-120q115 0 208.5-66T820-361l78 18q-45 136-160 219.5T480-40M42-520q7-67 32-128.5T143-762l57 57q-32 41-52 87.5T123-520zm214-241-57-57q53-44 114-69.5T440-918v80q-51 5-97 25t-87 52m449 0q-41-32-87.5-52T520-838v-80q67 6 128.5 31T762-818zm133 241q-5-51-25-97.5T761-705l57-57q44 52 69 113.5T918-520z"/></svg>
+`;
+
+  // Load autoplay preference from storage
+  chrome.storage.local.get(["autoplayNextEpisode"], (result) => {
+    if (result.autoplayNextEpisode !== undefined) {
+      state.autoplayNextEpisode = result.autoplayNextEpisode;
+      updateAutoplayButton();
+    }
+  });
+
+  function updateAutoplayButton() {
+    if (state.autoplayNextEpisode) {
+      autoplayToggleButton.title = "Autoplay: ON";
+      autoplayToggleButton.style.opacity = "1";
+    } else {
+      autoplayToggleButton.title = "Autoplay: OFF";
+      autoplayToggleButton.style.opacity = "0.6";
+    }
+  }
+
+  autoplayToggleButton.addEventListener("click", () => {
+    state.autoplayNextEpisode = !state.autoplayNextEpisode;
+    chrome.storage.local.set({ autoplayNextEpisode: state.autoplayNextEpisode });
+    updateAutoplayButton();
+    showMessage(
+      `Autoplay ${state.autoplayNextEpisode ? "enabled" : "disabled"}`
+    );
+  });
+
+  // === End of Autoplay Next Episode Integration ===
 
   state.videoElement.addEventListener("play", () => {
     if (state.buttonPlayPause)
@@ -1179,6 +1217,16 @@ function addMediaController() {
     if (state.controllerElement) {
       state.controllerElement.classList.remove("hidden");
       state.isControllerVisible = true;
+    }
+  });
+
+  // Listen for video end event for autoplay next episode
+  state.videoElement.addEventListener("ended", () => {
+    if (state.autoplayNextEpisode) {
+      showMessage("Playing next episode...");
+      setTimeout(() => {
+        jumpToNextEpisode();
+      }, 1500);
     }
   });
 
@@ -1271,6 +1319,7 @@ function addMediaController() {
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.00004 16.8669L4.62722 16.9413C2.73914 17.3183 0.98708 15.8303 1.00007 13.8609L1.05413 5.66559C1.06392 4.18207 2.09362 2.91119 3.51587 2.62725L11.3728 1.05866C13.2589 0.682096 15.0093 2.16667 15 4.13309L15.3728 4.05866C17.259 3.6821 19.0094 5.16666 19 7.13308L19.3728 7.05866C21.2608 6.68171 23.0129 8.16969 22.9999 10.1391L22.9459 18.3344C22.9361 19.8179 21.9064 21.0888 20.4841 21.3728L12.6272 22.9413C10.7409 23.3179 8.99026 21.833 9.00004 19.8662L8.62722 19.9413C6.74104 20.3179 4.99061 18.8333 5.00004 16.8669ZM9.01352 17.8248L9.05418 11.6656C9.06395 10.182 10.0936 8.9112 11.5159 8.62722L16.9973 7.5329L17 7.1259C17.005 6.36468 16.3525 5.90253 15.7644 6.01995L7.90743 7.58854C7.44642 7.68057 7.05783 8.112 7.05409 8.67877L7.00003 16.8741C6.99501 17.6353 7.64752 18.0975 8.23566 17.98L9.01352 17.8248ZM13 4.12595L12.9973 4.53291L7.51587 5.62724C6.09362 5.91118 5.06392 7.18207 5.05413 8.66557L5.0135 14.8248L4.23566 14.98C3.64746 15.0975 2.99501 14.6353 3.00003 13.8741L3.05409 5.67878C3.05783 5.112 3.44643 4.68058 3.90743 4.58854L11.7643 3.01995C12.3525 2.90253 13.005 3.36463 13 4.12595ZM20.9459 18.3212C20.9421 18.888 20.5535 19.3194 20.0926 19.4115L12.2357 20.98C11.6475 21.0975 10.9951 20.6353 11 19.8741L11.0541 11.6788C11.0579 11.112 11.4465 10.6806 11.9075 10.5885L19.7643 9.01995C20.3525 8.90252 21.005 9.36473 21 10.1259L20.9459 18.3212Z" fill="#ffffff"></path> </g></svg>';
 
   controlsRight.appendChild(nextEpisodeButton);
+  controlsRight.appendChild(autoplayToggleButton);
   controlsRight.appendChild(episodesButton);
   controlsRight.appendChild(removeToggle);
   controlsRight.appendChild(subtitleToggle);
