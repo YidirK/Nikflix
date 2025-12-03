@@ -16,6 +16,7 @@ let state = {
   progressionBar: null,
   screenTime: null,
   videoElement: null,
+  currentEpisodeDuration: null,
   volumeSlider: null,
   lastScreenTime: -1,
   lastTotalTime: -1,
@@ -247,12 +248,14 @@ function updateProgression() {
 
   if (!videoElement || !progressionBar || !screenTime) return;
 
-  if (videoElement.duration) {
-    const percentage = (videoElement.currentTime / videoElement.duration) * 100;
+  // Prefer cached metadata duration (fetched from Netflix metadata API).
+  const duration = state.currentEpisodeDuration || videoElement.duration;
+  if (duration) {
+    const percentage = (videoElement.currentTime / duration) * 100;
     progressionBar.style.width = `${percentage}%`;
 
     const currentTime = Math.floor(videoElement.currentTime);
-    const totalTime = Math.floor(videoElement.duration);
+    const totalTime = Math.floor(duration);
 
     if (
       state.lastScreenTime !== currentTime ||
@@ -1009,14 +1012,15 @@ function addMediaController() {
   state.progressTooltip = progressTooltip;
 
   function updateTooltipPosition(e) {
-    if (!state.videoElement || !state.videoElement.duration) return;
+    const duration = state.currentEpisodeDuration || state.videoElement?.duration;
+    if (!state.videoElement || !duration) return;
 
     const rect = barreContainer.getBoundingClientRect();
     let x = e.clientX - rect.left;
     x = Math.max(0, Math.min(rect.width, x)); // clamp within bar
 
     const pct = x / rect.width;
-    const seconds = pct * state.videoElement.duration;
+    const seconds = pct * duration;
 
     // position in viewport coords (center over the cursor)
     progressTooltip.style.left = `${rect.left + x}px`;
@@ -1302,7 +1306,8 @@ function addMediaController() {
     const x = e.clientX - rect.left;
     const percent = (x / rect.width) * 100; // allows us to determine where user wants to seek to
 
-    const totalVideoTime = Math.floor(state.videoElement.duration); // seconds
+    const duration = state.currentEpisodeDuration || state.videoElement.duration || 0;
+    const totalVideoTime = Math.floor(duration) || Math.floor(state.videoElement.duration || 0); // seconds
     const seekTime = Math.floor((percent / 100) * totalVideoTime * 1000); // ms
 
     // Send to injected script for custom seeking
@@ -1324,6 +1329,8 @@ function addMediaController() {
   createBackButton();
   //create and add tips button
   createTipsButton();
+  // Try to fetch and cache the canonical duration from Netflix metadata
+  fetchAndCacheCurrentEpisodeDuration();
 }
 
 /**
@@ -1658,6 +1665,70 @@ function getNextEpisodeId() {
     .catch((error) => {
       console.error("Error fetching metadata:", error);
       return null;
+    });
+}
+
+/**
+ * Try to obtain the current episode/movie duration from Netflix metadata API.
+ * Returns duration in seconds or null if not available.
+ */
+async function getCurrentEpisodeDuration() {
+  const curEpisodeId = getIdFromUrl();
+  if (!curEpisodeId) return null;
+
+  try {
+    const res = await fetch(
+      `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
+      { credentials: "include" }
+    );
+
+    const data = await res.json();
+
+    // For movies the runtime may be at data.video.runtime
+    if (data?.video?.runtime && Number.isFinite(data.video.runtime)) {
+      return data.video.runtime;
+    }
+
+    // For series search the seasons -> episodes for matching id
+    const seasons = data?.video?.seasons || [];
+    for (const season of seasons) {
+      if (!season || !Array.isArray(season.episodes)) continue;
+      const found = season.episodes.find(
+        (ep) => ep.id && ep.id.toString() === curEpisodeId.toString()
+      );
+      if (found && Number.isFinite(found.runtime)) {
+        return found.runtime;
+      }
+    }
+
+    return null;
+  } catch (err) {
+    console.warn("Could not fetch metadata duration:", err);
+    return null;
+  }
+}
+
+/**
+ * Fetch duration once and cache it in `state.currentEpisodeDuration`.
+ * Also update `state.screenTime` with the final duration if available.
+ */
+function fetchAndCacheCurrentEpisodeDuration() {
+  // fire-and-forget but update UI when resolved
+  getCurrentEpisodeDuration()
+    .then((runtime) => {
+      if (runtime && typeof runtime === "number") {
+        state.currentEpisodeDuration = runtime;
+        if (state.screenTime && state.videoElement) {
+          const cur = Math.floor(state.videoElement.currentTime || 0);
+          state.screenTime.textContent = `${timeFormat(cur)} / ${timeFormat(
+            Math.floor(runtime)
+          )}`;
+        }
+        console.debug("Cached current episode duration:", runtime);
+      }
+    })
+    .catch((e) => {
+      console.warn("Error caching episode duration:", e);
     });
 }
 
