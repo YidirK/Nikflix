@@ -1,3 +1,10 @@
+.nf-modal.interstitial-full-screen,
+.nf-modal.uma-modal.two-section-uma,
+.nf-modal.extended-diacritics-language.interstitial-full-screen,
+.css-1nym653.modal-enter-done {
+    display: none !important;
+}
+
 #mon-controleur-netflix {
     position: fixed;
     bottom: 0;
