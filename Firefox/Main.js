@@ -715,6 +715,20 @@ function setupKeyboardShortcuts() {
         }
         showMessage(`Volume: ${Math.round(videoElement.volume * 100)}%`);
         break
+
+      case "f": // F key - toggle fullscreen
+        e.preventDefault();
+        toggleFullScreen();
+        break;
+
+      case "m": // M key - toggle mute
+        e.preventDefault();
+        videoElement.muted = !videoElement.muted;
+        if (state.volumeSlider) {
+          state.volumeSlider.value = videoElement.muted ? 0 : videoElement.volume * 100;
+        }
+        showMessage(videoElement.muted ? "Muted" : `Volume: ${Math.round(videoElement.volume * 100)}%`);
+        break;
     }
   };
 
