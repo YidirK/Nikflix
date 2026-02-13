@@ -30,7 +30,8 @@ let state = {
   messageTimer: null,
   seekAmount: 10, // seconds to seek with arrow keys
   backButton: null, // New property to track the back button element
-  tipsButton:null,
+  tipsButton: null,
+  controllerType: "nikflix",
 
   // Subtitle-related state
   subtitleEnabled: true,
@@ -1316,6 +1317,11 @@ function removeElementsByClasses(classesNames) {
  * Main function to initialize or cleanup the controller
  */
 function doYourJob() {
+  if (state.controllerType === "netflix") {
+    removeElementsByClasses(CLASSES_TO_REMOVE);
+    return;
+  }
+
   //get audio trackliste
   window.dispatchEvent(
       new CustomEvent("GetAudioTracksList"),
@@ -1381,19 +1387,21 @@ const observer = new MutationObserver((mutations) => {
   }, 100); // Debounce time
 });
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    setupKeyboardShortcuts();
+browser.storage.local.get(["controllerType"]).then((result) => {
+  if (result.controllerType) state.controllerType = result.controllerType;
 
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      if (state.controllerType === "nikflix") setupKeyboardShortcuts();
+      observer.observe(document.body, observerOptions);
+      doYourJob();
+    });
+  } else {
+    if (state.controllerType === "nikflix") setupKeyboardShortcuts();
     observer.observe(document.body, observerOptions);
     doYourJob();
-  });
-} else {
-  setupKeyboardShortcuts();
-
-  observer.observe(document.body, observerOptions);
-  doYourJob();
-}
+  }
+});
 
 /**
  * Create and add back button to exit Netflix video player
@@ -1656,21 +1664,26 @@ browser.runtime.onMessage.addListener((message, sender) => {
 
 
   if (message.message === "enable") {
-    controller.style.display = "flex";
-    overlayArea.style.display="flex";
-    overlay.style.display="flex";
+    if (controller) controller.style.display = "flex";
+    if (overlayArea) overlayArea.style.display = "flex";
+    if (overlay) overlay.style.display = "flex";
     showMessage("Controller Enabled");
   } else if (message.message === "disable") {
-    controller.style.display = "none";
-    overlayArea.style.display="none";
-    overlay.style.display="none";
+    if (controller) controller.style.display = "none";
+    if (overlayArea) overlayArea.style.display = "none";
+    if (overlay) overlay.style.display = "none";
     showMessage("Controller Disabled");
     console.log("Disabled");
-  } else if (message.message === "debug"){
-    doYourJob()
-    showMessage("bypassed successfully")
-    createBackButton();
-    createTipsButton();
+  } else if (message.message === "debug") {
+    doYourJob();
+    showMessage("bypassed successfully");
+    if (state.controllerType === "nikflix") {
+      createBackButton();
+      createTipsButton();
+    }
+  } else if (message.message === "controllerType") {
+    state.controllerType = message.value;
+    browser.storage.local.set({ controllerType: message.value });
   }
 });
 

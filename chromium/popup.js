@@ -81,6 +81,8 @@ function sendMessage(message) {
 
 const toggle = document.getElementById('controllerToggle');
 const statusText = document.getElementById('statusText');
+const typeToggle = document.getElementById('controllerTypeToggle');
+const typeText = document.getElementById('typeText');
 
 toggle.addEventListener('change', function() {
 
@@ -97,6 +99,25 @@ toggle.addEventListener('change', function() {
 
     sendMessage(message);
     chrome.storage.session.set({ status: message });
+});
+
+typeToggle.addEventListener('change', function() {
+    this.parentElement.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        this.parentElement.style.transform = 'scale(1)';
+    }, 150);
+
+    const value = this.checked ? "netflix" : "nikflix";
+    typeText.textContent = this.checked ? "Netflix" : "Nikflix";
+    typeText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {message: "controllerType", value: value});
+        if (tabs[0].url && tabs[0].url.indexOf("netflix.com") !== -1) {
+            chrome.tabs.reload(tabs[0].id);
+        }
+    });
+    chrome.storage.local.set({ controllerType: value });
 });
 
 // Logique du bouton debug
@@ -117,5 +138,12 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle.checked = (status === "enable");
         statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
         statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
+    });
+
+    chrome.storage.local.get(["controllerType"], function(result) {
+        const type = result.controllerType || "nikflix";
+        typeToggle.checked = (type === "netflix");
+        typeText.textContent = typeToggle.checked ? 'Netflix' : 'Nikflix';
+        typeText.className = typeToggle.checked ? 'status-text status-active' : 'status-text status-inactive';
     });
 });

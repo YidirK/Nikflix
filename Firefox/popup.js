@@ -81,6 +81,8 @@ function sendMessage(message) {
 // Logique enable/disable controller
 const toggle = document.getElementById('controllerToggle');
 const statusText = document.getElementById('statusText');
+const typeToggle = document.getElementById('controllerTypeToggle');
+const typeText = document.getElementById('typeText');
 
 toggle.addEventListener('change', function() {
 
@@ -97,6 +99,25 @@ toggle.addEventListener('change', function() {
     browser.storage.local.set({ status: message });
 });
 
+
+typeToggle.addEventListener('change', function() {
+    this.parentElement.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        this.parentElement.style.transform = 'scale(1)';
+    }, 150);
+
+    const value = this.checked ? "netflix" : "nikflix";
+    typeText.textContent = this.checked ? "Netflix" : "Nikflix";
+    typeText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
+
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, { message: "controllerType", value: value });
+        if (tabs[0].url && tabs[0].url.indexOf("netflix.com") !== -1) {
+            browser.tabs.reload(tabs[0].id);
+        }
+    });
+    browser.storage.local.set({ controllerType: value });
+});
 
 const debug = document.getElementById('bug-info');
 
@@ -115,5 +136,12 @@ document.addEventListener('DOMContentLoaded', function() {
         toggle.checked = (status === "enable");
         statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
         statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
+    });
+
+    browser.storage.local.get(["controllerType"]).then(function(result) {
+        const type = result.controllerType || "nikflix";
+        typeToggle.checked = (type === "netflix");
+        typeText.textContent = typeToggle.checked ? 'Netflix' : 'Nikflix';
+        typeText.className = typeToggle.checked ? 'status-text status-active' : 'status-text status-inactive';
     });
 });

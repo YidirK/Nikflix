@@ -8,19 +8,27 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
   "web_accessible_resources": [
     {
         "resources": [
           "netflix-seeker.js",
           "netflix-audioChange.js",
-          "netflix-substitleChange.js"
+          "netflix-substitleChange.js",
+          "netflix-interceptor.js"
         ],
         "matches": ["*://*.netflix.com/*"]
     }
   ],
   "content_scripts": [
+    {
+      "js": ["netflix-interceptor.js"],
+      "matches": ["*://*.netflix.com/*"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
     {
       "js": ["Main.js"],
       "css": ["netflix-controller.css"],
