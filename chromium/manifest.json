@@ -24,10 +24,9 @@
   ],
   "content_scripts": [
     {
-      "js": ["netflix-interceptor.js"],
+      "js": ["netflix-interceptor-loader.js"],
       "matches": ["*://*.netflix.com/*"],
-      "run_at": "document_start",
-      "world": "MAIN"
+      "run_at": "document_start"
     },
     {
       "js": ["Main.js"],
