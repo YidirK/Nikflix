@@ -851,6 +851,9 @@ function createVideoOverlay() {
 }
 
 function createVideoAreaOverlay() {
+  const curEpisodeId = getIdFromUrl();
+  if (!curEpisodeId) return null; // If we can't get the episode ID, we won't create the overlay
+
   const videoAreaOverlay = document.createElement("div");
   videoAreaOverlay.id = "netflix-video-area-overlay";
   videoAreaOverlay.style.position = "fixed";
