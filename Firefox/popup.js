@@ -84,6 +84,22 @@ const statusText = document.getElementById('statusText');
 const typeToggle = document.getElementById('controllerTypeToggle');
 const typeText = document.getElementById('typeText');
 
+function syncControllerToggle(isNetflix) {
+    const container = toggle.closest('.controller-toggle') || toggle.parentElement && toggle.parentElement.parentElement;
+    if (isNetflix) {
+        toggle.checked = true;
+        toggle.disabled = true;
+        if (container) container.style.opacity = '0.7';
+        statusText.textContent = 'Enable';
+        statusText.className = 'status-text status-active';
+        sendMessage('enable');
+        browser.storage.local.set({ status: 'enable' });
+    } else {
+        toggle.disabled = false;
+        if (container) container.style.opacity = '1';
+    }
+}
+
 toggle.addEventListener('change', function() {
 
     this.parentElement.style.transform = 'scale(0.95)';
@@ -109,6 +125,7 @@ typeToggle.addEventListener('change', function() {
     const value = this.checked ? "netflix" : "nikflix";
     typeText.textContent = this.checked ? "Netflix" : "Nikflix";
     typeText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
+    syncControllerToggle(this.checked);
 
     browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
         browser.tabs.sendMessage(tabs[0].id, { message: "controllerType", value: value });
@@ -143,5 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
         typeToggle.checked = (type === "netflix");
         typeText.textContent = typeToggle.checked ? 'Netflix' : 'Nikflix';
         typeText.className = typeToggle.checked ? 'status-text status-active' : 'status-text status-inactive';
+        syncControllerToggle(typeToggle.checked);
     });
 });
