@@ -1,3 +1,15 @@
+// Early CSS to hide restriction screens before they even render
+const earlyStyle = document.createElement("style");
+earlyStyle.textContent = `
+  .nf-modal.interstitial-full-screen,
+  .nf-modal.uma-modal.two-section-uma,
+  .nf-modal.extended-diacritics-language.interstitial-full-screen,
+  .css-1nym653.modal-enter-done {
+    display: none !important;
+  }
+`;
+(document.head || document.documentElement).appendChild(earlyStyle);
+
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
@@ -749,6 +761,20 @@ function setupKeyboardShortcuts() {
         }
         showMessage(`Volume: ${Math.round(videoElement.volume * 100)}%`);
         break;
+
+      case "f": // F key - toggle fullscreen
+        e.preventDefault();
+        toggleFullScreen();
+        break;
+
+      case "m": // M key - toggle mute
+        e.preventDefault();
+        videoElement.muted = !videoElement.muted;
+        if (state.volumeSlider) {
+          state.volumeSlider.value = videoElement.muted ? 0 : videoElement.volume * 100;
+        }
+        showMessage(videoElement.muted ? "Muted" : `Volume: ${Math.round(videoElement.volume * 100)}%`);
+        break;
     }
   };
 
@@ -1440,6 +1466,25 @@ const observerOptions = {
 
 const observer = new MutationObserver((mutations) => {
   if (state.mutationTimeout) clearTimeout(state.mutationTimeout);
+
+  // Handle restriction screen: remove it, resume video and show controller
+  const hasRestrictionNode = mutations.some((mutation) =>
+    Array.from(mutation.addedNodes).some((node) => {
+      if (node.nodeType !== Node.ELEMENT_NODE) return false;
+      const cls = node.className || "";
+      return typeof cls === "string" && CLASSES_TO_REMOVE.some((c) => cls.includes(c));
+    })
+  );
+  if (hasRestrictionNode) {
+    removeElementsByClasses(CLASSES_TO_REMOVE);
+    const video = document.querySelector("video");
+    if (video) {
+      video.play();
+      if (state.controllerTimerId) clearTimeout(state.controllerTimerId);
+      state.controllerTimerId = null;
+      addMediaController();
+    }
+  }
 
   state.mutationTimeout = setTimeout(() => {
     const hasRelevantChanges = mutations.some((mutation) => {
