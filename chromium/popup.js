@@ -131,7 +131,7 @@ typeToggle.addEventListener('change', function() {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {message: "controllerType", value: value});
         if (tabs[0].url && tabs[0].url.indexOf("netflix.com") !== -1) {
-            chrome.tabs.reload(tabs[0].id);
+            chrome.tabs.reload(tabs[0].id, {bypassCache: true});
         }
     });
     chrome.storage.local.set({ controllerType: value });
