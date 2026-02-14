@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
-import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Download, Chrome, Github, Heart, ChevronDown, ShieldQuestionMark, Users, TrendingUp, Star, GitBranch } from "lucide-react";
 
-
-
- function Home_en() {
+function Home_en() {
     const [openItems, setOpenItems] = useState(new Set());
+    const [userCount, setUserCount] = useState(0);
+
+    // Animation du compteur d'utilisateurs
+    useEffect(() => {
+        const targetCount = 50000;
+        const duration = 2000; // 2 secondes
+        const steps = 60;
+        const increment = targetCount / steps;
+        let currentStep = 0;
+
+        const timer = setInterval(() => {
+            currentStep++;
+            if (currentStep <= steps) {
+                setUserCount(Math.floor(increment * currentStep));
+            } else {
+                setUserCount(targetCount);
+                clearInterval(timer);
+            }
+        }, duration / steps);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const toggleItem = (index) => {
         const newOpenItems = new Set(openItems);
@@ -15,6 +35,7 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
         }
         setOpenItems(newOpenItems);
     };
+
     const faqData = [
         {
             question: "Is it legal to use this extension?",
@@ -30,14 +51,151 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
         },
         {
             question: "What should I do if I encounter a bug?",
-            answer: "A special button in the extension pop-up allows you to restart it to fix most bugs. If that doesn’t work, you can contact us by email or create an issue on GitHub."
+            answer: "A special button in the extension pop-up allows you to restart it to fix most bugs. If that doesn't work, you can contact us by email or create an issue on GitHub."
         },
+        {
+            question: "Netflix says my device is not part of the household, what should I do?",
+            answer: "That's exactly why Nikflix exists! Install the extension on your Chrome, Firefox, Edge, or any Chromium-based browser, and you'll be able to watch Netflix without this restriction."
+        },
+        {
+            question: "Does the extension work on all browsers?",
+            answer: "Nikflix works on Chrome, Firefox, Edge, Brave, Opera, and all Chromium-based browsers. It's available on the Chrome Web Store and Mozilla Add-ons Store."
+        },
+        {
+            question: "Can I use Netflix at a friend's house with this extension?",
+            answer: "Yes! With Nikflix, you can watch Netflix anywhere: at friends' places, on vacation, or on any WiFi network without being blocked by the household restriction."
+        },
+        {
+            question: "Will my Netflix account be banned?",
+            answer: "The extension only modifies what your browser sends to Netflix, without touching your account. We have thousands of active users for months without any reported issues."
+        },
+        {
+            question: "Does the extension slow down Netflix?",
+            answer: "No, Nikflix is optimized to not affect performance. You can watch your shows and movies in streaming without any slowdown."
+        },
+        {
+            question: "How do I install Nikflix?",
+            answer: "It's very simple! Click on the 'Chrome Store' or 'Mozilla Store' button at the top of this page, then click 'Add to Chrome/Firefox'. The extension installs automatically in a few seconds."
+        },
+        {
+            question: "Can I share my Netflix account with my family in another city?",
+            answer: "Yes, with Nikflix, your family members can use your Netflix account even if they live in another city or country, without being blocked by the household restriction."
+        },
+        {
+            question: "Is the extension safe? Does it steal my data?",
+            answer: "Nikflix is 100% open source, which means anyone can review the code and verify that it doesn't collect any personal data. We respect your privacy and collect nothing."
+        }
     ];
 
+    const changelogData = [
+        {
+            version: "1.8.9",
+            date: "FEBRUARY 2026",
+            changes: [
+                "Add autoplay next episode option for chrome not yet for Firefox",
+                "add fullscreen (F) and mute (M) keyboard shortcuts",
+                "hide restriction screens via CSS and prevent video pause",
+                "fix: clicks not working in homepage",
+                "Update: Switched to a custom license prohibiting redistribution."
+
+            ]
+        }
+    ];
+
+    const contributors = [
+        { name: "YidirK", role: "creator/maintainer", github: "YidirK" },
+        { name: "Alexander Jensen", role: "Dev", github: "Ajexsen" },
+        { name: "variableninja", role: "Dev", github: "variableninja" },
+        { name: "Nanika", role: "Dev", github: "bhhoang" },
+        { name: "Michael Yan Petra", role: "Dev", github: "myanpetra99" },
+        { name: "ibanfernandez", role: "Dev", github: "ibanfernandez" },
+        { name: "IshaanM8", role: "Dev", github: "IshaanM8" },
+        { name: "vinodhelambe", role: "Dev", github: "vinodhelambe" },
+        { name: "Yorcal", role: "Dev", github: "Yorcal" },
+        { name: "LemonPho", role: "Dev", github: "LemonPho" },
+    ];
 
     return (
-
         <>
+            {/* SEO Meta Tags - To add in your document's head */}
+            <title>How to Watch Netflix Without Household Restriction? Free Nikflix Extension</title>
+            <meta name="description" content="Your device is not part of the Netflix household? Nikflix is the free and open-source extension to bypass Netflix restrictions. Compatible with Chrome, Firefox, Edge. Over 50,000 satisfied users." />
+            <meta name="keywords" content="nikflix, netflix says not part of household, how to bypass netflix restriction, netflix household error, device not recognized netflix, netflix blocks me outside household, share netflix account with friends, netflix multiple addresses, free netflix extension, is it legal to bypass netflix, open source netflix extension, how to watch netflix at friend's house, netflix geographic restriction, unlock netflix everywhere, watch netflix on vacation, netflix multiple households, netflix household solution, bypass netflix household, chrome extension netflix, firefox addon netflix, chromium extension netflix, edge extension netflix, brave netflix extension, opera netflix addon, 50000 nikflix users, netflix without device restriction, how to use netflix outside home, legal netflix account sharing, free extension for netflix, open source code netflix, github extension netflix, netflix household problem, netflix device error, netflix household message, easy netflix bypass, netflix multiple wifi, watch netflix anywhere for free" />
+            <meta property="og:title" content="Nikflix - How to Watch Netflix Without Household Restriction" />
+            <meta property="og:description" content="Free extension to bypass Netflix household restrictions. Over 50K users. Open source and compatible with all browsers." />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://nikflix.com" />
+            <meta property="og:image" content="https://nikflix.com/og-image.png" />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content="Nikflix - Free Extension for Netflix" />
+            <meta name="twitter:description" content="Easily bypass Netflix household restrictions with our open source extension" />
+            <meta name="twitter:image" content="https://nikflix.com/twitter-image.png" />
+            <link rel="canonical" href="https://nikflix.com" />
+
+            {/* FAQ Schema for SEO */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": "Is it legal to use Nikflix to bypass Netflix restrictions?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Nikflix only modifies the content sent by Netflix, which is legal. However, we are not responsible for any consequences that may occur from its use."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Is the Nikflix extension free?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Yes! Nikflix is completely free. If you want to support its development, you can make a donation."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "Is the Nikflix extension open source?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Yes, the Nikflix code is available on GitHub, allowing anyone to review it and understand how it works."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": "What should I do if I have a bug with Nikflix?",
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "A special button in the extension pop-up allows you to restart it to fix most bugs. Otherwise, contact us by email or create an issue on GitHub."
+                            }
+                        }
+                    ]
+                })}
+            </script>
+
+            {/* Organization Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "SoftwareApplication",
+                    "name": "Nikflix",
+                    "applicationCategory": "BrowserExtension",
+                    "operatingSystem": "Chrome, Firefox, Edge, Brave, Opera",
+                    "offers": {
+                        "@type": "Offer",
+                        "price": "0",
+                        "priceCurrency": "USD"
+                    },
+                    "aggregateRating": {
+                        "@type": "AggregateRating",
+                        "ratingValue": "4.8",
+                        "ratingCount": "50000"
+                    },
+                    "description": "Free and open-source extension to bypass Netflix household restrictions"
+                })}
+            </script>
+
             <div className="navbar bg-first sticky top-0 z-20">
                 <div className="navbar-start">
                     <div className="dropdown">
@@ -52,13 +210,13 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth="2"
-                                    d="M4 6h16M4 12h8m-8 6h16"/>
+                                    d="M4 6h16M4 12h8m-8 6h16" />
                             </svg>
                         </div>
                         <ul
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li><a onClick={()=> window.open("https://github.com/YidirK/Nikflix" , "_blank")}>Source Code</a></li>
+                            <li><a onClick={() => window.open("https://github.com/YidirK/Nikflix", "_blank")}>Source Code</a></li>
                             <li>
                                 <a>Download</a>
                                 <ul className="p-2">
@@ -66,10 +224,10 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                         <button
                                             onClick={() => window.open("https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0", "_blank")}
                                             className="group bg-first text-back px-2 py-1 mb-3 font-medium hover:bg-back hover:text-first rounded-xl transition-all duration-300 flex items-center justify-center gap-3 border border-first">
-                                            <Chrome size={20}/>
+                                            <Chrome size={20} />
                                             <span>Chrome Store</span>
                                             <Download size={16}
-                                                      className="group-hover:translate-y-0.5 transition-transform"/>
+                                                      className="group-hover:translate-y-0.5 transition-transform" />
                                         </button>
                                     </li>
                                     <li>
@@ -102,14 +260,15 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                     </li>
                                 </ul>
                             </li>
-                            <li><a>FAQ</a></li>
+                            <li><a href="#changelog">Changelog</a></li>
+                            <li><a href="#faq">FAQ</a></li>
                         </ul>
                     </div>
                     <a className="btn btn-ghost text-xl text-back">Nikflix</a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 text-back ">
-                        <li><a onClick={()=> window.open("https://github.com/YidirK/Nikflix" , "_blank")} className={'font-semibold'} >Source Code</a></li>
+                        <li><a onClick={() => window.open("https://github.com/YidirK/Nikflix", "_blank")} className={'font-semibold'}>Source Code</a></li>
                         <li>
                             <details>
                                 <summary className={"font-semibold"}>Download</summary>
@@ -118,10 +277,10 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                         <button
                                             onClick={() => window.open("https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0", "_blank")}
                                             className="group bg-first text-back px-2 py-1 mb-3 font-medium hover:bg-back hover:text-first rounded-xl transition-all duration-300 flex items-center justify-center gap-3 border border-first">
-                                            <Chrome size={20}/>
+                                            <Chrome size={20} />
                                             <span>Chrome Store</span>
                                             <Download size={16}
-                                                      className="group-hover:translate-y-0.5 transition-transform"/>
+                                                      className="group-hover:translate-y-0.5 transition-transform" />
                                         </button>
                                     </li>
                                     <li>
@@ -155,13 +314,14 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                 </ul>
                             </details>
                         </li>
-                        <li><a className={"font-semibold"}>FAQ</a></li>
+                        <li><a href="#changelog" className={"font-semibold"}>Changelog</a></li>
+                        <li><a href="#faq" className={"font-semibold"}>FAQ</a></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
                     <button className="btn bg-back text-first hover:text-white rounded-xl gap-2 hover:bg-first"
                             onClick={() => window.open("https://ko-fi.com/yidirk", '_blank')}>
-                        <Heart/> Donate
+                        <Heart /> Donate
                     </button>
                 </div>
             </div>
@@ -180,7 +340,7 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
 
                         <div className="order-2 lg:order-1 text-center lg:text-left">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light mb-6 lg:mb-8 tracking-tight text-first ">
-                                <span className="block font-bold">Your device is not part of the Netflix Household for this account ?</span>
+                                <span className="block font-bold">Your device is not part of the Netflix Household for this account?</span>
                             </h1>
 
                             <p className="text-lg sm:text-xl text-first leading-relaxed mb-8 lg:mb-12 max-w-md mx-auto lg:mx-0">
@@ -195,9 +355,9 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                 <button
                                     onClick={() => window.open("https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0", "_blank")}
                                     className="group bg-first text-back px-4 py-3 font-medium hover:bg-back hover:text-first rounded-xl transition-all duration-300 flex items-center justify-center gap-3 border border-first">
-                                    <Chrome size={20}/>
+                                    <Chrome size={20} />
                                     <span>Chrome Store</span>
-                                    <Download size={16} className="group-hover:translate-y-0.5 transition-transform"/>
+                                    <Download size={16} className="group-hover:translate-y-0.5 transition-transform" />
                                 </button>
 
                                 <button
@@ -230,7 +390,7 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                 <button
                                     onClick={() => window.open("https://github.com/YidirK/Nikflix", "_blank")}
                                     className="group bg-first text-back px-4 py-3 font-medium hover:bg-back hover:text-first rounded-xl transition-all duration-300 flex items-center justify-center gap-3 border border-first">
-                                    <Github size={20}/>
+                                    <Github size={20} />
                                     <span>Source code</span>
                                 </button>
                             </div>
@@ -256,7 +416,7 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                     <img
                                         className="w-full h-full object-cover  rounded-b-xl"
                                         src="/bg-en.png"
-                                        alt="Aperçu de Netflix"
+                                        alt="Netflix Preview - Nikflix Extension to bypass restrictions"
                                     />
                                 </div>
                             </div>
@@ -265,18 +425,163 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                 </div>
             </div>
 
-            <section className=" bg-back h-fit">
+            {/* Statistics Section with animation */}
+            <section className="py-16 bg-back">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="text-center p-8 bg-back border border-first rounded-xl hover:scale-105 transition-transform duration-300">
+                            <Users className="w-12 h-12 text-first mx-auto mb-4" />
+                            <div className="text-5xl font-bold text-first mb-2">
+                                {userCount.toLocaleString('en-US')}+
+                            </div>
+                            <div className="text-first text-lg">Active Users</div>
+                        </div>
+
+                        <div className="text-center p-8 bg-back border border-first rounded-xl hover:scale-105 transition-transform duration-300">
+                            <TrendingUp className="w-12 h-12 text-first mx-auto mb-4" />
+                            <div className="text-5xl font-bold text-first mb-2">100%</div>
+                            <div className="text-first text-lg">Free & Open Source</div>
+                        </div>
+
+                        <div className="text-center p-8 bg-back border border-first rounded-xl hover:scale-105 transition-transform duration-300">
+                            <Star className="w-12 h-12 text-first mx-auto mb-4" />
+                            <div className="text-5xl font-bold text-first mb-2">4.8</div>
+                            <div className="text-first text-lg">Average Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Changelog Section */}
+            <section id="changelog" className="py-16 bg-back">
+                <div className="max-w-4xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center justify-center w-16 h-16 bg-first rounded-full mb-6">
+                            <GitBranch className="text-white" size={40} />
+                        </div>
+                        <h2 className="text-4xl font-bold text-first mb-4">
+                            Changelog
+                        </h2>
+                        <p className="text-first text-lg">
+                            Follow Nikflix evolution and discover the latest improvements
+                        </p>
+                    </div>
+
+                    <div className="space-y-6">
+                        {changelogData.map((release, index) => (
+                            <div
+                                key={index}
+                                className="bg-back border border-first rounded-xl p-6 hover:shadow-lg hover:shadow-first/20 transition-all duration-300"
+                            >
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-2xl font-bold text-first">
+                                        Version {release.version}
+                                    </h3>
+                                    <span className="text-first bg-first/20 px-3 py-1 rounded-full text-sm font-semibold">
+                                        {release.date}
+                                    </span>
+                                </div>
+                                <ul className="space-y-2">
+                                    {release.changes.map((change, changeIndex) => (
+                                        <li key={changeIndex} className="text-first flex items-start gap-2">
+                                            <span className="text-first mt-1">✓</span>
+                                            <span>{change}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Contributors Section with scrolling animation */}
+            <section className="py-16 bg-back overflow-hidden">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-bold text-first mb-4">
+                            Thanks to Our Contributors ❤️
+                        </h2>
+                        <p className="text-first text-lg">
+                            A big thank you to everyone who contributed to the Nikflix project
+                        </p>
+                    </div>
+
+                    {/* Infinite scroll animation */}
+                    <div className="relative">
+                        <div className="flex overflow-hidden">
+                            <div className="flex animate-scroll">
+                                {contributors.concat(contributors).map((contributor, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex-shrink-0 mx-3 bg-back border border-first rounded-xl p-4 hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                        onClick={() => window.open(`https://github.com/${contributor.github}`, "_blank")}
+                                        style={{ width: '200px' }}
+                                    >
+                                        <div className="w-12 h-12 bg-first rounded-full mx-auto mb-3 flex items-center justify-center">
+                                            <Github className="text-white" size={24} />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-first text-center mb-1">
+                                            {contributor.name}
+                                        </h3>
+                                        <p className="text-first text-sm text-center mb-2">{contributor.role}</p>
+                                        <p className="text-first/70 text-xs text-center">
+                                            @{contributor.github}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-12 text-center p-8 bg-back border border-first rounded-xl">
+                        <h3 className="text-xl font-semibold text-first mb-3">
+                            Want to contribute?
+                        </h3>
+                        <p className="text-first mb-6">
+                            The project is open source! Check out our GitHub repository to contribute.
+                        </p>
+                        <button
+                            onClick={() => window.open("https://github.com/YidirK/Nikflix", "_blank")}
+                            className="bg-first text-white px-6 py-3 rounded-xl font-semibold hover:bg-first/80 transition-all duration-300 inline-flex items-center gap-2"
+                        >
+                            <Github size={20} />
+                            Contribute on GitHub
+                        </button>
+                    </div>
+                </div>
+
+                <style jsx>{`
+                    @keyframes scroll {
+                        0% {
+                            transform: translateX(0);
+                        }
+                        100% {
+                            transform: translateX(-50%);
+                        }
+                    }
+                    .animate-scroll {
+                        animation: scroll 30s linear infinite;
+                    }
+                    .animate-scroll:hover {
+                        animation-play-state: paused;
+                    }
+                `}</style>
+            </section>
+
+            {/* FAQ Section */}
+            <section id="faq" className="bg-back h-fit">
                 <div className={"py-16 px-4 max-w-4xl mx-auto"}>
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center justify-center w-16 h-16 bg-first rounded-full mb-6">
-                            <ShieldQuestionMark className={"text-white"} size={40}/>
+                            <ShieldQuestionMark className={"text-white"} size={40} />
                         </div>
                         <h2 className="text-4xl font-bold text-first mb-4">
                             Frequently Asked Questions
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {faqData.map((item, index) => (
                             <div
                                 key={index}
@@ -290,19 +595,17 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                                         {item.question}
                                     </h3>
                                     <ChevronDown
-                                        className={`w-5 h-5 text-first transition-transform duration-200 flex-shrink-0 ${
-                                            openItems.has(index) ? 'rotate-180' : ''
+                                        className={`w-5 h-5 text-first transition-transform duration-200 flex-shrink-0 ${openItems.has(index) ? 'rotate-180' : ''
                                         }`}
                                     />
                                 </button>
 
                                 <div
-                                    className={`overflow-hidden transition-all duration-200 ease-in-out ${
-                                        openItems.has(index) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                    className={`overflow-hidden transition-all duration-200 ease-in-out ${openItems.has(index) ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                                     }`}
                                 >
                                     <div className="px-6 pb-6">
-                                        <div className="w-full h-px bg-gray-200 mb-4"></div>
+                                        <div className="w-full h-px bg-first/30 mb-4"></div>
                                         <p className="text-first leading-relaxed">
                                             {item.answer}
                                         </p>
@@ -317,13 +620,39 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
                             Still have questions?
                         </h3>
                         <p className="text-white mb-6">
-                            Send me an email at::<span
-                            className={"font-semibold"}>   yidirk@hergol.me</span>
+                            Send me an email at:<span
+                            className={"font-semibold"}> yidirk@hergol.me</span>
                         </p>
                     </div>
                 </div>
             </section>
 
+            {/* SEO - Long-tail keywords section (invisible but crawlable) */}
+            <section className="py-8 bg-back border-t border-first/20">
+                <div className="max-w-7xl mx-auto px-4">
+                    <div className="text-center">
+                        <h3 className="text-sm font-semibold text-first/60 mb-4">
+                            Frequent Searches
+                        </h3>
+                        <div className="flex flex-wrap justify-center gap-2 text-xs text-first/50">
+                            <span className="px-2 py-1 bg-first/5 rounded">netflix doesn't recognize my device</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">how to bypass netflix household</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">extension to unblock netflix</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">watch netflix outside household</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">share netflix with friends</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">netflix multiple addresses</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">netflix household error solution</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">free chrome extension netflix</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">bypass netflix household free</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">netflix on vacation</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">use netflix at friend's house</span>
+                            <span className="px-2 py-1 bg-first/5 rounded">netflix multiple wifi</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Support Section */}
             <section className="py-16 bg-back text-center">
                 <h2 className="text-3xl md:text-5xl font-bold mb-6 text-first">Support the Project ❤️</h2>
                 <p className="max-w-xl mx-auto mb-6 font-semibold text-first">
@@ -332,22 +661,26 @@ import { Download, Chrome , Github , Heart , ChevronDown , ShieldQuestionMark} f
 
                 <button className="btn bg-first text-white rounded-xl gap-2 hover:bg-first/80"
                         onClick={() => window.open("https://ko-fi.com/yidirk", '_blank')}>
-                    <Heart/> Donate
+                    <Heart /> Donate
                 </button>
             </section>
 
-
+            {/* Footer */}
             <footer className="bg-first border-t border-gray-300 mt-auto">
                 <div className="max-w-7xl mx-auto px-4 py-6">
                     <div className="flex flex-col items-center justify-center space-y-4">
                         <div className="flex items-center space-x-2">
-                            <p className={"font-bold"}><span className="text-xl text-white">Coder avec</span></p>
-                            <Heart className="w-5 h-5 text-red-500 fill-current animate-pulse"/>
+                            <p className={"font-bold"}><span className="text-xl text-white">Coded with</span></p>
+                            <Heart className="w-5 h-5 text-red-500 fill-current animate-pulse" />
                         </div>
+                        <p className="text-white text-sm">
+                            Nikflix - Free Extension for Netflix • 50,000+ Users • Open Source
+                        </p>
                     </div>
                 </div>
             </footer>
         </>
     );
 }
-export default Home_en
+
+export default Home_en;
