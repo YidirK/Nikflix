@@ -707,6 +707,7 @@ function setupKeyboardShortcuts() {
     // Always ensure video element is current
     const videoElement = document.querySelector("video");
     if (!videoElement) return;
+    document.querySelector('video').disablePictureInPicture = false;
 
     // Always show controller when key is pressed if the controller exists
     if (state.controllerElement) {
@@ -1740,6 +1741,7 @@ function getNextEpisodeId() {
       }, []);
 
       console.log("Current Episode ID: ", curEpisodeId);
+      document.querySelector('video').disablePictureInPicture = false;
 
       // Find the index of the current episode
       const curEpisodeIndex = episodes.findIndex(
