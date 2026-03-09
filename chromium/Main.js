@@ -1410,6 +1410,20 @@ function addMediaController() {
   createTipsButton();
   // Try to fetch and cache the canonical duration from Netflix metadata
   fetchAndCacheCurrentEpisodeDuration();
+
+  // Restore controller visibility state from storage
+  chrome.storage.local.get(["status"], function(result) {
+    const status = result.status || "enable";
+    const controller = document.getElementById("mon-controleur-netflix");
+    const overlayArea = document.getElementById("netflix-video-area-overlay");
+    const overlay = document.getElementById("netflix-video-overlay");
+
+    if (status === "disable" && controller) {
+      controller.style.display = "none";
+      if (overlayArea) overlayArea.style.display = "none";
+      if (overlay) overlay.style.display = "none";
+    }
+  });
 }
 
 /**

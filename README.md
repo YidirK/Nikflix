@@ -39,12 +39,10 @@ https://nikflix.hergol.me
 ----
 
 # 📝 Changelog
-## [1.8.9] - 2026-02-14 (thanks to @variableninja)
-- ✓ Add autoplay next episode option for chrome not yet for Firefox
-- ✓ add fullscreen (F) and mute (M) keyboard shortcuts
-- ✓ hide restriction screens via CSS and prevent video pause
-- ✓ fix: clicks not working in homepage
-- ✓ Update: Switched to a custom license prohibiting redistribution.
+## [1.9.0] - 2026-03-09
+- ✓ fix: fix Picture-in-picture problem for chromium. [#94](https://github.com/YidirK/Nikflix/issues/94)
+- ✓ fix: fix Controller issue. now the button to turn off the extension controller have persistence via localStorage for chromium [#96](https://github.com/YidirK/Nikflix/issues/96) , [#87](https://github.com/YidirK/Nikflix/issues/87) , [#70
+  ](https://github.com/YidirK/Nikflix/issues/70)
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
@@ -66,7 +64,7 @@ This extension may violate Netflix's terms of service. Use at your own risk.
 ---
 
 ## 📄 License
-This project is under a custom "No Redistribution" license.
+This project is under license.
 See LICENSE file for details.
 
 ---

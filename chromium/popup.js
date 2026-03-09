@@ -96,7 +96,8 @@ toggle.addEventListener('change', function() {
 
 
     sendMessage(message);
-    chrome.storage.session.set({ status: message });
+    chrome.storage.local.set({ status: message });
+
 });
 
 // Logique du bouton debug
@@ -111,7 +112,7 @@ debug.addEventListener('click', function() {
 
 //state for enable controller buttun
 document.addEventListener('DOMContentLoaded', function() {
-    chrome.storage.session.get(["status"], function(result) {
+    chrome.storage.local.get(["status"], function(result) {
         const status = result.status || "enable";
 
         toggle.checked = (status === "enable");
