@@ -1,21 +1,21 @@
 //logique of popup butttons
 document.getElementById('code-btn').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://github.com/YidirK/Nikflix' });
+    browser.tabs.create({ url: 'https://github.com/YidirK/Nikflix' });
 });
 
 document.getElementById('coffee-btn').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://ko-fi.com/yidirk' });
+    browser.tabs.create({ url: 'https://ko-fi.com/yidirk' });
 });
 
 document.getElementById('bug-btn').addEventListener('click', () => {
-    chrome.tabs.create({ url: 'https://github.com/YidirK/Nikflix/issues/new?template=bug_report.md' });
+    browser.tabs.create({ url: 'https://github.com/YidirK/Nikflix/issues/new?template=bug_report.md' });
 });
 
 //get version of the extension
 document.addEventListener("DOMContentLoaded", () => {
     const versionEl = document.getElementById("version");
     if (versionEl) {
-        const manifestData = chrome.runtime.getManifest();
+        const manifestData = browser.runtime.getManifest();
         versionEl.textContent = `v${manifestData.version}`;
     }
     checkForUpdate();
@@ -25,7 +25,7 @@ async function checkForUpdate() {
     try {
         const remoteData = await getData();
         if (remoteData && remoteData.version) {
-            const currentVersion = chrome.runtime.getManifest().version;
+            const currentVersion = browser.runtime.getManifest().version;
             const remoteVersion = remoteData.version;
 
             console.log("Current version:", currentVersion);
@@ -73,12 +73,12 @@ async function getData() {
 
 // send message to main.js
 function sendMessage(message) {
-    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-        browser.tabs.sendMessage(tabs[0].id, { message: message });
+    browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        browser.tabs.sendMessage(tabs[0].id, {message: message});
     });
 }
 
-// Logique enable/disable controller
+
 const toggle = document.getElementById('controllerToggle');
 const statusText = document.getElementById('statusText');
 
@@ -89,15 +89,18 @@ toggle.addEventListener('change', function() {
         this.parentElement.style.transform = 'scale(1)';
     }, 150);
 
+
     const message = this.checked ? "enable" : "disable";
     statusText.textContent = this.checked ? "Enable" : "Disable";
     statusText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
 
+
     sendMessage(message);
     browser.storage.local.set({ status: message });
+
 });
 
-
+// Logique du bouton debug
 const debug = document.getElementById('bug-info');
 
 debug.addEventListener('click', function() {
@@ -107,9 +110,9 @@ debug.addEventListener('click', function() {
 
 
 
-//state for enable controller button
+//state for enable controller buttun
 document.addEventListener('DOMContentLoaded', function() {
-    browser.storage.local.get(["status"]).then(function(result) {
+    browser.storage.local.get(["status"], function(result) {
         const status = result.status || "enable";
 
         toggle.checked = (status === "enable");

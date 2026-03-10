@@ -39,10 +39,13 @@ https://nikflix.hergol.me
 ----
 
 # 📝 Changelog
-## [1.9.0] - 2026-03-09
-- ✓ fix: fix Picture-in-picture problem for chromium. [#94](https://github.com/YidirK/Nikflix/issues/94)
-- ✓ fix: fix Controller issue. now the button to turn off the extension controller have persistence via localStorage for chromium [#96](https://github.com/YidirK/Nikflix/issues/96) , [#87](https://github.com/YidirK/Nikflix/issues/87) , [#70
+## [1.9.1] - 2026-03-10
+- ✓ fix: fix Picture-in-picture problem for firefox. [#94](https://github.com/YidirK/Nikflix/issues/94)
+- ✓ fix: fix Controller issue. now the button to turn off the extension controller have persistence via localStorage for firefox [#96](https://github.com/YidirK/Nikflix/issues/96) , [#87](https://github.com/YidirK/Nikflix/issues/87) , [#70
   ](https://github.com/YidirK/Nikflix/issues/70)
+- ✓ fix: fix the volume sync issue , the volume slider and mute icon now correctly reflect the video's actual state on load and when Netflix changes the volume internally, instead of staying stuck at their initial value. This fix applies to both Chrome and Firefox.[#98](https://github.com/YidirK/Nikflix/issues/98) [##64
+  ](https://github.com/YidirK/Nikflix/issues/64)
+
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
