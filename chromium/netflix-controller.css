@@ -1,69 +1,43 @@
+/* ============================================================
+   NIKFLIX — Netflix-Style Player Controls  v2
+   ============================================================ */
+
+/* --- Hide Netflix restriction modals --- */
+.nf-modal.interstitial-full-screen,
+.nf-modal.uma-modal.two-section-uma,
+.nf-modal.extended-diacritics-language.interstitial-full-screen,
+.css-1nym653.modal-enter-done {
+    display: none !important;
+}
+
+/* ============================================================
+   CONTROL BAR WRAPPER
+   ============================================================ */
 #mon-controleur-netflix {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background: linear-gradient(to top,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.9) 10%,
-    rgba(0, 0, 0, 0.8) 20%,
-    rgba(0, 0, 0, 0.7) 30%,
-    rgba(0, 0, 0, 0.6) 40%,
-    rgba(0, 0, 0, 0.4) 50%,
-    rgba(0, 0, 0, 0.2) 65%,
-    rgba(0, 0, 0, 0.1) 80%,
-    rgba(0, 0, 0, 0) 100%);
-    color: white;
-    padding: 18px 20px;
-    padding-top: 60px; /* Extended padding for better gradient effect */
-    z-index: 3;
-    display: flex;
-    align-items: center; /* Changed from flex-end to center for better alignment */
-    justify-content: space-between;
-    font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    transform: translateZ(0);
-    will-change: transform;
-    pointer-events: auto;
-    transition: opacity 0.3s ease;
-    opacity: 1;
-}
-
-#netflix-video-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-    background-color: transparent;
-    pointer-events: none; /* Allow clicks to pass through to Netflix controls */
-}
-
-#netflix-video-area-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: calc(100% - 140px); /* Exclude Netflix controls area */
-    z-index: 9997;
-    cursor: pointer;
-    background-color: transparent;
-}
-
-#netflix-message-overlay {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 5px;
-    font-size: 20px;
-    font-weight: 500;
     z-index: 10000;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.7) 30%,
+        rgba(0, 0, 0, 0.3) 65%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    padding: 80px 28px 16px;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #fff;
+    box-sizing: border-box;
+    transform: translateZ(0);
+    will-change: opacity;
+    pointer-events: auto;
+    transition: opacity 0.4s ease;
+    opacity: 1;
 }
 
 #mon-controleur-netflix.hidden {
@@ -71,473 +45,912 @@
     pointer-events: none;
 }
 
-.netflix-control-button {
-    background: transparent;
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
+/* ============================================================
+   PROGRESS ROW
+   ============================================================ */
+.netflix-progress-row {
+    width: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    padding: 8px 0;
+    box-sizing: border-box;
 }
 
-.netflix-control-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-}
-
-.netflix-control-button:active {
-    transform: scale(0.95);
-}
-
-#netflix-play-pause,
-#netflix-plein-ecran,
-#netflix-next-episode,
-#netflix-subtitle-toggle,
-#netflix-remove-toggle {
-    background-color: transparent;
-    border: none;
-    color: transparent;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-#netflix-play-pause:hover,
-#netflix-plein-ecran:hover,
-#netflix-subtitle-toggle:hover,
-#netflix-remove-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-}
-
-#netflix-play-pause:active,
-#netflix-plein-ecran:active,
-#netflix-subtitle-toggle:active,
-#netflix-remove-toggle:active {
-    transform: scale(0.95);
-}
-
+/* ============================================================
+   SCRUBBER BAR
+   ============================================================ */
 #netflix-barre-container {
     flex: 1;
-    height: 4px;
+    height: 3px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 2px;
-    overflow: hidden;
     cursor: pointer;
-    margin: 0 20px;
     position: relative;
-    transition: height 0.2s ease;
-    align-self: center; /* Center vertically within flex container */
+    transition: height 0.15s ease;
+    overflow: visible;
 }
 
 #netflix-barre-container:hover {
-    height: 6px;
+    height: 5px;
 }
 
-#netflix-barre-container:hover #netflix-barre-progression {
-    background-color: #E50914;
-}
-
-#netflix-barre-progression {
+/* Buffered track */
+#netflix-barre-buffer {
+    position: absolute;
+    top: 0;
+    left: 0;
     height: 100%;
-    background-color: #E50914;
     width: 0%;
+    background-color: rgba(255, 255, 255, 0.35);
+    border-radius: 2px;
+    pointer-events: none;
+    will-change: width;
+}
+
+/* Played (red) fill */
+#netflix-barre-progression {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: #E50914;
+    border-radius: 2px;
     will-change: width;
     transform: translateZ(0);
-    position: relative;
+    pointer-events: none;
 }
 
+/* Scrubber dot */
 #netflix-barre-progression::after {
     content: '';
     position: absolute;
     right: -6px;
     top: 50%;
     transform: translateY(-50%) scale(0);
-    width: 12px;
-    height: 12px;
+    width: 13px;
+    height: 13px;
     background-color: #E50914;
     border-radius: 50%;
-    transition: transform 0.2s ease;
+    transition: transform 0.15s ease;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
 }
 
 #netflix-barre-container:hover #netflix-barre-progression::after {
     transform: translateY(-50%) scale(1);
 }
 
-#netflix-temps {
-    margin: 0 15px;
-    width: auto;
+/* ============================================================
+   PROGRESS TOOLTIP
+   ============================================================ */
+#netflix-progress-tooltip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
     font-weight: 500;
-    font-size: 14px;
-    opacity: 0.9;
-    letter-spacing: 0.5px;
+    line-height: 1.2;
     white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    z-index: 10002;
 }
 
-#netflix-volume-container {
+#netflix-progress-tooltip::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -5px;
+    border-width: 5px 4px 0;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.85) transparent transparent;
+}
+
+#netflix-progress-tooltip[data-visible="1"] {
+    opacity: 1;
+}
+
+/* ============================================================
+   CONTROLS ROW — three-section layout
+   ============================================================ */
+.netflix-controls-row {
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    height: 44px;
     position: relative;
 }
 
-#netflix-volume-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.controls-left {
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+    gap: 2px;
+    flex-shrink: 0;
+    z-index: 1;
 }
 
-#netflix-volume-icon:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-#netflix-volume-slider-container {
-    width: 0;
-    overflow: hidden;
-    transition: width 0.3s ease;
-    height: 40px;
-    display: flex;
-    align-items: center;
-}
-
-#netflix-volume-container:hover #netflix-volume-slider-container {
-    width: 100px;
-}
-
-#netflix-volume-slider {
-    width: 80px;
-    height: 4px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    outline: none;
-    margin-left: 10px;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-#netflix-volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    background-color: white;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-#netflix-volume-slider::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    background-color: white;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
-}
-
-#netflix-volume-slider:hover {
-    height: 5px;
-}
-
-.controls-left, .controls-right {
-    display: flex;
-    align-items: center;
-    height: 40px; /* Fixed height to ensure consistent alignment */
-}
-
+/* Center title info — absolutely centered */
 .controls-center {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 0;
 }
 
-/* Episodes list styles */
-#netflix-episodes-list {
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: auto;
+    z-index: 1;
+}
+
+/* ============================================================
+   TITLE / EPISODE INFO  (centered)
+   ============================================================ */
+#netflix-title-info {
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.95);
+    letter-spacing: 0.2px;
+    user-select: none;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+#netflix-title-info .nf-show-name {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+#netflix-title-info .nf-ep-info {
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   BUTTONS — base
+   ============================================================ */
+.netflix-control-button,
+#netflix-play-pause,
+#netflix-plein-ecran,
+#netflix-next-episode,
+#netflix-autoplay-toggle,
+#netflix-subtitle-toggle,
+#netflix-remove-toggle,
+#netflix-episodes-button,
+#netflix-speed-toggle,
+#netflix-skip-back,
+#netflix-skip-forward {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 44px;
+    min-width: 40px;
+    padding: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease, opacity 0.2s ease;
+    outline: none;
+    flex-shrink: 0;
+}
+
+.netflix-control-button:hover,
+#netflix-play-pause:hover,
+#netflix-plein-ecran:hover,
+#netflix-next-episode:hover,
+#netflix-autoplay-toggle:hover,
+#netflix-subtitle-toggle:hover,
+#netflix-remove-toggle:hover,
+#netflix-episodes-button:hover,
+#netflix-speed-toggle:hover,
+#netflix-skip-back:hover,
+#netflix-skip-forward:hover {
+    transform: scale(1.1);
+}
+
+.netflix-control-button:active,
+#netflix-play-pause:active,
+#netflix-plein-ecran:active,
+#netflix-next-episode:active,
+#netflix-autoplay-toggle:active,
+#netflix-subtitle-toggle:active,
+#netflix-remove-toggle:active,
+#netflix-episodes-button:active,
+#netflix-skip-back:active,
+#netflix-skip-forward:active {
+    transform: scale(0.93);
+}
+
+/* Play / Pause slightly larger */
+#netflix-play-pause svg {
+    width: 26px;
+    height: 26px;
+}
+
+/* Speed button — text pill */
+#netflix-speed-toggle {
+    width: auto;
+    min-width: 36px;
+    padding: 0 5px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: -0.3px;
+    color: #fff;
+}
+
+/* ============================================================
+   VOLUME CONTROL — vertical popup
+   ============================================================ */
+#netflix-volume-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 44px;
+    z-index: 10010;
+}
+
+#netflix-volume-icon {
+    width: 40px;
+    height: 44px;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    flex-shrink: 0;
+}
+
+#netflix-volume-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Vertical slider popup */
+#netflix-volume-popup {
     position: absolute;
-    bottom: 80px;
-    right: 20px;
-    width: 350px;
-    max-height: 70vh;
-    background-color: rgba(0, 0, 0, 0.9);
-    border-radius: 5px;
-    padding: 15px;
+    bottom: 100%;           /* flush against the icon — no gap */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 108px;
+    background: rgba(28, 28, 28, 0.92);
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 0 16px;   /* 16px bottom acts as the gap visually */
+    box-sizing: border-box;
+    opacity: 0;
+    pointer-events: none;
+    /* Delay before HIDING so mouse can travel from icon to popup */
+    transition: opacity 0.15s ease 0s;
+}
+
+#netflix-volume-container:hover #netflix-volume-popup {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
+}
+
+/* Keep popup visible when mouse is on the popup itself */
+#netflix-volume-popup:hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* The vertical range input — uses rotate to keep full styling control */
+#netflix-volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 76px;   /* becomes the track "height" after rotation */
+    height: 4px;   /* track thickness */
+    transform: rotate(-90deg);
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: transparent;
+    flex-shrink: 0;
+}
+
+/* Webkit track — red fill driven by --vol-pct */
+#netflix-volume-slider::-webkit-slider-runnable-track {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(
+        to right,
+        #E50914 0%,
+        #E50914 var(--vol-pct, 100%),
+        rgba(255,255,255,0.28) var(--vol-pct, 100%),
+        rgba(255,255,255,0.28) 100%
+    );
+}
+
+#netflix-volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    background-color: #E50914;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    margin-top: -4.5px; /* center on 4px track: (13-4)/2 = 4.5 */
+    border: none;
+}
+
+/* Firefox track */
+#netflix-volume-slider::-moz-range-track {
+    height: 4px;
+    background: rgba(255,255,255,0.28);
+    border-radius: 2px;
+}
+
+/* Firefox thumb */
+#netflix-volume-slider::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    background-color: #E50914;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   TIMESTAMP
+   ============================================================ */
+#netflix-temps {
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+    margin: 0 6px;
+    letter-spacing: 0.3px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   TITLE OVERLAY (top-left)
+   ============================================================ */
+#netflix-title-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 30px 80px;
+    background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.8) 0%,
+        rgba(0,0,0,0.35) 50%,
+        transparent 100%
+    );
+    z-index: 9998;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    opacity: 1;
+}
+
+#netflix-title-overlay.hidden {
+    opacity: 0;
+}
+
+#netflix-title-text {
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    margin: 0;
+}
+
+/* ============================================================
+   MESSAGE OVERLAY
+   ============================================================ */
+#netflix-message-overlay {
+    position: fixed;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.72);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    z-index: 10005;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   TRANSPARENT HIT AREAS
+   ============================================================ */
+#netflix-video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-color: transparent;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+#netflix-video-area-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 120px);
+    z-index: 99;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+/* ============================================================
+   EPISODES PANEL  — Netflix sidebar style
+   ============================================================ */
+#netflix-episodes-list {
+    position: fixed;
+    bottom: 72px;      /* sits above the control bar */
+    right: 0;
+    top: auto;
+    width: 420px;
+    height: 48vh;
+    min-height: 280px;
+    max-height: 520px;
+    background-color: rgba(20, 20, 20, 0.97);
     z-index: 10001;
     display: none;
-    color: white;
-    font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-    overflow-y: auto;
+    flex-direction: column;
+    color: #fff;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: -4px -4px 24px rgba(0,0,0,0.5);
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
 }
 
 #netflix-episodes-list.visible {
-    display: block;
+    display: flex;
 }
 
-#netflix-episodes-list h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-    text-align: center;
+/* === Season picker view === */
+.nf-seasons-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
 
-.season-container {
-    margin-bottom: 25px;
+.nf-seasons-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    padding: 28px 24px 16px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
 }
 
-.season-container:last-child {
-    margin-bottom: 0;
+.nf-season-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0 24px;
 }
 
-.season-header {
-    font-size: 16px;
-    font-weight: 500;
-    color: #E50914;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    margin-bottom: 12px;
-}
-
-.episode-item {
+.nf-season-item {
     display: flex;
     align-items: center;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-bottom: 8px;
-}
-
-.episode-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.episode-item.current {
-    background-color: rgba(229, 9, 20, 0.3);
-}
-
-.episode-number {
-    min-width: 30px;
+    padding: 12px 24px;
+    font-size: 15px;
     font-weight: 500;
-    color: #E50914;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    transition: background 0.15s;
+    border: 1px solid transparent;
+    margin: 2px 4px;
+    border-radius: 3px;
 }
 
-.episode-title {
+.nf-season-item:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.nf-season-item.active {
+    color: #fff;
+    border-color: rgba(255,255,255,0.4);
+}
+
+.nf-season-check {
+    width: 20px;
+    margin-right: 10px;
+    color: #fff;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+/* === Episode list view === */
+.nf-episodes-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.nf-ep-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 20px 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.nf-ep-header-back {
+    font-size: 18px;
+    margin-right: 12px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.nf-ep-header-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.nf-ep-list {
     flex: 1;
-    margin-left: 10px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.nf-ep-list::-webkit-scrollbar { width: 6px; }
+.nf-ep-list::-webkit-scrollbar-track { background: transparent; }
+.nf-ep-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 3px;
+}
+
+/* Episode row (collapsed) */
+.nf-ep-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    gap: 16px;
+}
+
+.nf-ep-row:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.nf-ep-num {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    min-width: 20px;
+    flex-shrink: 0;
+}
+
+.nf-ep-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.episode-duration {
-    margin-left: 10px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9em;
+/* Red progress line (right side of row) */
+.nf-ep-progress-line {
+    flex-shrink: 0;
+    width: 60px;
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 1px;
+    overflow: hidden;
 }
 
-#netflix-episodes-button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 15px;
-    cursor: pointer;
+.nf-ep-progress-fill {
+    height: 100%;
+    background: #E50914;
+    border-radius: 1px;
+    width: 0%;
+}
+
+/* Expanded (current) episode row */
+.nf-ep-row.current {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+    background: transparent;
+}
+
+.nf-ep-row.current .nf-ep-row-top {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.nf-ep-row.current .nf-ep-num {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+}
+
+.nf-ep-row.current .nf-ep-name {
+    color: #fff;
+    white-space: normal;
+}
+
+.nf-ep-row.current .nf-ep-progress-line {
+    margin-top: 2px;
+}
+
+/* Thumbnail + synopsis (only for current episode) */
+.nf-ep-expanded {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+}
+
+.nf-ep-thumb {
+    width: 120px;
+    height: 68px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-#netflix-episodes-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-}
-
-#netflix-episodes-button:active {
-    transform: scale(0.95);
-}
-
-/* Subtitle settings panel styles */
-#netflix-subtitle-settings {
-    position: absolute;
-    bottom: 80px;
-    right: 20px;
-    width: 350px;
-    background-color: rgba(0, 0, 0, 0.9);
-    border-radius: 5px;
-    padding: 15px;
-    z-index: 10001;
-    display: none;
-    color: white;
-    font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
-}
-
-#netflix-subtitle-settings.visible {
+.nf-ep-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
-#netflix-subtitle-settings h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 16px;
-    font-weight: 500;
-    color: #E50914;
-}
-
-.subtitle-settings-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.subtitle-settings-row:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.subtitle-settings-label {
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.subtitle-settings-control {
-    display: flex;
-    align-items: center;
-}
-
-.subtitle-select {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
+.nf-ep-synopsis {
+    flex: 1;
     font-size: 13px;
-    outline: none;
+    font-weight: 400;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
 
-.subtitle-select option {
-    background-color: #333;
-}
-
-.subtitle-toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-}
-
-.subtitle-toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.subtitle-toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
+/* ============================================================
+   AUDIO / SUBTITLE PANEL — two-column
+   ============================================================ */
+#netflix-subtitle-settings {
+    position: fixed;
+    bottom: 72px;      /* sits above the control bar */
     right: 0;
-    bottom: 0;
-    background-color: #444;
-    transition: .3s;
-    border-radius: 20px;
+    top: auto;
+    width: 480px;
+    height: 48vh;
+    min-height: 280px;
+    max-height: 520px;
+    background-color: rgba(20, 20, 20, 0.97);
+    z-index: 10001;
+    display: none;
+    flex-direction: row;
+    color: #fff;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    box-shadow: -4px -4px 24px rgba(0,0,0,0.5);
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
 }
 
-.subtitle-toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
+#netflix-subtitle-settings.visible {
+    display: flex;
+}
+
+/* Each column */
+.nf-lang-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.nf-lang-col + .nf-lang-col {
+    border-left: 1px solid rgba(255,255,255,0.12);
+}
+
+.nf-lang-col-header {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    padding: 28px 20px 12px;
+    flex-shrink: 0;
+    letter-spacing: 0.2px;
+}
+
+.nf-lang-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.nf-lang-list::-webkit-scrollbar { width: 4px; }
+.nf-lang-list::-webkit-scrollbar-track { background: transparent; }
+.nf-lang-list::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.18);
+    border-radius: 2px;
+}
+
+/* A separator between groups */
+.nf-lang-separator {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 6px 0;
+}
+
+/* Individual language option row */
+.nf-lang-item {
+    display: flex;
+    align-items: center;
+    padding: 9px 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    transition: background 0.12s;
+    gap: 12px;
+}
+
+.nf-lang-item:hover {
+    background: rgba(255,255,255,0.07);
+    color: #fff;
+}
+
+.nf-lang-item.active {
+    color: #fff;
+}
+
+.nf-lang-check {
+    font-size: 14px;
+    color: #fff;
     width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
+    flex-shrink: 0;
+    opacity: 0;
 }
 
-input:checked + .subtitle-toggle-slider {
-    background-color: #E50914;
+.nf-lang-item.active .nf-lang-check {
+    opacity: 1;
 }
 
-input:focus + .subtitle-toggle-slider {
-    box-shadow: 0 0 1px #E50914;
+.nf-lang-label {
+    flex: 1;
 }
 
-input:checked + .subtitle-toggle-slider:before {
-    transform: translateX(20px);
+/* ============================================================
+   SKIP INTRO / CREDITS BUTTON
+   ============================================================ */
+#netflix-skip-intro {
+    position: fixed;
+    bottom: 110px;
+    right: 28px;
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.85);
+    padding: 8px 20px;
+    border-radius: 3px;
+    font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 10003;
+    display: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+    letter-spacing: 0.3px;
 }
 
-/* Custom dual subtitles styling */
+#netflix-skip-intro:hover {
+    background-color: rgba(255,255,255,0.15);
+    border-color: #fff;
+}
+
+#netflix-skip-intro.visible {
+    display: block;
+}
+
+/* ============================================================
+   DUAL SUBTITLE RENDERING
+   ============================================================ */
 .player-timedtext[dual-subtitles='true'] {
-    position: fixed !important; /* Use fixed instead of absolute to ensure consistent positioning */
-    bottom: 80px !important;  /* Position above the controller */
-    top: auto !important; /* Override any top positioning from Netflix */
+    position: fixed !important;
+    bottom: 90px !important;
+    top: auto !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
     display: flex !important;
     justify-content: center !important;
-    align-items: flex-end !important; /* Align to bottom */
+    align-items: flex-end !important;
     pointer-events: none !important;
-    z-index: 9996 !important; /* Make sure it's above video but below controls */
-    transform: none !important; /* Reset any transforms */
+    z-index: 9996 !important;
+    transform: none !important;
 }
 
 .player-timedtext[dual-subtitles='true'] .player-timedtext-text-container {
-    max-width: 80% !important; /* Limit width to prevent overflow */
+    max-width: 80% !important;
     margin: 0 auto !important;
-    background-color: rgba(0, 0, 0, var(--subtitle-bg-opacity, 0.5));
-    padding: 8px 16px;
-    border-radius: 4px;
+    background-color: rgba(0,0,0,var(--subtitle-bg-opacity,0.5));
+    padding: 6px 14px;
+    border-radius: 3px;
     text-align: center !important;
-    position: relative !important; /* Reset any absolute positioning */
-    left: 0 !important; /* Reset any left positioning */
-    right: 0 !important; /* Reset any right positioning */
-    transform: none !important; /* Reset any transforms */
-    width: auto !important; /* Let the width be determined by content with max-width limit */
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: auto !important;
 }
 
-/* Fix subtitle text to prevent overflow and ensure proper wrapping */
 .player-timedtext[dual-subtitles='true'] .player-timedtext-text-container span {
-    white-space: normal !important; /* Allow text to wrap */
-    overflow-wrap: break-word !important; /* Break long words if needed */
-    word-break: break-word !important; /* Break words at appropriate points */
-    display: inline-block !important; /* Keep the text behavior consistent */
-    max-width: 100% !important; /* Prevent overflow */
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    display: inline-block !important;
+    max-width: 100% !important;
 }
 
 .primary-subtitle {
     color: var(--primary-color, white);
     font-size: var(--subtitle-size, 1.4em);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 500;
     line-height: 1.4;
     text-align: center !important;
@@ -559,189 +972,8 @@ input:checked + .subtitle-toggle-slider:before {
     overflow-wrap: break-word !important;
 }
 
-/* Subtitle color options */
-.color-option {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.color-option.selected {
-    border-color: white;
-}
-
-.color-white { background-color: white; }
-.color-yellow { background-color: #FFD700; }
-.color-cyan { background-color: #00FFFF; }
-.color-green { background-color: #7FFF00; }
-.color-pink { background-color: #FF69B4; }
-
-/* Size options */
-.size-option {
-    padding: 3px 8px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    margin-right: 5px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-.size-option.selected {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* For proper subtitle sizing */
 :root {
-    --small-subtitle-size: 2.4em;
+    --small-subtitle-size:  2.4em;
     --medium-subtitle-size: 2.7em;
-    --large-subtitle-size: 3em;
+    --large-subtitle-size:  3em;
 }
-
-/* Episodes list panel styles */
-#netflix-episodes-list {
-    position: absolute;
-    bottom: 80px;
-    right: 20px;
-    width: 400px;
-    max-height: 70vh;
-    background-color: rgba(0, 0, 0, 0.95);
-    border-radius: 8px;
-    padding: 20px;
-    z-index: 10001;
-    display: none;
-    color: white;
-    font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #E50914 rgba(255, 255, 255, 0.1);
-}
-
-#netflix-episodes-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-#netflix-episodes-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
-#netflix-episodes-list::-webkit-scrollbar-thumb {
-    background: #E50914;
-    border-radius: 4px;
-}
-
-#netflix-episodes-list.visible {
-    display: block;
-}
-
-#netflix-episodes-list h3 {
-    margin: 0 0 20px 0;
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
-    text-align: left;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.episode-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-bottom: 8px;
-}
-
-.episode-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.episode-item.current {
-    background-color: rgba(229, 9, 20, 0.3);
-}
-
-.episode-number {
-    min-width: 30px;
-    font-weight: 500;
-    color: #E50914;
-}
-
-.episode-title {
-    flex: 1;
-    margin-left: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.episode-duration {
-    margin-left: 10px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9em;
-}
-
-#netflix-speed-toggle {
-    background-color: transparent;
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 23px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-#netflix-speed-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: scale(1.05);
-}
-
-#netflix-speed-toggle:active {
-    transform: scale(0.95);
-}
-
-#netflix-progress-tooltip {
-    position: fixed;                 /* was absolute */
-    top: -32px;                      /* JS will override */
-    left: 0;                         /* JS will override */
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    line-height: 1;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .15s ease, transform .15s ease;
-    z-index: 10002;
-  }
-  
-  #netflix-progress-tooltip::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
-  }
-  
-  #netflix-progress-tooltip[data-visible="1"] {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-2px);
-  }
-  

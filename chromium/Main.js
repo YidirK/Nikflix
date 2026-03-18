@@ -1,6 +1,19 @@
+// Early CSS to hide restriction screens before they even render
+const earlyStyle = document.createElement("style");
+earlyStyle.textContent = `
+  .nf-modal.interstitial-full-screen,
+  .nf-modal.uma-modal.two-section-uma,
+  .nf-modal.extended-diacritics-language.interstitial-full-screen,
+  .css-1nym653.modal-enter-done {
+    display: none !important;
+  }
+`;
+(document.head || document.documentElement).appendChild(earlyStyle);
+
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
+  "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
   "nf-modal uma-modal two-section-uma",
@@ -15,6 +28,7 @@ let state = {
   progressionBar: null,
   screenTime: null,
   videoElement: null,
+  currentEpisodeDuration: null,
   volumeSlider: null,
   lastScreenTime: -1,
   lastTotalTime: -1,
@@ -42,13 +56,6 @@ let state = {
   subtitleContainer: null,
   subtitleSettingsOpen: false,
   subtitleSettingsPanel: null,
-  primaryLanguage: "en", // Default primary language
-  secondaryLanguage: "es", // Default secondary language
-  subtitlePosition: "bottom", // Can be "bottom" or "top"
-  subtitleSize: "medium", // Can be "small", "medium", "large"
-  primaryColor: "white",
-  secondaryColor: "#FFD700", // Gold color for secondary language
-  subtitleBackgroundOpacity: 0.5,
 
   //Audio
   availableAudioTracks: [],
@@ -59,6 +66,17 @@ let state = {
 
   // Tooltip state
   progressTooltip: null,
+
+  // Autoplay next episode state
+  autoplayNextEpisode: false,
+
+  // Title overlay
+  titleOverlay: null,
+
+  // Center title info element + show title cache
+  _titleInfoEl: null,
+  _titleTextEl: null, 
+  _episodesShowTitle: "",
 };
 
 // Constants
@@ -127,7 +145,7 @@ window.addEventListener("message", (event) => {
 
       console.log(
         "Available subtitle tracks set to:",
-        state.availableAudioTracks
+        state.availableAudioTracks,
       );
     } else {
       console.warn("state is not defined or is invalid.");
@@ -149,7 +167,7 @@ window.addEventListener("message", (event) => {
 
       console.log(
         "Available subtitle tracks set to:",
-        state.availableSubtitleTracks
+        state.availableSubtitleTracks,
       );
     } else {
       console.warn("state is not defined or is invalid.");
@@ -158,106 +176,221 @@ window.addEventListener("message", (event) => {
 });
 
 /**
- * Show episodes list panel
+ * Build the episode list view for a given season
+ */
+function buildEpisodeListView(
+  panel,
+  seasons,
+  currentSeasonIndex,
+  curEpisodeId,
+) {
+  const season = seasons[currentSeasonIndex];
+  panel.innerHTML = "";
+
+  const view = document.createElement("div");
+  view.className = "nf-episodes-view";
+
+  // Header: back arrow + "Season N"
+  const header = document.createElement("div");
+  header.className = "nf-ep-header";
+  header.innerHTML = `
+    <span class="nf-ep-header-back">←</span>
+    <span class="nf-ep-header-title">Season ${season.seq}</span>
+  `;
+  header.addEventListener("click", (e) => {
+    e.stopPropagation(); // prevent outside-click handler from firing
+    buildSeasonPickerView(panel, seasons, currentSeasonIndex, curEpisodeId);
+  });
+
+  // Episode list
+  const list = document.createElement("div");
+  list.className = "nf-ep-list";
+
+  season.episodes.forEach((episode) => {
+    const isCurrent = episode.id.toString() === curEpisodeId;
+    const row = document.createElement("div");
+    row.className = "nf-ep-row" + (isCurrent ? " current" : "");
+    row.setAttribute("data-episode-id", episode.id);
+
+    if (isCurrent) {
+      // Expanded layout for current episode
+      row.innerHTML = `
+        <div class="nf-ep-row-top">
+          <span class="nf-ep-num">${episode.seq}</span>
+          <span class="nf-ep-name">${episode.title}</span>
+          <div class="nf-ep-progress-line"><div class="nf-ep-progress-fill" style="width:50%"></div></div>
+        </div>
+        <div class="nf-ep-expanded">
+          <div class="nf-ep-thumb">
+            ${
+              episode.stills && episode.stills[0]
+                ? `<img src="${episode.stills[0].url}" alt="${episode.title}" />`
+                : ""
+            }
+          </div>
+          <div class="nf-ep-synopsis">${episode.synopsis || ""}</div>
+        </div>
+      `;
+    } else {
+      row.innerHTML = `
+        <span class="nf-ep-num">${episode.seq}</span>
+        <span class="nf-ep-name">${episode.title}</span>
+        <div class="nf-ep-progress-line"><div class="nf-ep-progress-fill" style="width:0%"></div></div>
+      `;
+    }
+
+    row.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent outside-click from closing panel
+      if (!isCurrent) {
+        window.location.href = `https://www.netflix.com/watch/${episode.id}`;
+      }
+    });
+
+    list.appendChild(row);
+  });
+
+  // Scroll current episode into view after render
+  view.appendChild(header);
+  view.appendChild(list);
+  panel.appendChild(view);
+
+  requestAnimationFrame(() => {
+    const currentRow = list.querySelector(".current");
+    if (currentRow) {
+      currentRow.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+  });
+}
+
+/**
+ * Build the season picker view
+ */
+function buildSeasonPickerView(
+  panel,
+  seasons,
+  currentSeasonIndex,
+  curEpisodeId,
+) {
+  panel.innerHTML = "";
+
+  const view = document.createElement("div");
+  view.className = "nf-seasons-view";
+
+  const title = document.createElement("div");
+  title.className = "nf-seasons-title";
+  title.textContent = state._episodesShowTitle || "";
+
+  const list = document.createElement("div");
+  list.className = "nf-season-list";
+
+  seasons.forEach((season, idx) => {
+    const item = document.createElement("div");
+    item.className =
+      "nf-season-item" + (idx === currentSeasonIndex ? " active" : "");
+    item.innerHTML = `
+      <span class="nf-season-check">${idx === currentSeasonIndex ? "✓" : ""}</span>
+      Season ${season.seq}
+    `;
+    item.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent outside-click from closing panel
+      buildEpisodeListView(panel, seasons, idx, curEpisodeId);
+    });
+    list.appendChild(item);
+  });
+
+  view.appendChild(title);
+  view.appendChild(list);
+  panel.appendChild(view);
+}
+
+/**
+ * Show episodes list panel — Netflix two-view style
  */
 async function showEpisodesList() {
   const curEpisodeId = getIdFromUrl();
   if (!curEpisodeId) return;
 
+  // Remove existing panel
+  const existingPanel = document.getElementById("netflix-episodes-list");
+  if (existingPanel) {
+    existingPanel.remove();
+    state.episodesListOpen = false;
+    return;
+  }
+
   try {
     const response = await fetch(
       `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
-      {
-        credentials: "include",
-      }
+      { credentials: "include" },
     );
     const data = await response.json();
 
-    // Remove existing panel if any
-    const existingPanel = document.getElementById("netflix-episodes-list");
-    if (existingPanel) existingPanel.remove();
+    const seasons = (data.video.seasons || []).sort((a, b) => a.seq - b.seq);
 
-    // Create new panel
+    // Find which season the current episode belongs to
+    let currentSeasonIndex = 0;
+    seasons.forEach((season, idx) => {
+      if (season.episodes.some((ep) => ep.id.toString() === curEpisodeId)) {
+        currentSeasonIndex = idx;
+      }
+    });
+
+    // Cache show title
+    state._episodesShowTitle = data.video.title || "";
+
     const panel = document.createElement("div");
     panel.id = "netflix-episodes-list";
     panel.className = "visible";
-
-    // Order seasons by sequence number
-    const seasons = data.video.seasons.sort((a, b) => a.seq - b.seq);
-
-    panel.innerHTML = `
-            <h3>${data.video.title}</h3>
-            ${seasons
-              .map(
-                (season) => `
-                <div class="season-container">
-                    <div class="season-header">Season ${season.seq}</div>
-                    ${season.episodes
-                      .map(
-                        (episode) => `
-                        <div class="episode-item ${
-                          episode.id.toString() === curEpisodeId
-                            ? "current"
-                            : ""
-                        }" 
-                             data-episode-id="${episode.id}">
-                            <span class="episode-number">E${episode.seq}</span>
-                            <span class="episode-title">${episode.title}</span>
-                            <span class="episode-duration">${formatDuration(
-                              episode.runtime
-                            )}</span>
-                        </div>
-                    `
-                      )
-                      .join("")}
-                </div>
-            `
-              )
-              .join("")}
-        `;
-
     document.body.appendChild(panel);
     state.episodesListOpen = true;
 
-    // Add click handlers
-    panel.querySelectorAll(".episode-item").forEach((item) => {
-      item.addEventListener("click", () => {
-        const episodeId = item.getAttribute("data-episode-id");
-        if (episodeId) {
-          window.location.href = `https://www.netflix.com/watch/${episodeId}`;
+    // Default: episode list of the current season
+    buildEpisodeListView(panel, seasons, currentSeasonIndex, curEpisodeId);
+
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener("click", function outsideClick(e) {
+        if (
+          !panel.contains(e.target) &&
+          !e.target.closest("#netflix-episodes-button")
+        ) {
+          panel.remove();
+          state.episodesListOpen = false;
+          document.removeEventListener("click", outsideClick);
         }
       });
-    });
-
-    // Close panel when clicking outside
-    document.addEventListener("click", (e) => {
-      if (
-        !panel.contains(e.target) &&
-        !e.target.closest("#netflix-episodes-button")
-      ) {
-        panel.remove();
-        state.episodesListOpen = false;
-      }
-    });
+    }, 50);
   } catch (error) {
     console.error("Error fetching episodes:", error);
   }
 }
 
 /**
- * Update the progress bar and time display
+ * Update the progress bar, buffered bar, and time display
  */
 function updateProgression() {
   const { videoElement, progressionBar, screenTime } = state;
 
   if (!videoElement || !progressionBar || !screenTime) return;
 
-  if (videoElement.duration) {
-    const percentage = (videoElement.currentTime / videoElement.duration) * 100;
+  // Prefer cached metadata duration (fetched from Netflix metadata API).
+  const duration = state.currentEpisodeDuration || videoElement.duration;
+  if (duration) {
+    const percentage = (videoElement.currentTime / duration) * 100;
     progressionBar.style.width = `${percentage}%`;
 
+    // Update buffered bar
+    const bufferBar = document.getElementById("netflix-barre-buffer");
+    if (bufferBar && videoElement.buffered.length > 0) {
+      const buffered = videoElement.buffered.end(
+        videoElement.buffered.length - 1,
+      );
+      const bufferedPct = (buffered / duration) * 100;
+      bufferBar.style.width = `${bufferedPct}%`;
+    }
+
     const currentTime = Math.floor(videoElement.currentTime);
-    const totalTime = Math.floor(videoElement.duration);
+    const totalTime = Math.floor(duration);
 
     if (
       state.lastScreenTime !== currentTime ||
@@ -266,7 +399,7 @@ function updateProgression() {
       state.lastScreenTime = currentTime;
       state.lastTotalTime = totalTime;
       screenTime.textContent = `${timeFormat(currentTime)} / ${timeFormat(
-        totalTime
+        totalTime,
       )}`;
     }
   }
@@ -354,7 +487,7 @@ function cleanController() {
 
   // Also clean up the video area overlay
   const videoAreaOverlay = document.getElementById(
-    "netflix-video-area-overlay"
+    "netflix-video-area-overlay",
   );
   if (videoAreaOverlay) {
     videoAreaOverlay.remove();
@@ -376,6 +509,12 @@ function cleanController() {
   //tips button
   if (state.tipsButton) {
     state.tipsButton.remove();
+  }
+
+  // Remove title overlay
+  if (state.titleOverlay) {
+    state.titleOverlay.remove();
+    state.titleOverlay = null;
   }
 
   // Remove keyboard event listener if exists
@@ -406,17 +545,13 @@ function cleanController() {
     isControllerAdded: false,
     isControllerVisible: true,
     seekAmount: 10,
+    titleOverlay: null,
 
     // Keep subtitle preferences, reset other subtitle state
     subtitleEnabled: state.subtitleEnabled,
     bilingualEnabled: state.bilingualEnabled,
     primaryLanguage: state.primaryLanguage,
-    secondaryLanguage: state.secondaryLanguage,
     subtitlePosition: state.subtitlePosition,
-    subtitleSize: state.subtitleSize,
-    primaryColor: state.primaryColor,
-    secondaryColor: state.secondaryColor,
-    subtitleBackgroundOpacity: state.subtitleBackgroundOpacity,
 
     primarySubtitleTrack: null,
     secondarySubtitleTrack: null,
@@ -434,6 +569,9 @@ function showController() {
   if (!state.controllerElement) return;
 
   state.controllerElement.classList.remove("hidden");
+  if (state.titleOverlay) {
+    state.titleOverlay.classList.remove("hidden");
+  }
   if (state.backButton) {
     state.backButton.style.opacity = "1";
   }
@@ -444,7 +582,7 @@ function showController() {
 
   // Show cursor when controls are visible
   const videoAreaOverlay = document.getElementById(
-    "netflix-video-area-overlay"
+    "netflix-video-area-overlay",
   );
   if (videoAreaOverlay) {
     videoAreaOverlay.style.cursor = "pointer";
@@ -461,6 +599,9 @@ function showController() {
       !state.subtitleSettingsOpen
     ) {
       state.controllerElement.classList.add("hidden");
+      if (state.titleOverlay) {
+        state.titleOverlay.classList.add("hidden");
+      }
 
       if (state.backButton) {
         state.backButton.style.opacity = "0";
@@ -505,152 +646,134 @@ function showMessage(message, duration = 1500) {
 }
 
 /**
- * Create subtitle settings panel
- * @returns {HTMLElement} The settings panel element
+ * Create subtitle/audio panel — Netflix two-column style
+ * @returns {HTMLElement}
  */
 function createSubtitleSettings() {
-  // Create settings panel
   const panel = document.createElement("div");
   panel.id = SUBTITLE_SETTINGS_ID;
   panel.className = state.subtitleSettingsOpen ? "visible" : "";
 
-  // Create settings content
-  panel.innerHTML = `
-        <h3>Language Settings</h3>
-        
-        <div class="subtitle-settings-row">
-            <span class="subtitle-settings-label">Subtitles</span>
-            <div class="subtitle-settings-control">
-                <label class="subtitle-toggle-switch">
-                    <input type="checkbox" id="subtitle-toggle-checkbox">
-                    <span class="subtitle-toggle-slider"></span>
-                </label>
-            </div>
-        </div>
-        
-     
-        
-        <div class="subtitle-settings-row">
-            <span class="subtitle-settings-label">Audio Language</span>
-            <div class="subtitle-settings-control">
-                <select id="audio-language-select" class="subtitle-select">
-                    ${generateAudioLanguageOptions(state.audioLanguage)}
-                </select>
-            </div>
-        </div>
-        
-        <div class="subtitle-settings-row">
-            <span class="subtitle-settings-label">Subtitles Language</span>
-            <div class="subtitle-settings-control">
-                <select id="subtitle-language-select" class="subtitle-select">
-                    ${generateSubtitleLanguageOptions(state.substitleLanguage)}
-                </select>
-            </div>
-        </div>
-    `;
+  // --- Audio column ---
+  const audioCol = document.createElement("div");
+  audioCol.className = "nf-lang-col";
 
+  const audioHeader = document.createElement("div");
+  audioHeader.className = "nf-lang-col-header";
+  audioHeader.textContent = "Audio";
+
+  const audioList = document.createElement("div");
+  audioList.className = "nf-lang-list";
+  audioList.id = "nf-audio-list";
+
+  function renderAudioList() {
+    audioList.innerHTML = "";
+    if (state.availableAudioTracks.length === 0) {
+      audioList.innerHTML =
+        '<div class="nf-lang-item" style="color:rgba(255,255,255,0.35)">No audio tracks</div>';
+      return;
+    }
+    state.availableAudioTracks.forEach((track, index) => {
+      const isActive = String(index) === String(state.audioLanguage);
+      const item = document.createElement("div");
+      item.className = "nf-lang-item" + (isActive ? " active" : "");
+      item.innerHTML = `<span class="nf-lang-check">✓</span><span class="nf-lang-label">${track.displayName}</span>`;
+      item.addEventListener("click", () => {
+        state.audioLanguage = index;
+        window.dispatchEvent(
+          new CustomEvent("netflixAudioChange", { detail: index }),
+        );
+        setTimeout(() => {
+          doYourJob();
+          showMessage(`Audio: ${track.displayName}`, 2000);
+        }, 500);
+        renderAudioList();
+      });
+      audioList.appendChild(item);
+    });
+  }
+
+  audioCol.appendChild(audioHeader);
+  audioCol.appendChild(audioList);
+
+  // --- Subtitle column ---
+  const subCol = document.createElement("div");
+  subCol.className = "nf-lang-col";
+
+  const subHeader = document.createElement("div");
+  subHeader.className = "nf-lang-col-header";
+  subHeader.textContent = "Subtitles";
+
+  const subList = document.createElement("div");
+  subList.className = "nf-lang-list";
+  subList.id = "nf-subtitle-list";
+
+  function renderSubList() {
+    subList.innerHTML = "";
+
+    // "Off" option
+    const offActive = !state.subtitleEnabled;
+    const offItem = document.createElement("div");
+    offItem.className = "nf-lang-item" + (offActive ? " active" : "");
+    offItem.innerHTML = `<span class="nf-lang-check">✓</span><span class="nf-lang-label">Off</span>`;
+    offItem.addEventListener("click", () => {
+      state.subtitleEnabled = false;
+      window.dispatchEvent(
+        new CustomEvent("netflixSubtitleChange", { detail: 0 }),
+      );
+      setTimeout(() => {
+        doYourJob();
+        showMessage("Subtitles off", 2000);
+      }, 500);
+      renderSubList();
+    });
+    subList.appendChild(offItem);
+
+    const sep = document.createElement("div");
+    sep.className = "nf-lang-separator";
+    subList.appendChild(sep);
+
+    if (state.availableSubtitleTracks.length === 0) {
+      subList.innerHTML +=
+        '<div class="nf-lang-item" style="color:rgba(255,255,255,0.35)">No subtitle tracks</div>';
+      return;
+    }
+    state.availableSubtitleTracks.forEach((track, index) => {
+      if (index === 0) return; // skip the "off" track if the API includes it
+      const isActive =
+        state.subtitleEnabled &&
+        String(index) === String(state.substitleLanguage);
+      const item = document.createElement("div");
+      item.className = "nf-lang-item" + (isActive ? " active" : "");
+      item.innerHTML = `<span class="nf-lang-check">✓</span><span class="nf-lang-label">${track.displayName}</span>`;
+      item.addEventListener("click", () => {
+        state.subtitleEnabled = true;
+        state.substitleLanguage = index;
+        window.dispatchEvent(
+          new CustomEvent("netflixSubtitleChange", { detail: index }),
+        );
+        setTimeout(() => {
+          doYourJob();
+          showMessage(`Subtitles: ${track.displayName}`, 2000);
+        }, 500);
+        renderSubList();
+      });
+      subList.appendChild(item);
+    });
+  }
+
+  subCol.appendChild(subHeader);
+  subCol.appendChild(subList);
+
+  panel.appendChild(audioCol);
+  panel.appendChild(subCol);
   document.body.appendChild(panel);
 
-  // Add event listeners for settings controls
-  panel
-    .querySelector("#subtitle-toggle-checkbox")
-    .addEventListener("change", (e) => {
-      state.subtitleEnabled = e.target.checked;
+  // Populate lists
+  renderAudioList();
+  renderSubList();
 
-      const event = new CustomEvent("netflixSubtitleChange", {
-        detail: state.subtitleEnabled ? 1 : 0,
-      });
-
-      window.dispatchEvent(event);
-
-      setTimeout(() => {
-        doYourJob();
-        showMessage(
-          `${
-            state.subtitleEnabled ? "Subtitles enabled" : "Subtitles disabled"
-          }`,
-          2000
-        );
-      }, 500);
-    });
-
-  panel
-    .querySelector("#audio-language-select")
-    .addEventListener("change", (e) => {
-      state.audioLanguage = e.target.value;
-      console.log("e", e.target.value);
-      window.dispatchEvent(
-        new CustomEvent("netflixAudioChange", { detail: e.target.value })
-      );
-      setTimeout(() => {
-        doYourJob();
-        showMessage(
-          `Audio changed to ${
-            state.availableAudioTracks[e.target.value].displayName
-          } `,
-          2000
-        );
-      }, 500);
-    });
-
-  panel
-    .querySelector("#subtitle-language-select")
-    .addEventListener("change", (e) => {
-      const selectedValue = e.target.value;
-      state.subtitleLanguage = selectedValue;
-
-      window.dispatchEvent(
-        new CustomEvent("netflixSubtitleChange", { detail: selectedValue })
-      );
-
-      console.log("izan", state.availableSubtitleTracks[selectedValue]);
-      console.log("caca de vache", state.subtitleEnabled);
-
-      setTimeout(() => {
-        doYourJob();
-        state.subtitleEnabled = selectedValue !== "0";
-
-        // change checkbox etat
-        panel.querySelector("#subtitle-toggle-checkbox").checked =
-          state.subtitleEnabled;
-
-        showMessage(
-          `Subtitle changed to ${
-            state.availableSubtitleTracks[selectedValue]?.displayName ||
-            "Unknown"
-          }`,
-          2000
-        );
-      }, 500);
-    });
   return panel;
-}
-
-/**
- * Generate HTML options for language dropdown
- * @param {string} selectedLang - Currently selected language code
- * @returns {string} HTML string of options
- */
-function generateAudioLanguageOptions(selectedLang) {
-  let optionsHTML = "";
-  if (state.availableAudioTracks.length > 0) {
-    state.availableAudioTracks.forEach((track, index) => {
-      const isSelected = track.key === selectedLang ? "selected" : "";
-      optionsHTML += `<option value="${index}" ${isSelected}>${track.displayName}</option>`;
-    });
-  }
-  return optionsHTML;
-}
-function generateSubtitleLanguageOptions(selectedLang) {
-  let optionsHTML = "";
-
-  if (state.availableSubtitleTracks.length > 0) {
-    state.availableSubtitleTracks.forEach((track, index) => {
-      const isSelected = track.key === selectedLang ? "selected" : "";
-      optionsHTML += `<option value="${index}" ${isSelected}>${track.displayName}</option>`;
-    });
-  }
-  return optionsHTML;
 }
 
 /**
@@ -661,19 +784,32 @@ function toggleSubtitleSettings() {
 
   if (!state.subtitleSettingsPanel) {
     state.subtitleSettingsPanel = createSubtitleSettings();
+  } else {
+    // Rebuild lists to reflect latest track state
+    const audioList =
+      state.subtitleSettingsPanel.querySelector("#nf-audio-list");
+    const subList =
+      state.subtitleSettingsPanel.querySelector("#nf-subtitle-list");
+    if (audioList) audioList.innerHTML = "";
+    if (subList) subList.innerHTML = "";
+    // Re-create to pick up fresh track lists
+    state.subtitleSettingsPanel.remove();
+    state.subtitleSettingsPanel = createSubtitleSettings();
+    if (state.subtitleSettingsOpen) {
+      state.subtitleSettingsPanel.classList.add("visible");
+    }
+    return;
   }
 
   if (state.subtitleSettingsOpen) {
     state.subtitleSettingsPanel.classList.add("visible");
-
-    // Don't hide controller when settings are open
     if (state.controllerHideTimer) {
       clearTimeout(state.controllerHideTimer);
       state.controllerHideTimer = null;
     }
   } else {
     state.subtitleSettingsPanel.classList.remove("visible");
-    showController(); // Restart controller hide timer
+    showController();
   }
 }
 
@@ -697,6 +833,7 @@ function setupKeyboardShortcuts() {
     // Always ensure video element is current
     const videoElement = document.querySelector("video");
     if (!videoElement) return;
+    document.querySelector("video").disablePictureInPicture = false;
 
     // Always show controller when key is pressed if the controller exists
     if (state.controllerElement) {
@@ -749,6 +886,26 @@ function setupKeyboardShortcuts() {
           state.volumeSlider.value = videoElement.volume * 100;
         }
         showMessage(`Volume: ${Math.round(videoElement.volume * 100)}%`);
+        break;
+
+      case "f": // F key - toggle fullscreen
+        e.preventDefault();
+        toggleFullScreen();
+        break;
+
+      case "m": // M key - toggle mute
+        e.preventDefault();
+        videoElement.muted = !videoElement.muted;
+        if (state.volumeSlider) {
+          state.volumeSlider.value = videoElement.muted
+            ? 0
+            : videoElement.volume * 100;
+        }
+        showMessage(
+          videoElement.muted
+            ? "Muted"
+            : `Volume: ${Math.round(videoElement.volume * 100)}%`,
+        );
         break;
     }
   };
@@ -853,6 +1010,9 @@ function createVideoOverlay() {
 }
 
 function createVideoAreaOverlay() {
+  const curEpisodeId = getIdFromUrl();
+  if (!curEpisodeId) return null; // If we can't get the episode ID, we won't create the overlay
+
   const videoAreaOverlay = document.createElement("div");
   videoAreaOverlay.id = "netflix-video-area-overlay";
   videoAreaOverlay.style.position = "fixed";
@@ -950,12 +1110,15 @@ function addMediaController() {
   state.controllerElement = document.createElement("div");
   state.controllerElement.id = CONTROLLER_ID;
 
-  // Create container divs for better layout
+  // Two-row Netflix layout
+  const progressRow = document.createElement("div");
+  progressRow.className = "netflix-progress-row";
+
+  const controlsRow = document.createElement("div");
+  controlsRow.className = "netflix-controls-row";
+
   const controlsLeft = document.createElement("div");
   controlsLeft.className = "controls-left";
-
-  const controlsCenter = document.createElement("div");
-  controlsCenter.className = "controls-center";
 
   const controlsRight = document.createElement("div");
   controlsRight.className = "controls-right";
@@ -1006,6 +1169,10 @@ function addMediaController() {
   const barreContainer = document.createElement("div");
   barreContainer.id = "netflix-barre-container";
 
+  // Buffered indicator sits behind the red fill
+  const bufferBar = document.createElement("div");
+  bufferBar.id = "netflix-barre-buffer";
+
   state.progressionBar = document.createElement("div");
   state.progressionBar.id = "netflix-barre-progression";
 
@@ -1017,14 +1184,16 @@ function addMediaController() {
   state.progressTooltip = progressTooltip;
 
   function updateTooltipPosition(e) {
-    if (!state.videoElement || !state.videoElement.duration) return;
+    const duration =
+      state.currentEpisodeDuration || state.videoElement?.duration;
+    if (!state.videoElement || !duration) return;
 
     const rect = barreContainer.getBoundingClientRect();
     let x = e.clientX - rect.left;
     x = Math.max(0, Math.min(rect.width, x)); // clamp within bar
 
     const pct = x / rect.width;
-    const seconds = pct * state.videoElement.duration;
+    const seconds = pct * duration;
 
     // position in viewport coords (center over the cursor)
     progressTooltip.style.left = `${rect.left + x}px`;
@@ -1045,7 +1214,7 @@ function addMediaController() {
   state.screenTime = document.createElement("div");
   state.screenTime.id = "netflix-temps";
 
-  // Volume control
+  // Volume control — vertical popup
   const volumeContainer = document.createElement("div");
   volumeContainer.id = "netflix-volume-container";
 
@@ -1054,15 +1223,30 @@ function addMediaController() {
   volumeIcon.innerHTML =
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
 
-  const volumeSliderContainer = document.createElement("div");
-  volumeSliderContainer.id = "netflix-volume-slider-container";
+  // Sync icon on init
+  if (state.videoElement.muted || state.videoElement.volume === 0) {
+    volumeIcon.innerHTML =
+      '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>';
+  }
+
+  // Vertical slider popup above the volume button
+  const volumePopup = document.createElement("div");
+  volumePopup.id = "netflix-volume-popup";
 
   state.volumeSlider = document.createElement("input");
   state.volumeSlider.type = "range";
   state.volumeSlider.id = "netflix-volume-slider";
   state.volumeSlider.min = "0";
   state.volumeSlider.max = "100";
-  state.volumeSlider.value = state.videoElement.volume * 100;
+  const initVol = state.videoElement.muted
+    ? 0
+    : state.videoElement.volume * 100;
+  state.volumeSlider.value = initVol;
+  state.volumeSlider.style.setProperty("--vol-pct", `${initVol}%`);
+
+  volumePopup.appendChild(state.volumeSlider);
+  volumeContainer.appendChild(volumePopup);
+  volumeContainer.appendChild(volumeIcon);
 
   const handleControlsClick = (e) => {
     if (
@@ -1097,10 +1281,7 @@ function addMediaController() {
     ) {
       // Trigger next episode action
       jumpToNextEpisode();
-    } else if (
-      e.target === episodesButton ||
-      e.target.closest("#netflix-episodes-button")
-    ) {
+    } else if (e.target.closest("#netflix-episodes-button")) {
       // Toggle episodes list
       const panel = document.getElementById("netflix-episodes-list");
       if (panel) {
@@ -1130,10 +1311,11 @@ function addMediaController() {
     const volume = e.target.value / 100;
     state.videoElement.volume = volume;
     state.videoElement.muted = volume === 0;
-    volumeIcon.innerHTML =
-      volume === 0
-        ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>'
-        : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
+    e.target.style.setProperty("--vol-pct", `${e.target.value}%`);
+    const isMuted = volume === 0;
+    volumeIcon.innerHTML = isMuted
+      ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>'
+      : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
   });
 
   state.controllerElement.addEventListener("click", handleControlsClick);
@@ -1146,32 +1328,69 @@ function addMediaController() {
     }
   });
 
-  // === Speed toggle button ===
+  // === Speed toggle button — shows text label (Netflix style) ===
+  const speedOptions = [1, 1.25, 1.5, 1.75, 2];
+  let currentSpeedIndex = 0;
+
   const speedToggleButton = document.createElement("button");
   speedToggleButton.id = "netflix-speed-toggle";
-  speedToggleButton.title = "Speed: 1x";
-  speedToggleButton.innerHTML = `
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" role="img" viewBox="0 0 24 24" width="24" height="24" data-icon="InternetSpeedStandard" aria-hidden="true">
-<path fill="currentColor" d="M19.0569 6.27006C15.1546 2.20629 8.84535 2.20629 4.94312 6.27006C1.01896 10.3567 1.01896 16.9985 4.94312 21.0852L3.50053 22.4704C-1.16684 17.6098 -1.16684 9.7454 3.50053 4.88481C8.18984 0.0013696 15.8102 0.0013696 20.4995 4.88481C25.1668 9.7454 25.1668 17.6098 20.4995 22.4704L19.0569 21.0852C22.981 16.9985 22.981 10.3567 19.0569 6.27006ZM15 14.0001C15 15.6569 13.6569 17.0001 12 17.0001C10.3431 17.0001 9 15.6569 9 14.0001C9 12.3432 10.3431 11.0001 12 11.0001C12.4632 11.0001 12.9018 11.105 13.2934 11.2924L16.2929 8.29296L17.7071 9.70717L14.7076 12.7067C14.895 13.0983 15 13.5369 15 14.0001Z" clip-rule="evenodd" fill-rule="evenodd"></path>
-</svg>
-`;
-
-  let speedOptions = [1, 1.25, 1.5, 1.75, 2];
-  let currentSpeedIndex = 0;
+  speedToggleButton.title = "Playback speed";
+  speedToggleButton.textContent = "1×";
 
   speedToggleButton.addEventListener("click", () => {
     currentSpeedIndex = (currentSpeedIndex + 1) % speedOptions.length;
     if (state.videoElement) {
       state.videoElement.playbackRate = speedOptions[currentSpeedIndex];
-      speedToggleButton.title = `Speed: ${speedOptions[currentSpeedIndex]}x`;
-      showMessage(`Speed: ${speedOptions[currentSpeedIndex]}x`);
+      const label =
+        speedOptions[currentSpeedIndex] === 1
+          ? "1×"
+          : `${speedOptions[currentSpeedIndex]}×`;
+      speedToggleButton.textContent = label;
+      showMessage(`Speed: ${speedOptions[currentSpeedIndex]}×`);
     }
   });
 
   // Append to right controls bar
   controlsRight.appendChild(speedToggleButton);
 
-  // === End of Video Speed Control Integration ===
+  // === Autoplay Next Episode Toggle ===
+  const autoplayToggleButton = document.createElement("button");
+  autoplayToggleButton.id = "netflix-autoplay-toggle";
+  autoplayToggleButton.title = "Autoplay: OFF";
+  autoplayToggleButton.innerHTML = `
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 -960 960 960"><path fill="white" d="M380-300v-360l280 180zM480-40q-108 0-202.5-49.5T120-228v108H40v-240h240v80h-98q51 75 129.5 117.5T480-120q115 0 208.5-66T820-361l78 18q-45 136-160 219.5T480-40M42-520q7-67 32-128.5T143-762l57 57q-32 41-52 87.5T123-520zm214-241-57-57q53-44 114-69.5T440-918v80q-51 5-97 25t-87 52m449 0q-41-32-87.5-52T520-838v-80q67 6 128.5 31T762-818zm133 241q-5-51-25-97.5T761-705l57-57q44 52 69 113.5T918-520z"/></svg>
+`;
+
+  // Load autoplay preference from storage
+  chrome.storage.local.get(["autoplayNextEpisode"], (result) => {
+    if (result.autoplayNextEpisode !== undefined) {
+      state.autoplayNextEpisode = result.autoplayNextEpisode;
+      updateAutoplayButton();
+    }
+  });
+
+  function updateAutoplayButton() {
+    if (state.autoplayNextEpisode) {
+      autoplayToggleButton.title = "Autoplay: ON";
+      autoplayToggleButton.style.opacity = "1";
+    } else {
+      autoplayToggleButton.title = "Autoplay: OFF";
+      autoplayToggleButton.style.opacity = "0.6";
+    }
+  }
+
+  autoplayToggleButton.addEventListener("click", () => {
+    state.autoplayNextEpisode = !state.autoplayNextEpisode;
+    chrome.storage.local.set({
+      autoplayNextEpisode: state.autoplayNextEpisode,
+    });
+    updateAutoplayButton();
+    showMessage(
+      `Autoplay ${state.autoplayNextEpisode ? "enabled" : "disabled"}`,
+    );
+  });
+
+  // === End of Autoplay Next Episode Integration ===
 
   state.videoElement.addEventListener("play", () => {
     if (state.buttonPlayPause)
@@ -1187,6 +1406,30 @@ function addMediaController() {
     if (state.controllerElement) {
       state.controllerElement.classList.remove("hidden");
       state.isControllerVisible = true;
+    }
+  });
+
+  // Listen for video end event for autoplay next episode
+  state.videoElement.addEventListener("ended", () => {
+    if (state.autoplayNextEpisode) {
+      showMessage("Playing next episode...");
+      setTimeout(() => {
+        jumpToNextEpisode();
+      }, 1500);
+    }
+  });
+
+  state.videoElement.addEventListener("volumechange", () => {
+    const isMuted = state.videoElement.muted || state.videoElement.volume === 0;
+
+    if (state.volumeSlider) {
+      state.volumeSlider.value = isMuted ? 0 : state.videoElement.volume * 100;
+    }
+
+    if (volumeIcon) {
+      volumeIcon.innerHTML = isMuted
+        ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>'
+        : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
     }
   });
 
@@ -1255,41 +1498,103 @@ function addMediaController() {
 
   // Set up keyboard shortcuts
 
-  volumeSliderContainer.appendChild(state.volumeSlider);
-  volumeContainer.appendChild(volumeIcon);
-  volumeContainer.appendChild(volumeSliderContainer);
+  volumeContainer.appendChild(volumePopup);
+  // volumeIcon already added above inside volumeContainer
 
+  // Build progress bar (buffer then red fill)
+  barreContainer.appendChild(bufferBar);
   barreContainer.appendChild(state.progressionBar);
 
-  // Create a container for the progress bar to ensure vertical alignment
-  const progressContainer = document.createElement("div");
-  progressContainer.style.display = "flex";
-  progressContainer.style.alignItems = "center"; // Center items vertically
-  progressContainer.style.flex = "1";
-  progressContainer.appendChild(barreContainer);
+  // === Skip Back 10s button ===
+  const skipBackButton = document.createElement("button");
+  skipBackButton.id = "netflix-skip-back";
+  skipBackButton.title = "Rewind 10s";
+  skipBackButton.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"><path fill="white" d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7.5" y="15.5" font-size="6.5" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle" dominant-baseline="middle">10</text></svg>';
+  skipBackButton.addEventListener("click", () => {
+    sendSeekKeyToNetflix("left");
+  });
 
-  // Organize controls
+  // === Skip Forward 10s button ===
+  const skipForwardButton = document.createElement("button");
+  skipForwardButton.id = "netflix-skip-forward";
+  skipForwardButton.title = "Forward 10s";
+  skipForwardButton.innerHTML =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"><path fill="white" d="M12.01 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/><text x="12" y="15.5" font-size="6.5" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle" dominant-baseline="middle">10</text></svg>';
+  skipForwardButton.addEventListener("click", () => {
+    sendSeekKeyToNetflix("right");
+  });
+
+  // Episodes button
+  const episodesButton = document.createElement("button");
+  episodesButton.id = "netflix-episodes-button";
+  episodesButton.title = "Episodes";
+  episodesButton.innerHTML =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_iconCarrier"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.00004 16.8669L4.62722 16.9413C2.73914 17.3183 0.98708 15.8303 1.00007 13.8609L1.05413 5.66559C1.06392 4.18207 2.09362 2.91119 3.51587 2.62725L11.3728 1.05866C13.2589 0.682096 15.0093 2.16667 15 4.13309L15.3728 4.05866C17.259 3.6821 19.0094 5.16666 19 7.13308L19.3728 7.05866C21.2608 6.68171 23.0129 8.16969 22.9999 10.1391L22.9459 18.3344C22.9361 19.8179 21.9064 21.0888 20.4841 21.3728L12.6272 22.9413C10.7409 23.3179 8.99026 21.833 9.00004 19.8662L8.62722 19.9413C6.74104 20.3179 4.99061 18.8333 5.00004 16.8669ZM9.01352 17.8248L9.05418 11.6656C9.06395 10.182 10.0936 8.9112 11.5159 8.62722L16.9973 7.5329L17 7.1259C17.005 6.36468 16.3525 5.90253 15.7644 6.01995L7.90743 7.58854C7.44642 7.68057 7.05783 8.112 7.05409 8.67877L7.00003 16.8741C6.99501 17.6353 7.64752 18.0975 8.23566 17.98L9.01352 17.8248ZM13 4.12595L12.9973 4.53291L7.51587 5.62724C6.09362 5.91118 5.06392 7.18207 5.05413 8.66557L5.0135 14.8248L4.23566 14.98C3.64746 15.0975 2.99501 14.6353 3.00003 13.8741L3.05409 5.67878C3.05783 5.112 3.44643 4.68058 3.90743 4.58854L11.7643 3.01995C12.3525 2.90253 13.005 3.36463 13 4.12595ZM20.9459 18.3212C20.9421 18.888 20.5535 19.3194 20.0926 19.4115L12.2357 20.98C11.6475 21.0975 10.9951 20.6353 11 19.8741L11.0541 11.6788C11.0579 11.112 11.4465 10.6806 11.9075 10.5885L19.7643 9.01995C20.3525 8.90252 21.005 9.36473 21 10.1259L20.9459 18.3212Z" fill="#ffffff"></path></g></svg>';
+
+  // === Title Overlay (top-left) ===
+  const titleOverlay = document.createElement("div");
+  titleOverlay.id = "netflix-title-overlay";
+  const titleText = document.createElement("p");
+  titleText.id = "netflix-title-text";
+  const rawTitle = document.title.replace(/\s*[|\u2013-].*$/, "").trim();
+  titleText.textContent = rawTitle || "";
+  titleOverlay.appendChild(titleText);
+  document.body.appendChild(titleOverlay);
+  state.titleOverlay = titleOverlay;
+  state._titleTextEl = titleText;
+
+  // Keep title overlay text in sync
+  const titleObserver = new MutationObserver(() => {
+    const updated = document.title.replace(/\s*[|\u2013-].*$/, "").trim();
+    if (updated && titleText.textContent !== updated)
+      titleText.textContent = updated;
+  });
+  titleObserver.observe(document.querySelector("title") || document.head, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
+
+  // === Center: Title + Episode info ===
+  const controlsCenter = document.createElement("div");
+  controlsCenter.className = "controls-center";
+
+  const titleInfo = document.createElement("div");
+  titleInfo.id = "netflix-title-info";
+
+  // Parse title from document: "ONE PIECE" + episode from metadata later
+  const showName = document.title.replace(/\s*[|\u2013-].*$/, "").trim();
+  titleInfo.innerHTML = `<span class="nf-show-name">${showName}</span>`;
+  state._titleInfoEl = titleInfo; // store so metadata fetch can update it
+  controlsCenter.appendChild(titleInfo);
+
+  // === Assemble left controls: play, skip-back, skip-forward, volume, time ===
   controlsLeft.appendChild(state.buttonPlayPause);
+  controlsLeft.appendChild(skipBackButton);
+  controlsLeft.appendChild(skipForwardButton);
   controlsLeft.appendChild(volumeContainer);
   controlsLeft.appendChild(state.screenTime);
 
-  const episodesButton = document.createElement("button");
-  episodesButton.id = "netflix-episodes-button";
-  episodesButton.innerHTML =
-    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M5.00004 16.8669L4.62722 16.9413C2.73914 17.3183 0.98708 15.8303 1.00007 13.8609L1.05413 5.66559C1.06392 4.18207 2.09362 2.91119 3.51587 2.62725L11.3728 1.05866C13.2589 0.682096 15.0093 2.16667 15 4.13309L15.3728 4.05866C17.259 3.6821 19.0094 5.16666 19 7.13308L19.3728 7.05866C21.2608 6.68171 23.0129 8.16969 22.9999 10.1391L22.9459 18.3344C22.9361 19.8179 21.9064 21.0888 20.4841 21.3728L12.6272 22.9413C10.7409 23.3179 8.99026 21.833 9.00004 19.8662L8.62722 19.9413C6.74104 20.3179 4.99061 18.8333 5.00004 16.8669ZM9.01352 17.8248L9.05418 11.6656C9.06395 10.182 10.0936 8.9112 11.5159 8.62722L16.9973 7.5329L17 7.1259C17.005 6.36468 16.3525 5.90253 15.7644 6.01995L7.90743 7.58854C7.44642 7.68057 7.05783 8.112 7.05409 8.67877L7.00003 16.8741C6.99501 17.6353 7.64752 18.0975 8.23566 17.98L9.01352 17.8248ZM13 4.12595L12.9973 4.53291L7.51587 5.62724C6.09362 5.91118 5.06392 7.18207 5.05413 8.66557L5.0135 14.8248L4.23566 14.98C3.64746 15.0975 2.99501 14.6353 3.00003 13.8741L3.05409 5.67878C3.05783 5.112 3.44643 4.68058 3.90743 4.58854L11.7643 3.01995C12.3525 2.90253 13.005 3.36463 13 4.12595ZM20.9459 18.3212C20.9421 18.888 20.5535 19.3194 20.0926 19.4115L12.2357 20.98C11.6475 21.0975 10.9951 20.6353 11 19.8741L11.0541 11.6788C11.0579 11.112 11.4465 10.6806 11.9075 10.5885L19.7643 9.01995C20.3525 8.90252 21.005 9.36473 21 10.1259L20.9459 18.3212Z" fill="#ffffff"></path> </g></svg>';
-
+  // === Assemble right controls: next ep, autoplay, episodes, speed, subtitles, remove, fullscreen ===
   controlsRight.appendChild(nextEpisodeButton);
+  controlsRight.appendChild(autoplayToggleButton);
   controlsRight.appendChild(episodesButton);
-  controlsRight.appendChild(removeToggle);
-  controlsRight.appendChild(subtitleToggle);
-  controlsRight.appendChild(state.buttonFullScreen);
   controlsRight.appendChild(speedToggleButton);
+  controlsRight.appendChild(subtitleToggle);
+  controlsRight.appendChild(removeToggle);
+  controlsRight.appendChild(state.buttonFullScreen);
 
-  state.controllerElement.appendChild(controlsLeft);
-  state.controllerElement.appendChild(progressContainer);
-  state.controllerElement.appendChild(controlsRight);
+  // === Assemble two-row layout ===
+  progressRow.appendChild(barreContainer);
+  controlsRow.appendChild(controlsLeft);
+  controlsRow.appendChild(controlsCenter);
+  controlsRow.appendChild(controlsRight);
 
-  // Add the overlay first, then the controller (so controller is on top)
+  state.controllerElement.appendChild(progressRow);
+  state.controllerElement.appendChild(controlsRow);
+
+  // Add the overlay first, then the controller
   document.body.appendChild(state.videoOverlay);
   document.body.appendChild(state.controllerElement);
   state.isControllerAdded = true;
@@ -1310,12 +1615,15 @@ function addMediaController() {
     const x = e.clientX - rect.left;
     const percent = (x / rect.width) * 100; // allows us to determine where user wants to seek to
 
-    const totalVideoTime = Math.floor(state.videoElement.duration); // seconds
+    const duration =
+      state.currentEpisodeDuration || state.videoElement.duration || 0;
+    const totalVideoTime =
+      Math.floor(duration) || Math.floor(state.videoElement.duration || 0); // seconds
     const seekTime = Math.floor((percent / 100) * totalVideoTime * 1000); // ms
 
     // Send to injected script for custom seeking
     window.dispatchEvent(
-      new CustomEvent("netflixSeekTo", { detail: seekTime })
+      new CustomEvent("netflixSeekTo", { detail: seekTime }),
     );
   });
 
@@ -1332,6 +1640,68 @@ function addMediaController() {
   createBackButton();
   //create and add tips button
   createTipsButton();
+  // Try to fetch and cache the canonical duration from Netflix metadata
+  fetchAndCacheCurrentEpisodeDuration();
+
+  // Fetch episode info to populate the centered title info
+  (async () => {
+    try {
+      const epId = getIdFromUrl();
+      if (!epId || !state._titleInfoEl) return;
+      const res = await fetch(
+        `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${epId}`,
+        { credentials: "include" },
+      );
+      const data = await res.json();
+      const video = data.video;
+      if (!video) return;
+
+      if (video.type === "show" && video.seasons) {
+        // Find current episode
+        let foundEp = null;
+        for (const season of video.seasons) {
+          for (const ep of season.episodes) {
+            if (ep.id.toString() === epId) {
+              foundEp = ep;
+              break;
+            }
+          }
+          if (foundEp) break;
+        }
+        if (foundEp && state._titleInfoEl) {
+          state._titleInfoEl.innerHTML = `
+            <span class="nf-show-name">${video.title}</span>
+            <span class="nf-ep-info">E${foundEp.seq}&nbsp;&nbsp;${foundEp.title}</span>
+          `;
+          if (state._titleTextEl) {
+            state._titleTextEl.textContent = `${video.title}: ${foundEp.title}`;
+          }
+        }
+      } else if (video.title && state._titleInfoEl) {
+        // Movie
+        state._titleInfoEl.innerHTML = `<span class="nf-show-name">${video.title}</span>`;
+        if (state._titleTextEl) {
+          state._titleTextEl.textContent = video.title;
+        }
+      }
+    } catch (e) {
+      /* non-critical */
+    }
+  })();
+
+  // Restore controller visibility state from storage
+  chrome.storage.local.get(["status"], function (result) {
+    const status = result.status || "enable";
+    const controller = document.getElementById("mon-controleur-netflix");
+    const overlayArea = document.getElementById("netflix-video-area-overlay");
+    const overlay = document.getElementById("netflix-video-overlay");
+
+    if (status === "disable" && controller) {
+      controller.style.display = "none";
+      if (overlayArea) overlayArea.style.display = "none";
+      if (overlay) overlay.style.display = "none";
+    }
+  });
 }
 
 /**
@@ -1341,7 +1711,7 @@ function addMediaController() {
 function removeElementsByClasses(classesNames) {
   classesNames.forEach((className) => {
     const elementsToRemove = document.querySelectorAll(
-      `[class*="${className}"]`
+      `[class*="${className}"]`,
     );
     if (elementsToRemove.length > 0) {
       elementsToRemove.forEach((el) => el.remove());
@@ -1368,6 +1738,9 @@ function doYourJob() {
     state.controllerTimerId = setTimeout(() => {
       addMediaController();
       state.controllerTimerId = null;
+      state.videoElement.play();
+      state.buttonPlayPause.innerHTML =
+        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
     }, CONTROLLER_INIT_DELAY);
   } else {
     removeElementsByClasses(CLASSES_TO_REMOVE);
@@ -1384,6 +1757,28 @@ const observerOptions = {
 const observer = new MutationObserver((mutations) => {
   if (state.mutationTimeout) clearTimeout(state.mutationTimeout);
 
+  // Handle restriction screen: remove it, resume video and show controller
+  const hasRestrictionNode = mutations.some((mutation) =>
+    Array.from(mutation.addedNodes).some((node) => {
+      if (node.nodeType !== Node.ELEMENT_NODE) return false;
+      const cls = node.className || "";
+      return (
+        typeof cls === "string" &&
+        CLASSES_TO_REMOVE.some((c) => cls.includes(c))
+      );
+    }),
+  );
+  if (hasRestrictionNode) {
+    removeElementsByClasses(CLASSES_TO_REMOVE);
+    const video = document.querySelector("video");
+    if (video) {
+      video.play();
+      if (state.controllerTimerId) clearTimeout(state.controllerTimerId);
+      state.controllerTimerId = null;
+      addMediaController();
+    }
+  }
+
   state.mutationTimeout = setTimeout(() => {
     const hasRelevantChanges = mutations.some((mutation) => {
       return Array.from(mutation.addedNodes).some((node) => {
@@ -1397,7 +1792,7 @@ const observer = new MutationObserver((mutations) => {
             node.querySelector("video") ||
             CLASSES_TO_REMOVE.some(
               (c) =>
-                typeof nodeClassName === "string" && nodeClassName.includes(c)
+                typeof nodeClassName === "string" && nodeClassName.includes(c),
             )
           );
         }
@@ -1629,7 +2024,7 @@ function getNextEpisodeId() {
     `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
     {
       credentials: "include", // Important: includes your session cookies
-    }
+    },
   )
     .then((response) => response.json())
     .then((response) => {
@@ -1641,10 +2036,11 @@ function getNextEpisodeId() {
       }, []);
 
       console.log("Current Episode ID: ", curEpisodeId);
+      document.querySelector("video").disablePictureInPicture = false;
 
       // Find the index of the current episode
       const curEpisodeIndex = episodes.findIndex(
-        (episode) => episode.id.toString() === curEpisodeId
+        (episode) => episode.id.toString() === curEpisodeId,
       );
       if (curEpisodeIndex === -1) {
         console.log("Current episode not found");
@@ -1663,6 +2059,70 @@ function getNextEpisodeId() {
     .catch((error) => {
       console.error("Error fetching metadata:", error);
       return null;
+    });
+}
+
+/**
+ * Try to obtain the current episode/movie duration from Netflix metadata API.
+ * Returns duration in seconds or null if not available.
+ */
+async function getCurrentEpisodeDuration() {
+  const curEpisodeId = getIdFromUrl();
+  if (!curEpisodeId) return null;
+
+  try {
+    const res = await fetch(
+      `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
+      { credentials: "include" },
+    );
+
+    const data = await res.json();
+
+    // For movies the runtime may be at data.video.runtime
+    if (data?.video?.runtime && Number.isFinite(data.video.runtime)) {
+      return data.video.runtime;
+    }
+
+    // For series search the seasons -> episodes for matching id
+    const seasons = data?.video?.seasons || [];
+    for (const season of seasons) {
+      if (!season || !Array.isArray(season.episodes)) continue;
+      const found = season.episodes.find(
+        (ep) => ep.id && ep.id.toString() === curEpisodeId.toString(),
+      );
+      if (found && Number.isFinite(found.runtime)) {
+        return found.runtime;
+      }
+    }
+
+    return null;
+  } catch (err) {
+    console.warn("Could not fetch metadata duration:", err);
+    return null;
+  }
+}
+
+/**
+ * Fetch duration once and cache it in `state.currentEpisodeDuration`.
+ * Also update `state.screenTime` with the final duration if available.
+ */
+function fetchAndCacheCurrentEpisodeDuration() {
+  // fire-and-forget but update UI when resolved
+  getCurrentEpisodeDuration()
+    .then((runtime) => {
+      if (runtime && typeof runtime === "number") {
+        state.currentEpisodeDuration = runtime;
+        if (state.screenTime && state.videoElement) {
+          const cur = Math.floor(state.videoElement.currentTime || 0);
+          state.screenTime.textContent = `${timeFormat(cur)} / ${timeFormat(
+            Math.floor(runtime),
+          )}`;
+        }
+        console.debug("Cached current episode duration:", runtime);
+      }
+    })
+    .catch((e) => {
+      console.warn("Error caching episode duration:", e);
     });
 }
 
