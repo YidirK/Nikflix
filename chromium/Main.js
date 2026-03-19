@@ -1249,6 +1249,28 @@ function addMediaController() {
   volumeContainer.appendChild(volumeIcon);
 
   const handleControlsClick = (e) => {
+    // Determine which popup button is clicked, if any
+    let clickedPopupBtn = null;
+    if (e.target.closest("#netflix-episodes-button")) clickedPopupBtn = "episodes";
+    if (e.target.closest("#netflix-subtitle-toggle")) clickedPopupBtn = "subtitle";
+
+    // Close episodes list if clicking anything else
+    if (clickedPopupBtn !== "episodes" && state.episodesListOpen) {
+      const panel = document.getElementById("netflix-episodes-list");
+      if (panel) {
+        panel.remove();
+        state.episodesListOpen = false;
+      }
+    }
+
+    // Close subtitle settings if clicking anything else
+    if (clickedPopupBtn !== "subtitle" && state.subtitleSettingsOpen) {
+      state.subtitleSettingsOpen = false;
+      if (state.subtitleSettingsPanel) {
+        state.subtitleSettingsPanel.classList.remove("visible");
+      }
+    }
+
     if (
       e.target === state.buttonPlayPause ||
       e.target.closest("#netflix-play-pause")
