@@ -1510,7 +1510,7 @@ function addMediaController() {
   skipBackButton.id = "netflix-skip-back";
   skipBackButton.title = "Rewind 10s";
   skipBackButton.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"><path fill="white" d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7.5" y="15.5" font-size="6.5" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle" dominant-baseline="middle">10</text></svg>';
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"><path fill="white" d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="12" y="15.5" font-size="6.5" fill="white" font-family="Arial" font-weight="bold" text-anchor="middle" dominant-baseline="middle">10</text></svg>';
   skipBackButton.addEventListener("click", () => {
     sendSeekKeyToNetflix("left");
   });
