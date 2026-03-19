@@ -875,6 +875,7 @@ function setupKeyboardShortcuts() {
         videoElement.volume = Math.min(1, videoElement.volume + 0.1);
         if (state.volumeSlider) {
           state.volumeSlider.value = videoElement.volume * 100;
+          state.volumeSlider.style.setProperty("--vol-pct", `${videoElement.volume * 100}%`);
         }
         showMessage(`Volume: ${Math.round(videoElement.volume * 100)}%`);
         break;
@@ -884,6 +885,7 @@ function setupKeyboardShortcuts() {
         videoElement.volume = Math.max(0, videoElement.volume - 0.1);
         if (state.volumeSlider) {
           state.volumeSlider.value = videoElement.volume * 100;
+          state.volumeSlider.style.setProperty("--vol-pct", `${videoElement.volume * 100}%`);
         }
         showMessage(`Volume: ${Math.round(videoElement.volume * 100)}%`);
         break;
@@ -897,9 +899,9 @@ function setupKeyboardShortcuts() {
         e.preventDefault();
         videoElement.muted = !videoElement.muted;
         if (state.volumeSlider) {
-          state.volumeSlider.value = videoElement.muted
-            ? 0
-            : videoElement.volume * 100;
+          const newVol = videoElement.muted ? 0 : videoElement.volume * 100;
+          state.volumeSlider.value = newVol;
+          state.volumeSlider.style.setProperty("--vol-pct", `${newVol}%`);
         }
         showMessage(
           videoElement.muted
@@ -1445,7 +1447,9 @@ function addMediaController() {
     const isMuted = state.videoElement.muted || state.videoElement.volume === 0;
 
     if (state.volumeSlider) {
-      state.volumeSlider.value = isMuted ? 0 : state.videoElement.volume * 100;
+      const newVol = isMuted ? 0 : state.videoElement.volume * 100;
+      state.volumeSlider.value = newVol;
+      state.volumeSlider.style.setProperty("--vol-pct", `${newVol}%`);
     }
 
     if (volumeIcon) {
