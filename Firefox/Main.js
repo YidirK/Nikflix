@@ -898,30 +898,45 @@ function createVideoAreaOverlay() {
 
   // Handle play/pause toggle
   videoAreaOverlay.addEventListener("click", (e) => {
-    // Prevent clicks on controller from triggering this
     if (
-        !e.target.closest("#mon-controleur-netflix") &&
-        !e.target.closest("#netflix-subtitle-settings")
-    ) {
-      if (state.videoElement.paused) {
-        state.videoElement.play();
-        if (state.buttonPlayPause) {
-          state.buttonPlayPause.innerHTML =
-              '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
-        }
-      } else {
-        state.videoElement.pause();
-        if (state.buttonPlayPause) {
-          state.buttonPlayPause.innerHTML =
-              '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="white"/></svg>';
-        }
+      e.target.closest("#mon-controleur-netflix") ||
+      e.target.closest("#netflix-subtitle-settings")
+    ) return;
+
+    // Disable pointer-events briefly to find what's really under the cursor
+    videoAreaOverlay.style.pointerEvents = "none";
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    videoAreaOverlay.style.pointerEvents = "auto";
+
+    // Teleparty iframe is cross-origin — can't forward, just skip
+    if (elementBelow && elementBelow.tagName === "IFRAME" &&
+        (elementBelow.id === "tpChatFrame" || elementBelow.src?.includes("teleparty"))) {
+      return;
+    }
+
+    if (elementBelow &&
+        (elementBelow.closest('[id^="tp-"]') || elementBelow.closest('[data-tp-id]'))) {
+      elementBelow.click();
+      return;
+    }
+
+    if (state.videoElement.paused) {
+      state.videoElement.play();
+      if (state.buttonPlayPause) {
+        state.buttonPlayPause.innerHTML =
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
+      }
+    } else {
+      state.videoElement.pause();
+      if (state.buttonPlayPause) {
+        state.buttonPlayPause.innerHTML =
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="white"/></svg>';
       }
     }
   });
 
   // Handle double-click for fullscreen
   videoAreaOverlay.addEventListener("dblclick", (e) => {
-    // Prevent double-click on controller
     if (
         !e.target.closest("#mon-controleur-netflix") &&
         !e.target.closest("#netflix-subtitle-settings")
@@ -931,7 +946,23 @@ function createVideoAreaOverlay() {
   });
 
   document.body.appendChild(videoAreaOverlay);
+  watchTelepartyFrame(videoAreaOverlay);
   return videoAreaOverlay;
+}
+
+function adjustOverlayForTeleparty(overlay) {
+  const tpFrame = document.getElementById("tpChatFrame");
+  const rect = tpFrame?.getBoundingClientRect();
+  const targetWidth = rect?.width > 0 && rect?.left > 0 ? rect.left + "px" : "100%";
+  if (overlay.style.width !== targetWidth) overlay.style.width = targetWidth;
+}
+
+function watchTelepartyFrame(overlay) {
+  adjustOverlayForTeleparty(overlay);
+  const id = setInterval(() => {
+    if (!overlay.isConnected) { clearInterval(id); return; }
+    adjustOverlayForTeleparty(overlay);
+  }, 500);
 }
 
 /**
