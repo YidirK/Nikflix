@@ -13,11 +13,12 @@ earlyStyle.textContent = `
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
-    "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
+  "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
   "nf-modal uma-modal two-section-uma",
   "nf-modal extended-diacritics-language interstitial-full-screen",
+  "e38lgv32 default-ltr-yhcdbf-cache-fn1p85"
 ];
 // State object that contains all controller elements and state
 let state = {

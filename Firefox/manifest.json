@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Nikflix (Household Bypass)",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "icons": {
     "48": "icons/Nikflix-48.png"
   },

@@ -39,12 +39,28 @@ https://nikflix.hergol.me
 ----
 
 # 📝 Changelog
-## [1.9.1] - 2026-03-10
-- ✓ fix: fix Picture-in-picture problem for firefox. [#94](https://github.com/YidirK/Nikflix/issues/94)
-- ✓ fix: fix Controller issue. now the button to turn off the extension controller have persistence via localStorage for firefox [#96](https://github.com/YidirK/Nikflix/issues/96) , [#87](https://github.com/YidirK/Nikflix/issues/87) , [#70
-  ](https://github.com/YidirK/Nikflix/issues/70)
-- ✓ fix: fix the volume sync issue , the volume slider and mute icon now correctly reflect the video's actual state on load and when Netflix changes the volume internally, instead of staying stuck at their initial value. This fix applies to both Chrome and Firefox.[#98](https://github.com/YidirK/Nikflix/issues/98) [##64
-  ](https://github.com/YidirK/Nikflix/issues/64)
+
+## [1.9.3] - 2026-05-12
+- ✓ Fix: resolved service worker crashes and improved compatibility with the Teleparty sidebar (thanks to [RenatoGarciaLopes](https://github.com/RenatoGarciaLopes))
+- ✓ Chromium: added i18n support to automatically detect and translate the user’s language. You can add your own language support in `#translate`
+
+# 🌍 Translation
+To add your own language translation:
+
+1. Go to the `_locales` folder.
+2. Create a new folder using your language code (for example: `fr`, `es`, `de`, etc.).
+3. Inside that folder, create a `messages.json` file.
+4. Copy the structure from another existing language file.
+5. Translate the values and save the file.
+
+Example:
+```txt
+_locales/
+ ├── en/
+ │    └── messages.json
+ ├── fr/
+ │    └── messages.json
+ ```
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
@@ -59,6 +75,7 @@ However, I prefer not to use this method for two reasons:
 - From a legal standpoint, my extension is less risky because we simply modify the content that has already been sent and add our own content on top. We don’t block any requests, which is legally safer. I wanted to avoid any legal issues for myself and also protect my users from being banned.
 ##  🤝 Contributing
 Contributions are welcome! Feel free to submit a Pull Request or report an issue.
+
 
 ## ⚠️ Disclaimer
 

@@ -1,3 +1,9 @@
+
+import { t, applyI18n } from './i18n.js';
+
+
+
+
 //logique of popup butttons
 document.getElementById('code-btn').addEventListener('click', () => {
     chrome.tabs.create({ url: 'https://github.com/YidirK/Nikflix' });
@@ -13,6 +19,7 @@ document.getElementById('bug-btn').addEventListener('click', () => {
 
 //get version of the extension
 document.addEventListener("DOMContentLoaded", () => {
+    applyI18n();
     const versionEl = document.getElementById("version");
     if (versionEl) {
         const manifestData = chrome.runtime.getManifest();
@@ -33,7 +40,6 @@ async function checkForUpdate() {
 
             if (currentVersion < remoteVersion) {
                 console.log("New version available!");
-                // Open the extension popup/page to notify user
                 openExtensionForUpdate(remoteVersion);
             } else {
                 console.log("Extension is up to date");
@@ -47,7 +53,10 @@ async function checkForUpdate() {
 function openExtensionForUpdate(newVersion) {
     const updateMessageEl = document.getElementById('update-message');
     if (updateMessageEl) {
-        updateMessageEl.textContent = `New version ${newVersion} is available!`;
+        const msg = t('updateAvailableVersion', [newVersion]);
+        updateMessageEl.textContent = msg !== 'updateAvailableVersion'
+            ? msg
+            : `${t('updateAvailable')} (v${newVersion})`;
         updateMessageEl.style.display = 'block';
     }
 }

@@ -1,0 +1,67 @@
+{
+  "extensionName": {
+    "message": "Nikflix",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Bypass the account-sharing restrictions",
+    "description": "Extension description"
+  },
+  "header": {
+    "message": "🎬 Nikflix",
+    "description": "Header title"
+  },
+  "updateAvailable": {
+    "message": "🎉 New version available! Please update your extension.",
+    "description": "Update notification message"
+  },
+  "checkCode": {
+    "message": "📂 Check code on GitHub",
+    "description": "GitHub button"
+  },
+  "buyMeCoffee": {
+    "message": "☕ Buy me a coffee",
+    "description": "Coffee button"
+  },
+  "reportBug": {
+    "message": "🐞 Report a bug",
+    "description": "Bug report button"
+  },
+  "bugInfoText": {
+    "message": "If you have a bug, use the button with this icon in the controller. (or click here)",
+    "description": "Bug info hint text"
+  },
+  "contactDeveloper": {
+    "message": "Want to contact the developer?",
+    "description": "Contact section label"
+  },
+  "controllerLabel": {
+    "message": "Controller",
+    "description": "Toggle label for the controller"
+  },
+  "statusEnabled": {
+    "message": "Enable",
+    "description": "Status text when toggle is on"
+  },
+  "statusDisabled": {
+    "message": "Disable",
+    "description": "Status text when toggle is off"
+  },
+  "madeWith": {
+    "message": "Made with ❤️ by",
+    "description": "Footer credit text"
+  },
+  "thanksContributors": {
+    "message": "🙌 Thanks to Contributors :",
+    "description": "Marquee contributors prefix"
+  },
+  "updateAvailableVersion": {
+    "message": "🎉 New version $VERSION$ available! Please update.",
+    "description": "Update notification with version number",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  }
+}

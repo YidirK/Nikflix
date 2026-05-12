@@ -1,0 +1,67 @@
+{
+  "extensionName": {
+    "message": "Nikflix",
+    "description": "Nom de l'extension"
+  },
+  "extensionDescription": {
+    "message": "Contourner les restrictions de partage de compte",
+    "description": "Description de l'extension"
+  },
+  "header": {
+    "message": "🎬 Nikflix",
+    "description": "Titre de l'en-tête"
+  },
+  "updateAvailable": {
+    "message": "🎉 Nouvelle version disponible ! Veuillez mettre à jour votre extension.",
+    "description": "Message de notification de mise à jour"
+  },
+  "checkCode": {
+    "message": "📂 Voir le code sur GitHub",
+    "description": "Bouton GitHub"
+  },
+  "buyMeCoffee": {
+    "message": "☕ Offre-moi un café",
+    "description": "Bouton café"
+  },
+  "reportBug": {
+    "message": "🐞 Signaler un bug",
+    "description": "Bouton signalement de bug"
+  },
+  "bugInfoText": {
+    "message": "Si vous avez un bug, utilisez le bouton avec cette icône dans le contrôleur. (ou cliquez ici)",
+    "description": "Texte d'aide sur les bugs"
+  },
+  "contactDeveloper": {
+    "message": "Vous souhaitez contacter le développeur ?",
+    "description": "Libellé de la section contact"
+  },
+  "controllerLabel": {
+    "message": "Contrôleur",
+    "description": "Libellé du toggle contrôleur"
+  },
+  "statusEnabled": {
+    "message": "Activé",
+    "description": "Texte de statut quand le toggle est actif"
+  },
+  "statusDisabled": {
+    "message": "Désactivé",
+    "description": "Texte de statut quand le toggle est inactif"
+  },
+  "madeWith": {
+    "message": "Fait avec ❤️ par",
+    "description": "Texte de crédit dans le pied de page"
+  },
+  "thanksContributors": {
+    "message": "🙌 Merci aux contributeurs :",
+    "description": "Préfixe du bandeau défilant des contributeurs"
+  },
+  "updateAvailableVersion": {
+    "message": "🎉 New version $VERSION$ available! Please update.",
+    "description": "Update notification with version number",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  }
+}
