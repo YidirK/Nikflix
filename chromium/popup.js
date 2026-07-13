@@ -100,7 +100,9 @@ toggle.addEventListener('change', function() {
 
 
     const message = this.checked ? "enable" : "disable";
-    statusText.textContent = this.checked ? "Enable" : "Disable";
+    statusText.textContent = this.checked
+        ? "Nikflix (Stable)"
+        : "Netflix (Experimental)";
     statusText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
 
 
@@ -125,7 +127,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const status = result.status || "enable";
 
         toggle.checked = (status === "enable");
-        statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
+        statusText.textContent = toggle.checked
+            ? 'Nikflix (Stable)'
+            : 'Netflix (Experimental)';
         statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
     });
 });

@@ -1,7 +1,7 @@
 {
   "name": "Nikflix (Household Bypass)",
   "description": "Bypass the account-sharing restrictions on Netflix.",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "manifest_version": 3,
   "default_locale": "en",
   "action": {
@@ -22,6 +22,21 @@
     }
   ],
   "content_scripts": [
+    {
+      "js": ["native-mode-bridge.js"],
+      "matches": [
+        "*://*.netflix.com/*"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "js": ["native-mode-page.js"],
+      "matches": [
+        "*://*.netflix.com/*"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
     {
       "js": ["Main.js"],
       "css": ["netflix-controller.css"],

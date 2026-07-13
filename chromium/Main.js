@@ -1473,6 +1473,8 @@ function addMediaController() {
       controller.style.display = "none";
       if (overlayArea) overlayArea.style.display = "none";
       if (overlay) overlay.style.display = "none";
+      if (state.backButton) state.backButton.style.display = "none";
+      if (state.tipsButton) state.tipsButton.style.display = "none";
     }
   });
 }
@@ -1919,14 +1921,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
   const overlay = document.getElementById("netflix-video-overlay");
 
   if (message.message === "enable") {
-    controller.style.display = "flex";
-    overlayArea.style.display = "flex";
-    overlay.style.display = "flex";
+    if (controller) controller.style.display = "flex";
+    if (overlayArea) overlayArea.style.display = "flex";
+    if (overlay) overlay.style.display = "flex";
+    if (state.backButton) state.backButton.style.display = "flex";
+    if (state.tipsButton) state.tipsButton.style.display = "flex";
     showMessage("Controller Enabled");
   } else if (message.message === "disable") {
-    controller.style.display = "none";
-    overlayArea.style.display = "none";
-    overlay.style.display = "none";
+    if (controller) controller.style.display = "none";
+    if (overlayArea) overlayArea.style.display = "none";
+    if (overlay) overlay.style.display = "none";
+    if (state.backButton) state.backButton.style.display = "none";
+    if (state.tipsButton) state.tipsButton.style.display = "none";
     showMessage("Controller Disabled");
     console.log("Disabled");
   } else if (message.message === "debug") {
