@@ -951,18 +951,108 @@ function createVideoAreaOverlay() {
 }
 
 function adjustOverlayForTeleparty(overlay) {
-  const tpFrame = document.getElementById("tpChatFrame");
-  const rect = tpFrame?.getBoundingClientRect();
-  const targetWidth = rect?.width > 0 && rect?.left > 0 ? rect.left + "px" : "100%";
-  if (overlay.style.width !== targetWidth) overlay.style.width = targetWidth;
+  const tpFrame = document.getElementById('tpChatFrame');
+
+  // Ensure overlay is fixed and fills the screen
+  overlay.style.position = overlay.style.position || 'fixed';
+  overlay.style.left = '0';
+  overlay.style.top = '0';
+  overlay.style.bottom = '0';
+  overlay.style.boxSizing = 'border-box';
+  overlay.style.zIndex = overlay.style.zIndex || '99997';
+  overlay.style.width = 'auto';
+
+  if (!tpFrame) {
+    // No Teleparty chat → cover full width
+    overlay.style.right = '0';
+    return;
+  }
+
+  const rect = tpFrame.getBoundingClientRect();
+
+  // Chat visible on the right
+  if (rect.width > 0 && rect.left > 0) {
+    const chatWidth = Math.round(rect.width);
+
+    // Reserve space for chat by anchoring right edge
+    overlay.style.right = chatWidth + 'px';
+  } else {
+    // Chat hidden/collapsed
+    overlay.style.right = '0';
+  }
 }
 
 function watchTelepartyFrame(overlay) {
+  // Initial adjustment
   adjustOverlayForTeleparty(overlay);
-  const id = setInterval(() => {
-    if (!overlay.isConnected) { clearInterval(id); return; }
+
+  // Use ResizeObserver when available
+  const tpFrame = document.getElementById('tpChatFrame');
+  let ro;
+
+  if (tpFrame && window.ResizeObserver) {
+    try {
+      ro = new ResizeObserver(() => {
+        adjustOverlayForTeleparty(overlay);
+      });
+      ro.observe(tpFrame);
+    } catch (e) {
+      // Ignore observer errors
+    }
+  }
+
+  // Update when browser window resizes
+  const onWinResize = () => adjustOverlayForTeleparty(overlay);
+  window.addEventListener('resize', onWinResize, { passive: true });
+
+  // Polling fallback
+  const intervalId = setInterval(() => {
+    if (!overlay.isConnected) {
+      clearInterval(intervalId);
+      window.removeEventListener('resize', onWinResize);
+
+      if (ro && tpFrame) {
+        try {
+          ro.unobserve(tpFrame);
+        } catch (e) {}
+      }
+
+      return;
+    }
+
     adjustOverlayForTeleparty(overlay);
   }, 500);
+
+  // Watch for Teleparty frame being added later
+  const mo = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!(node instanceof HTMLElement)) continue;
+
+        if (
+          node.id === 'tpChatFrame' ||
+          (node.querySelector &&
+            node.querySelector('#tpChatFrame'))
+        ) {
+          adjustOverlayForTeleparty(overlay);
+
+          if (ro && node instanceof Element) {
+            try {
+              ro.observe(node);
+            } catch (e) {}
+          }
+        }
+      }
+    }
+  });
+
+  mo.observe(
+    document.documentElement || document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
 }
 
 /**
