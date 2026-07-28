@@ -13,11 +13,12 @@ earlyStyle.textContent = `
 const CLASSES_TO_REMOVE = [
   "layout-item_styles__zc08zp30 default-ltr-cache-7vbe6a ermvlvv0",
   "default-ltr-cache-1sfbp89 e1qcljkj0",
-    "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
+  "default-Itr-iqcdef-cache-ohh5jx e53rikt0",
   "css-1nym653 modal-enter-done",
   "nf-modal interstitial-full-screen",
   "nf-modal uma-modal two-section-uma",
   "nf-modal extended-diacritics-language interstitial-full-screen",
+  "e38lgv32 default-ltr-yhcdbf-cache-fn1p85"
 ];
 // State object that contains all controller elements and state
 let state = {
@@ -708,6 +709,7 @@ function setupKeyboardShortcuts() {
     // Always ensure video element is current
     const videoElement = document.querySelector("video");
     if (!videoElement) return;
+    document.querySelector('video').disablePictureInPicture = false;
 
     // Always show controller when key is pressed if the controller exists
     if (state.controllerElement) {
@@ -878,6 +880,9 @@ function createVideoOverlay() {
 }
 
 function createVideoAreaOverlay() {
+  const curEpisodeId = getIdFromUrl();
+  if (!curEpisodeId) return null; // If we can't get the episode ID, we won't create the overlay
+
   const videoAreaOverlay = document.createElement("div");
   videoAreaOverlay.id = "netflix-video-area-overlay";
   videoAreaOverlay.style.position = "fixed";
@@ -895,30 +900,45 @@ function createVideoAreaOverlay() {
 
   // Handle play/pause toggle
   videoAreaOverlay.addEventListener("click", (e) => {
-    // Prevent clicks on controller from triggering this
     if (
-      !e.target.closest("#mon-controleur-netflix") &&
-      !e.target.closest("#netflix-subtitle-settings")
-    ) {
-      if (state.videoElement.paused) {
-        state.videoElement.play();
-        if (state.buttonPlayPause) {
-          state.buttonPlayPause.innerHTML =
-            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
-        }
-      } else {
-        state.videoElement.pause();
-        if (state.buttonPlayPause) {
-          state.buttonPlayPause.innerHTML =
-            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="white"/></svg>';
-        }
+      e.target.closest("#mon-controleur-netflix") ||
+      e.target.closest("#netflix-subtitle-settings")
+    ) return;
+
+    // Disable pointer-events briefly to find what's really under the cursor
+    videoAreaOverlay.style.pointerEvents = "none";
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    videoAreaOverlay.style.pointerEvents = "auto";
+
+    // Teleparty iframe is cross-origin — can't forward, just skip
+    if (elementBelow && elementBelow.tagName === "IFRAME" &&
+        (elementBelow.id === "tpChatFrame" || elementBelow.src?.includes("teleparty"))) {
+      return;
+    }
+
+    if (elementBelow &&
+        (elementBelow.closest('[id^="tp-"]') || elementBelow.closest('[data-tp-id]'))) {
+      elementBelow.click();
+      return;
+    }
+
+    if (state.videoElement.paused) {
+      state.videoElement.play();
+      if (state.buttonPlayPause) {
+        state.buttonPlayPause.innerHTML =
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
+      }
+    } else {
+      state.videoElement.pause();
+      if (state.buttonPlayPause) {
+        state.buttonPlayPause.innerHTML =
+          '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="white"/></svg>';
       }
     }
   });
 
   // Handle double-click for fullscreen
   videoAreaOverlay.addEventListener("dblclick", (e) => {
-    // Prevent double-click on controller
     if (
       !e.target.closest("#mon-controleur-netflix") &&
       !e.target.closest("#netflix-subtitle-settings")
@@ -928,7 +948,113 @@ function createVideoAreaOverlay() {
   });
 
   document.body.appendChild(videoAreaOverlay);
+  watchTelepartyFrame(videoAreaOverlay);
   return videoAreaOverlay;
+}
+
+function adjustOverlayForTeleparty(overlay) {
+  const tpFrame = document.getElementById('tpChatFrame');
+
+  // Ensure overlay is fixed and fills the screen
+  overlay.style.position = overlay.style.position || 'fixed';
+  overlay.style.left = '0';
+  overlay.style.top = '0';
+  overlay.style.bottom = '0';
+  overlay.style.boxSizing = 'border-box';
+  overlay.style.zIndex = overlay.style.zIndex || '99997';
+  overlay.style.width = 'auto';
+
+  if (!tpFrame) {
+    // No Teleparty chat → cover full width
+    overlay.style.right = '0';
+    return;
+  }
+
+  const rect = tpFrame.getBoundingClientRect();
+
+  // Chat visible on the right
+  if (rect.width > 0 && rect.left > 0) {
+    const chatWidth = Math.round(rect.width);
+
+    // Reserve space for chat by anchoring right edge
+    overlay.style.right = chatWidth + 'px';
+  } else {
+    // Chat hidden/collapsed
+    overlay.style.right = '0';
+  }
+}
+
+function watchTelepartyFrame(overlay) {
+  // Initial adjustment
+  adjustOverlayForTeleparty(overlay);
+
+  // Use ResizeObserver when available
+  const tpFrame = document.getElementById('tpChatFrame');
+  let ro;
+
+  if (tpFrame && window.ResizeObserver) {
+    try {
+      ro = new ResizeObserver(() => {
+        adjustOverlayForTeleparty(overlay);
+      });
+      ro.observe(tpFrame);
+    } catch (e) {
+      // Ignore observer errors
+    }
+  }
+
+  // Update when browser window resizes
+  const onWinResize = () => adjustOverlayForTeleparty(overlay);
+  window.addEventListener('resize', onWinResize, { passive: true });
+
+  // Polling fallback
+  const intervalId = setInterval(() => {
+    if (!overlay.isConnected) {
+      clearInterval(intervalId);
+      window.removeEventListener('resize', onWinResize);
+
+      if (ro && tpFrame) {
+        try {
+          ro.unobserve(tpFrame);
+        } catch (e) {}
+      }
+
+      return;
+    }
+
+    adjustOverlayForTeleparty(overlay);
+  }, 500);
+
+  // Watch for Teleparty frame being added later
+  const mo = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!(node instanceof HTMLElement)) continue;
+
+        if (
+          node.id === 'tpChatFrame' ||
+          (node.querySelector &&
+            node.querySelector('#tpChatFrame'))
+        ) {
+          adjustOverlayForTeleparty(overlay);
+
+          if (ro && node instanceof Element) {
+            try {
+              ro.observe(node);
+            } catch (e) {}
+          }
+        }
+      }
+    }
+  });
+
+  mo.observe(
+    document.documentElement || document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
 }
 
 /**
@@ -1080,6 +1206,11 @@ function addMediaController() {
   volumeIcon.innerHTML =
     '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
 
+  // Sync icon with actual video state on init
+  if (state.videoElement.muted || state.videoElement.volume === 0) {
+    volumeIcon.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>';
+  }
+
   const volumeSliderContainer = document.createElement("div");
   volumeSliderContainer.id = "netflix-volume-slider-container";
 
@@ -1088,7 +1219,7 @@ function addMediaController() {
   state.volumeSlider.id = "netflix-volume-slider";
   state.volumeSlider.min = "0";
   state.volumeSlider.max = "100";
-  state.volumeSlider.value = state.videoElement.volume * 100;
+  state.volumeSlider.value = state.videoElement.muted ? 0 : state.videoElement.volume * 100;
 
   const handleControlsClick = (e) => {
     if (
@@ -1261,6 +1392,20 @@ function addMediaController() {
     }
   });
 
+  state.videoElement.addEventListener("volumechange", () => {
+    const isMuted = state.videoElement.muted || state.videoElement.volume === 0;
+
+    if (state.volumeSlider) {
+      state.volumeSlider.value = isMuted ? 0 : state.videoElement.volume * 100;
+    }
+
+    if (volumeIcon) {
+      volumeIcon.innerHTML = isMuted
+          ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L9.91 6.09 12 8.18M4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.26c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.32 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9" fill="white"/></svg>'
+          : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4-.91 7-4.49 7-8.77 0-4.28-3-7.86-7-8.77M16.5 12c0-1.77-1-3.29-2.5-4.03V16c1.5-.71 2.5-2.24 2.5-4M3 9v6h4l5 5V4L7 9H3z" fill="white"/></svg>';
+    }
+  });
+
   setupKeyboardShortcuts();
 
   setTimeout(() => {
@@ -1407,6 +1552,20 @@ function addMediaController() {
   createTipsButton();
   // Try to fetch and cache the canonical duration from Netflix metadata
   fetchAndCacheCurrentEpisodeDuration();
+
+  // Restore controller visibility state from storage
+  chrome.storage.local.get(["status"], function(result) {
+    const status = result.status || "enable";
+    const controller = document.getElementById("mon-controleur-netflix");
+    const overlayArea = document.getElementById("netflix-video-area-overlay");
+    const overlay = document.getElementById("netflix-video-overlay");
+
+    if (status === "disable" && controller) {
+      controller.style.display = "none";
+      if (overlayArea) overlayArea.style.display = "none";
+      if (overlay) overlay.style.display = "none";
+    }
+  });
 }
 
 /**
@@ -1745,6 +1904,7 @@ function getNextEpisodeId() {
       }, []);
 
       console.log("Current Episode ID: ", curEpisodeId);
+      document.querySelector('video').disablePictureInPicture = false;
 
       // Find the index of the current episode
       const curEpisodeIndex = episodes.findIndex(

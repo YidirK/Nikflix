@@ -1,8 +1,9 @@
 {
-  "name": "Nikflix",
+  "name": "Nikflix (Household Bypass)",
   "description": "Bypass the account-sharing restrictions on Netflix.",
-  "version": "1.8.8",
+  "version": "1.9.3",
   "manifest_version": 3,
+  "default_locale": "en",
   "action": {
     "default_icon": "icons/Nikflix-48.png",
     "default_popup": "popup.html"
@@ -35,8 +36,5 @@
         "*://*.netflix.com/*"
       ]
     }
-  ],
-  "background": {
-    "service_worker": "Main.js"
-  }
+  ]
 }

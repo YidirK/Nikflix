@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/13k-users.png" alt="13 000 users" width="600"/>
+  <img src="assets/50k-users.png" alt="50 000 users" width="600"/>
 </p>
 
 # Netflix Password-Sharing (household) Bypass Extension
@@ -21,6 +21,11 @@ If you like this project, consider giving it a star ⭐ or a tip if you feel gen
 [![Mozilla Add-on Users](https://img.shields.io/amo/users/nikflix)](https://addons.mozilla.org/fr/firefox/addon/nikflix/)
 
 ----
+## 🌐 Website
+
+You can check out our website here:  
+https://nikflix.hergol.me
+---
 
 ## ✨ Features
 
@@ -34,43 +39,33 @@ If you like this project, consider giving it a star ⭐ or a tip if you feel gen
 ----
 
 # 📝 Changelog
-## [1.8.8] - 2025-09-29
 
-### 🛠️ Fix
+## [1.9.3] - 2026-05-12
+- ✓ Fix: resolved service worker crashes and improved compatibility with the Teleparty sidebar (thanks to [RenatoGarciaLopes](https://github.com/RenatoGarciaLopes))
+- ✓ Chromium: added i18n support to automatically detect and translate the user’s language. You can add your own language support in `#translate`
 
-- Fix bug with  playing content automatically when you launch an episode.
+# 🌍 Translation
+To add your own language translation:
 
-### New Features
-- We added a tooltip to the controller, allowing you to see your current progress or even pick a specific time to start your episode. ( thanks to [Michael Yan Petra](https://github.com/myanpetra99))
-- We now have an online website, available at [nikflix.hergol.me](https://nikflix.hergol.me/). It’s accessible in English and French, and you can add your own language if you want. I’ll soon add a translation system to make this easier.
+1. Go to the `_locales` folder.
+2. Create a new folder using your language code (for example: `fr`, `es`, `de`, etc.).
+3. Inside that folder, create a `messages.json` file.
+4. Copy the structure from another existing language file.
+5. Translate the values and save the file.
 
+Example:
+```txt
+_locales/
+ ├── en/
+ │    └── messages.json
+ ├── fr/
+ │    └── messages.json
+ ```
 
 ## 👥 Contributors
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
 </a> 
-
-## 📊 Extension Statistics (Chromium Browsers)
-
-| **Metric**                | **Value**        |
-|---------------------------|-----------------|
-| **Total Installations**   | **17.7k**       |
-| **Uninstalls**            | 3.26k          |
-| **Daily Active Users**    | **12k**        |
-
-### 🌍 Distribution by Country
-| Country      | Percentage |
-|-------------|-------------|
-| 🇺🇸 USA      | 21%         |
-| 🇧🇷 Brazil   | 9%          |
-| …           | …           |
-
-### 🗣️ Distribution by Language
-| Language    | Percentage |
-|------------|-------------|
-| 🇬🇧 English | 53%         |
-| 🇵🇹 Portuguese | 8%      |
-| …          | …           |
 
 
 ## 💬 Note
@@ -81,6 +76,7 @@ However, I prefer not to use this method for two reasons:
 ##  🤝 Contributing
 Contributions are welcome! Feel free to submit a Pull Request or report an issue.
 
+
 ## ⚠️ Disclaimer
 
 This extension may violate Netflix's terms of service. Use at your own risk.
@@ -88,7 +84,8 @@ This extension may violate Netflix's terms of service. Use at your own risk.
 ---
 
 ## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is under license.
+See LICENSE file for details.
 
 ---
 ### ⭐ Enjoying the extension? Show your support with a star — or a tip if you feel generous! ⭐
