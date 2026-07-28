@@ -39,6 +39,10 @@
     "message": "Contrôleur",
     "description": "Libellé du toggle contrôleur"
   },
+  "controllerTypeLabel": {
+    "message": "Type",
+    "description": "Libellé du toggle de type de contrôleur (Nikflix ou Netflix)"
+  },
   "statusEnabled": {
     "message": "Activé",
     "description": "Texte de statut quand le toggle est actif"

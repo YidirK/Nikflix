@@ -99,7 +99,7 @@ function syncControllerToggle(isNetflix) {
         toggle.checked = true;
         toggle.disabled = true;
         if (container) container.style.opacity = '0.7';
-        statusText.textContent = 'Enable';
+        statusText.textContent = t('statusEnabled');
         statusText.className = 'status-text status-active';
         sendMessage('enable');
         chrome.storage.session.set({ status: 'enable' });
@@ -118,7 +118,7 @@ toggle.addEventListener('change', function() {
 
 
     const message = this.checked ? "enable" : "disable";
-    statusText.textContent = this.checked ? "Enable" : "Disable";
+    statusText.textContent = this.checked ? t('statusEnabled') : t('statusDisabled');
     statusText.className = this.checked ? "status-text status-active" : "status-text status-inactive";
 
 
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const status = result.status || "enable";
 
         toggle.checked = (status === "enable");
-        statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
+        statusText.textContent = toggle.checked ? t('statusEnabled') : t('statusDisabled');
         statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
     });
 
