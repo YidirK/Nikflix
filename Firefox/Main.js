@@ -1588,6 +1588,14 @@ function removeElementsByClasses(classesNames) {
 function doYourJob() {
   if (state.controllerType === "netflix") {
     removeElementsByClasses(CLASSES_TO_REMOVE);
+
+    // A switch mid-playback can leave a debounced addMediaController() armed,
+    // which would rebuild our controller on top of netflix's original one
+    if (state.controllerTimerId) {
+      clearTimeout(state.controllerTimerId);
+      state.controllerTimerId = null;
+    }
+    if (state.isControllerAdded) cleanController();
     return;
   }
 
@@ -2036,5 +2044,8 @@ browser.runtime.onMessage.addListener((message, sender) => {
   } else if (message.message === "controllerType") {
     state.controllerType = message.value;
     browser.storage.local.set({ controllerType: message.value });
+    // tear down right away when leaving nikflix, so both controllers are never
+    // on screen at once. going back to nikflix is handled by the tab reload
+    if (message.value === "netflix") doYourJob();
   }
 });
