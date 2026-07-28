@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         versionEl.textContent = `v${manifestData.version}`;
     }
     checkForUpdate();
+    loadContributors();
 });
 
 async function checkForUpdate() {
@@ -77,6 +78,55 @@ async function getData() {
         console.error(error.message);
         return null;
     }
+}
+
+
+const CONTRIBUTORS_URL = "https://api.github.com/repos/YidirK/Nikflix/contributors";
+const CONTRIBUTORS_TTL = 24 * 60 * 60 * 1000;
+
+//the owner is already credited in the footer
+const OWNER = "YidirK";
+
+async function loadContributors() {
+    const container = document.getElementById('contributors');
+    if (!container) return;
+
+    const cached = (await chrome.storage.local.get("contributors")).contributors;
+    if (cached) {
+        renderContributors(container, cached.logins);
+        if (Date.now() - cached.fetchedAt < CONTRIBUTORS_TTL) return;
+    }
+
+    try {
+        const response = await fetch(CONTRIBUTORS_URL);
+        if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        const logins = (await response.json())
+            .filter(contributor => contributor.type === "User" && contributor.login !== OWNER)
+            .map(contributor => contributor.login);
+
+        renderContributors(container, logins);
+        chrome.storage.local.set({ contributors: { logins, fetchedAt: Date.now() } });
+    } catch (error) {
+        console.error("Error loading contributors:", error);
+    }
+}
+
+function renderContributors(container, logins) {
+    container.replaceChildren();
+    logins.forEach((login, index) => {
+        const link = document.createElement('a');
+        link.href = `https://github.com/${login}`;
+        link.target = '_blank';
+        link.textContent = `@${login}`;
+        container.appendChild(link);
+
+        if (index < logins.length - 1) {
+            container.appendChild(document.createTextNode(' • '));
+        }
+    });
 }
 
 
