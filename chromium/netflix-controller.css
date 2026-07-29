@@ -756,4 +756,13 @@ input:checked + .subtitle-toggle-slider:before {
     opacity: 1;
     transform: translateX(-50%) translateY(-2px);
   }
-  
+
+/* Netflix's own player UI, hidden while our controller is on screen.
+   Netflix only unmounts these itself when the household interstitial fires,
+   so accounts without the restriction were seeing both UIs at once. */
+body.nikflix-active [data-uia="controls-standard"],
+body.nikflix-active .watch-video--bottom-controls-container,
+body.nikflix-active .watch-video--back-container,
+body.nikflix-active .watch-video--flag-container {
+  display: none !important;
+}

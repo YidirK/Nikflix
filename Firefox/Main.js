@@ -342,6 +342,8 @@ function createStylesIfNeeded() {
  * Clean up controller elements and reset state
  */
 function cleanController() {
+  document.body.classList.remove("nikflix-active");
+
   if (state.progressionIntervalId) {
     cancelAnimationFrame(state.progressionIntervalId);
     state.progressionIntervalId = null;
@@ -1508,6 +1510,7 @@ function addMediaController() {
   document.body.appendChild(state.videoOverlay);
   document.body.appendChild(state.controllerElement);
   state.isControllerAdded = true;
+  document.body.classList.add("nikflix-active");
 
   updateProgression();
 
@@ -2011,11 +2014,14 @@ browser.runtime.onMessage.addListener((message, sender) => {
     controller.style.display = "flex";
     overlayArea.style.display = "flex";
     overlay.style.display = "flex";
+    document.body.classList.add("nikflix-active");
     showMessage("Controller Enabled");
   } else if (message.message === "disable") {
     controller.style.display = "none";
     overlayArea.style.display = "none";
     overlay.style.display = "none";
+    // give netflix's own controls back, otherwise there are none at all
+    document.body.classList.remove("nikflix-active");
     showMessage("Controller Disabled");
     console.log("Disabled");
   } else if (message.message === "debug") {
