@@ -1,5 +1,5 @@
 
-import { t, applyI18n } from './i18n.js';
+import { t, applyI18n } from './I18n.js';
 
 
 
