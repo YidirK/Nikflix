@@ -20,6 +20,9 @@
       ],
       "js": [
         "Main.js"
+      ],
+      "css": [
+        "netflix-controller.css"
       ]
     }
   ]
