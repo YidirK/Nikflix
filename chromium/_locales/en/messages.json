@@ -39,6 +39,10 @@
     "message": "Controller",
     "description": "Toggle label for the controller"
   },
+  "controllerTypeLabel": {
+    "message": "Type",
+    "description": "Toggle label for the controller type (Nikflix or Netflix)"
+  },
   "statusEnabled": {
     "message": "Enable",
     "description": "Status text when toggle is on"

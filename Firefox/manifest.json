@@ -6,14 +6,23 @@
     "48": "icons/Nikflix-48.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "tabs"
   ],
   "browser_action": {
     "default_icon": "icons/Nikflix-48.png",
     "default_popup": "popup.html",
     "default_title": "Nikflix - Bypass the account-sharing restrictions"
   },
+  "web_accessible_resources": [
+    "netflix-interceptor.js"
+  ],
   "content_scripts": [
+    {
+      "matches": ["*://*.netflix.com/*"],
+      "js": ["netflix-interceptor-loader.js"],
+      "run_at": "document_start"
+    },
     {
       "matches": [
         "*://*.netflix.com/*"
