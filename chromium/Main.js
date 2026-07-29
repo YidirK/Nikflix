@@ -1315,9 +1315,6 @@ function addMediaController() {
     }
   });
 
-  // Append to right controls bar
-  controlsRight.appendChild(speedToggleButton);
-
   // === Autoplay Next Episode Toggle ===
   const autoplayToggleButton = document.createElement("button");
   autoplayToggleButton.id = "netflix-autoplay-toggle";
@@ -1489,8 +1486,8 @@ function addMediaController() {
   controlsRight.appendChild(episodesButton);
   controlsRight.appendChild(removeToggle);
   controlsRight.appendChild(subtitleToggle);
-  controlsRight.appendChild(state.buttonFullScreen);
   controlsRight.appendChild(speedToggleButton);
+  controlsRight.appendChild(state.buttonFullScreen);
 
   state.controllerElement.appendChild(controlsLeft);
   state.controllerElement.appendChild(progressContainer);
