@@ -23,7 +23,7 @@
     color: white;
     padding: 18px 20px;
     padding-top: 60px; /* Extended padding for better gradient effect */
-    z-index: 99;
+    z-index: 9998;
     display: flex;
     align-items: center; /* Changed from flex-end to center for better alignment */
     justify-content: space-between;
@@ -53,9 +53,9 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 140px); /* Exclude Netflix controls area */
+    height: 100%;
     z-index: 99;
-    cursor: pointer;
+    cursor: default;
     background-color: transparent;
 }
 
@@ -761,4 +761,23 @@ body.nikflix-active .watch-video--bottom-controls-container,
 body.nikflix-active .watch-video--back-container,
 body.nikflix-active .watch-video--flag-container {
   display: none !important;
+}
+
+/* let clicks on the controller's own background reach the video underneath */
+#mon-controleur-netflix {
+    pointer-events: none;
+}
+
+#mon-controleur-netflix button,
+#mon-controleur-netflix input,
+#mon-controleur-netflix #netflix-volume-icon,
+#mon-controleur-netflix #netflix-barre-container {
+    pointer-events: auto;
+}
+
+#mon-controleur-netflix.hidden button,
+#mon-controleur-netflix.hidden input,
+#mon-controleur-netflix.hidden #netflix-volume-icon,
+#mon-controleur-netflix.hidden #netflix-barre-container {
+    pointer-events: none;
 }

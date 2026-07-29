@@ -460,7 +460,7 @@ function showController() {
     "netflix-video-area-overlay"
   );
   if (videoAreaOverlay) {
-    videoAreaOverlay.style.cursor = "pointer";
+    videoAreaOverlay.style.cursor = "default";
   }
 
   if (state.controllerHideTimer) {
@@ -890,9 +890,9 @@ function createVideoAreaOverlay() {
   videoAreaOverlay.style.top = "0";
   videoAreaOverlay.style.left = "0";
   videoAreaOverlay.style.width = "100%";
-  videoAreaOverlay.style.height = "calc(100% - 140px)";
+  videoAreaOverlay.style.height = "100%";
   videoAreaOverlay.style.zIndex = "9997";
-  videoAreaOverlay.style.cursor = "pointer";
+  videoAreaOverlay.style.cursor = "default";
   videoAreaOverlay.style.backgroundColor = "transparent";
 
   // Make it focusable
@@ -1087,17 +1087,6 @@ function addMediaController() {
   state.videoOverlay = document.createElement("div");
   state.videoOverlay.id = "netflix-video-overlay";
   state.videoOverlay.style.pointerEvents = "none"; // Allow clicks to pass through to Netflix's controls
-
-  // Create a separate overlay just for the video area (excluding controls)
-  videoAreaOverlay.id = "netflix-video-area-overlay";
-  videoAreaOverlay.style.position = "fixed";
-  videoAreaOverlay.style.top = "0";
-  videoAreaOverlay.style.left = "0";
-  videoAreaOverlay.style.width = "100%";
-  videoAreaOverlay.style.height = "calc(100% - 140px)"; // Exclude Netflix controls area
-  videoAreaOverlay.style.zIndex = "9997";
-  videoAreaOverlay.style.cursor = "pointer";
-  videoAreaOverlay.style.backgroundColor = "transparent";
 
   state.controllerElement = document.createElement("div");
   state.controllerElement.id = CONTROLLER_ID;
