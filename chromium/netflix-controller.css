@@ -126,6 +126,7 @@
 
 #netflix-play-pause:hover,
 #netflix-plein-ecran:hover,
+#netflix-next-episode:hover,
 #netflix-autoplay-toggle:hover,
 #netflix-subtitle-toggle:hover,
 #netflix-remove-toggle:hover {
@@ -135,6 +136,7 @@
 
 #netflix-play-pause:active,
 #netflix-plein-ecran:active,
+#netflix-next-episode:active,
 #netflix-autoplay-toggle:active,
 #netflix-subtitle-toggle:active,
 #netflix-remove-toggle:active {
