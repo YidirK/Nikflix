@@ -1604,10 +1604,11 @@ function doYourJob() {
 
     const startController = () => {
       state.controllerTimerId = null;
+      const alreadyBuilt = state.isControllerAdded;
       addMediaController();
 
-      // no <video> yet, so nothing was built. a later mutation will retry
-      if (!state.isControllerAdded) return;
+      // only resume on the first build, never fight a deliberate pause
+      if (alreadyBuilt || !state.isControllerAdded) return;
 
       state.videoElement.play();
       state.buttonPlayPause.innerHTML =
