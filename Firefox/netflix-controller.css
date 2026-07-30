@@ -10,6 +10,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    box-sizing: border-box;
     background: linear-gradient(to top,
     rgba(0, 0, 0, 1) 0%,
     rgba(0, 0, 0, 0.9) 10%,
@@ -23,7 +24,7 @@
     color: white;
     padding: 18px 20px;
     padding-top: 60px; /* Extended padding for better gradient effect */
-    z-index: 99;
+    z-index: 9998;
     display: flex;
     align-items: center; /* Changed from flex-end to center for better alignment */
     justify-content: space-between;
@@ -53,9 +54,9 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100% - 140px); /* Exclude Netflix controls area */
+    height: 100%;
     z-index: 99;
-    cursor: pointer;
+    cursor: default;
     background-color: transparent;
 }
 
@@ -125,6 +126,7 @@
 
 #netflix-play-pause:hover,
 #netflix-plein-ecran:hover,
+#netflix-next-episode:hover,
 #netflix-subtitle-toggle:hover,
 #netflix-remove-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
@@ -133,6 +135,7 @@
 
 #netflix-play-pause:active,
 #netflix-plein-ecran:active,
+#netflix-next-episode:active,
 #netflix-subtitle-toggle:active,
 #netflix-remove-toggle:active {
     transform: scale(0.95);
@@ -703,7 +706,7 @@ input:checked + .subtitle-toggle-slider:before {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 23px;
+    margin-right: 15px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -761,4 +764,46 @@ body.nikflix-active .watch-video--bottom-controls-container,
 body.nikflix-active .watch-video--back-container,
 body.nikflix-active .watch-video--flag-container {
   display: none !important;
+}
+
+/* let clicks on the controller's own background reach the video underneath */
+#mon-controleur-netflix {
+    pointer-events: none;
+}
+
+#mon-controleur-netflix button,
+#mon-controleur-netflix input,
+#mon-controleur-netflix #netflix-volume-icon,
+#mon-controleur-netflix #netflix-barre-container {
+    pointer-events: auto;
+}
+
+#mon-controleur-netflix.hidden button,
+#mon-controleur-netflix.hidden input,
+#mon-controleur-netflix.hidden #netflix-volume-icon,
+#mon-controleur-netflix.hidden #netflix-barre-container {
+    pointer-events: none;
+}
+
+#mon-controleur-netflix .controls-right > *:last-child {
+    margin-right: 0;
+}
+
+/* beats the inline cursor the show-controls handler writes on mousemove */
+#netflix-video-area-overlay.over-netflix-button {
+    cursor: pointer !important;
+}
+
+/* lift netflix's skip buttons clear of our controller, like their own bar does */
+body.nikflix-controls-visible .watch-video--skip-content,
+body.nikflix-controls-visible .watch-video--skip-preplay,
+body.nikflix-controls-visible .SeamlessControls--container {
+    transform: translateY(calc(var(--nikflix-controls-height, 118px) * -1));
+}
+
+/* netflix keeps these up after a seek back to the middle, so hide them whenever
+   the playhead is nowhere near the end */
+body.nikflix-away-from-end .SeamlessControls--container {
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
