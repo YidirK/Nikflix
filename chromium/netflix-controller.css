@@ -10,6 +10,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    box-sizing: border-box;
     background: linear-gradient(to top,
     rgba(0, 0, 0, 1) 0%,
     rgba(0, 0, 0, 0.9) 10%,
@@ -786,4 +787,8 @@ body.nikflix-active .watch-video--flag-container {
 #mon-controleur-netflix.hidden #netflix-volume-icon,
 #mon-controleur-netflix.hidden #netflix-barre-container {
     pointer-events: none;
+}
+
+#mon-controleur-netflix .controls-right > *:last-child {
+    margin-right: 0;
 }
