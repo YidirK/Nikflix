@@ -1710,15 +1710,35 @@ function doYourJob() {
     // Use debounce technique to prevent multiple calls
     if (state.controllerTimerId) {
       clearTimeout(state.controllerTimerId);
+      state.controllerTimerId = null;
     }
 
-    state.controllerTimerId = setTimeout(() => {
-      addMediaController();
+    const startController = () => {
       state.controllerTimerId = null;
+      const alreadyBuilt = state.isControllerAdded;
+      addMediaController();
+
+      // only resume on the first build, never fight a deliberate pause
+      if (alreadyBuilt || !state.isControllerAdded) return;
+
       state.videoElement.play();
       state.buttonPlayPause.innerHTML =
           '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 19H18V5H14V19ZM6 19H10V5H6V19Z" fill="white"/></svg>';
-    }, CONTROLLER_INIT_DELAY);
+    };
+
+    // Netflix shows its own controls the moment the player is ready, so build
+    // ours as soon as the video has metadata instead of waiting out a fixed
+    // delay that ran long after everything was already in place.
+    const video = document.querySelector("video");
+    if (video && video.readyState >= 1) {
+      startController();
+    } else {
+      if (video) {
+        video.addEventListener("loadedmetadata", startController, { once: true });
+      }
+      // fallback for a video that never reports metadata
+      state.controllerTimerId = setTimeout(startController, CONTROLLER_INIT_DELAY);
+    }
   } else {
     removeElementsByClasses(CLASSES_TO_REMOVE);
     cleanController();
