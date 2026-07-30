@@ -792,3 +792,22 @@ body.nikflix-active .watch-video--flag-container {
 #mon-controleur-netflix .controls-right > *:last-child {
     margin-right: 0;
 }
+
+/* beats the inline cursor the show-controls handler writes on mousemove */
+#netflix-video-area-overlay.over-netflix-button {
+    cursor: pointer !important;
+}
+
+/* lift netflix's skip buttons clear of our controller, like their own bar does */
+body.nikflix-controls-visible .watch-video--skip-content,
+body.nikflix-controls-visible .watch-video--skip-preplay,
+body.nikflix-controls-visible .SeamlessControls--container {
+    transform: translateY(calc(var(--nikflix-controls-height, 118px) * -1));
+}
+
+/* netflix keeps these up after a seek back to the middle, so hide them whenever
+   the playhead is nowhere near the end */
+body.nikflix-away-from-end .SeamlessControls--container {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}

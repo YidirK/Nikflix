@@ -455,6 +455,19 @@ function showController() {
   }
   state.isControllerVisible = true;
 
+  // netflix lifts its skip buttons by reflow, ours is fixed so it can't
+  document.body.classList.add("nikflix-controls-visible");
+  if (state.controllerElement) {
+    // the top padding is just transparent gradient, only clear the controls
+    const rect = state.controllerElement.getBoundingClientRect();
+    const padTop =
+      parseFloat(getComputedStyle(state.controllerElement).paddingTop) || 0;
+    document.body.style.setProperty(
+      "--nikflix-controls-height",
+      `${Math.round(rect.height - padTop)}px`
+    );
+  }
+
   // Show cursor when controls are visible
   const videoAreaOverlay = document.getElementById(
     "netflix-video-area-overlay"
@@ -483,10 +496,12 @@ function showController() {
       }
 
       state.isControllerVisible = false;
+      document.body.classList.remove("nikflix-controls-visible");
 
       // Hide cursor when controls are hidden
       if (videoAreaOverlay) {
         videoAreaOverlay.style.cursor = "none";
+        videoAreaOverlay.classList.remove("over-netflix-button");
       }
     }
   }, CONTROLLER_HIDE_DELAY);
@@ -880,6 +895,66 @@ function createVideoOverlay() {
   document.body.appendChild(state.videoOverlay);
 }
 
+const NETFLIX_PASSTHROUGH_BUTTONS =
+  '[data-uia^="player-skip"], [data-uia$="seamless-button"], [data-uia$="seamless-button-draining"]';
+
+// netflix never dismisses its next episode controls on a seek, so key them off
+// how far the playhead is from the end instead
+const SEAMLESS_END_WINDOW_S = 120;
+
+function updateSeamlessDistance() {
+  const video = state.videoElement;
+  if (!video || !video.duration || Number.isNaN(video.duration)) return;
+
+  const remaining = video.duration - video.currentTime;
+  document.body.classList.toggle(
+    "nikflix-away-from-end",
+    remaining > SEAMLESS_END_WINDOW_S
+  );
+}
+
+function cancelNetflixCountdown() {
+  const container = document.querySelector(".SeamlessControls--container");
+  if (!container) return;
+
+  // netflix only cancels its next episode countdown once the mouse has
+  // travelled ~50px over this container, and our overlay swallows the real
+  // events, so replay enough of them to clear its timers
+  for (let i = 0; i < 8; i++) {
+    container.dispatchEvent(
+      new MouseEvent("mousemove", {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+        clientX: 200 + i * 20,
+        clientY: 300,
+      })
+    );
+  }
+}
+
+function forwardHover(from, to) {
+  const fire = (el, types, related) => {
+    for (const type of types) {
+      const Ctor = type.startsWith("pointer") ? PointerEvent : MouseEvent;
+      el.dispatchEvent(
+        new Ctor(type, {
+          bubbles: type.endsWith("over") || type.endsWith("out"),
+          cancelable: true,
+          composed: true,
+          relatedTarget: related || null,
+          ...(Ctor === PointerEvent
+            ? { pointerId: 1, pointerType: "mouse", isPrimary: true }
+            : {}),
+        })
+      );
+    }
+  };
+
+  if (from) fire(from, ["pointerout", "mouseout", "pointerleave", "mouseleave"], to);
+  if (to) fire(to, ["pointerover", "mouseover", "pointerenter", "mouseenter"], from);
+}
+
 function createVideoAreaOverlay() {
   const curEpisodeId = getIdFromUrl();
   if (!curEpisodeId) return null; // If we can't get the episode ID, we won't create the overlay
@@ -923,6 +998,13 @@ function createVideoAreaOverlay() {
       return;
     }
 
+    const passthroughButton =
+      elementBelow && elementBelow.closest(NETFLIX_PASSTHROUGH_BUTTONS);
+    if (passthroughButton) {
+      passthroughButton.click();
+      return;
+    }
+
     if (state.videoElement.paused) {
       state.videoElement.play();
       if (state.buttonPlayPause) {
@@ -935,6 +1017,45 @@ function createVideoAreaOverlay() {
         state.buttonPlayPause.innerHTML =
           '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 5V19L19 12L8 5Z" fill="white"/></svg>';
       }
+    }
+  });
+
+  // netflix's skip buttons sit under our overlay, so show a pointer over them
+  let lastCursorCheck = 0;
+  let lastHovered = null;
+  videoAreaOverlay.addEventListener("mousemove", (e) => {
+    // the hit test forces a style recalc, so keep it off every mousemove
+    if (e.timeStamp - lastCursorCheck < 100) return;
+    lastCursorCheck = e.timeStamp;
+
+    videoAreaOverlay.style.pointerEvents = "none";
+    const below = document.elementFromPoint(e.clientX, e.clientY);
+    videoAreaOverlay.style.pointerEvents = "auto";
+    const hovered = below && below.closest(NETFLIX_PASSTHROUGH_BUTTONS);
+
+    // a class, not an inline style: the show-controls handler also writes
+    // cursor on mousemove and would overwrite us
+    videoAreaOverlay.classList.toggle("over-netflix-button", !!hovered);
+
+    // only while actually over a button: the seamless container is full-bleed,
+    // and feeding it activity everywhere kept netflix's controls awake forever
+    if (hovered) {
+      below.dispatchEvent(
+        new MouseEvent("mousemove", {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          clientX: e.clientX,
+          clientY: e.clientY,
+        })
+      );
+    }
+
+    if (hovered !== lastHovered) {
+      // netflix pauses its autoplay countdown on hover, but the overlay
+      // swallows the real events so they have to be replayed
+      forwardHover(lastHovered, hovered);
+      lastHovered = hovered;
     }
   });
 
@@ -1368,6 +1489,10 @@ function addMediaController() {
       state.isControllerVisible = true;
     }
   });
+
+  // seeking away means the user is not waiting for the next episode
+  state.videoElement.addEventListener("seeked", cancelNetflixCountdown);
+  state.videoElement.addEventListener("timeupdate", updateSeamlessDistance);
 
   // Listen for video end event for autoplay next episode
   state.videoElement.addEventListener("ended", () => {
