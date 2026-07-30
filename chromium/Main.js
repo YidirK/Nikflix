@@ -30,6 +30,7 @@ let state = {
   screenTime: null,
   videoElement: null,
   currentEpisodeDuration: null,
+  currentEpisodeId: null,
   volumeSlider: null,
   lastScreenTime: -1,
   lastTotalTime: -1,
@@ -1622,6 +1623,17 @@ const observerOptions = {
 
 const observer = new MutationObserver((mutations) => {
   if (state.mutationTimeout) clearTimeout(state.mutationTimeout);
+
+  // netflix swaps episodes without reloading, so tear down and let the
+  // controller rebuild instead of keeping a stale video element
+  const episodeId = getIdFromUrl();
+  if (episodeId !== state.currentEpisodeId) {
+    if (state.currentEpisodeId !== null) {
+      cleanController();
+      state.currentEpisodeDuration = null;
+    }
+    state.currentEpisodeId = episodeId;
+  }
 
   // Handle restriction screen: remove it, resume video and show controller
   const hasRestrictionNode = mutations.some((mutation) =>
