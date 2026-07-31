@@ -1,0 +1,22 @@
+{
+  "name": "nikflix",
+  "displayName": "Nikflix (Household Bypass)",
+  "version": "1.9.4",
+  "description": "Bypass the account-sharing restrictions on Netflix.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "build:all": "npm run build && npm run build:firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "wxt": "^0.19.0"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "extensionName": {
+    "message": "Nikflix",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "Evita las restricciones de uso compartido de cuentas",
+    "description": "Extension description"
+  },
+  "header": {
+    "message": "🎬 Nikflix",
+    "description": "Header title"
+  },
+  "updateAvailable": {
+    "message": "🎉 ¡Nueva versión disponible! Actualiza tu extensión.",
+    "description": "Update notification message"
+  },
+  "checkCode": {
+    "message": "📂 Ver el código en GitHub",
+    "description": "GitHub button"
+  },
+  "buyMeCoffee": {
+    "message": "☕ Invítame a un café",
+    "description": "Coffee button"
+  },
+  "reportBug": {
+    "message": "🐞 Reportar un error",
+    "description": "Bug report button"
+  },
+  "bugInfoText": {
+    "message": "Si encuentras un error, utiliza el botón con este icono en el controlador. (o haz clic aquí)",
+    "description": "Bug info hint text"
+  },
+  "contactDeveloper": {
+    "message": "¿Quieres contactar con el desarrollador?",
+    "description": "Contact section label"
+  },
+  "controllerLabel": {
+    "message": "Controlador",
+    "description": "Toggle label for the controller"
+  },
+  "statusEnabled": {
+    "message": "Activado",
+    "description": "Status text when toggle is on"
+  },
+  "statusDisabled": {
+    "message": "Desactivado",
+    "description": "Status text when toggle is off"
+  },
+  "madeWith": {
+    "message": "Hecho con ❤️ por",
+    "description": "Footer credit text"
+  },
+  "thanksContributors": {
+    "message": "🙌 Gracias a los colaboradores:",
+    "description": "Marquee contributors prefix"
+  },
+  "updateAvailableVersion": {
+    "message": "🎉 ¡Nueva versión $VERSION$ disponible! Actualiza la extensión.",
+    "description": "Update notification with version number",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  }
+}

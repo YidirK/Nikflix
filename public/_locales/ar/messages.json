@@ -1,0 +1,67 @@
+{
+  "extensionName": {
+    "message": "Nikflix",
+    "description": "Extension name"
+  },
+  "extensionDescription": {
+    "message": "تجاوز قيود مشاركة حساب Netflix",
+    "description": "Extension description"
+  },
+  "header": {
+    "message": "🎬 Nikflix",
+    "description": "Header title"
+  },
+  "updateAvailable": {
+    "message": "🎉 يتوفر إصدار جديد! يرجى تحديث الإضافة.",
+    "description": "Update notification message"
+  },
+  "checkCode": {
+    "message": "📂 عرض الكود على GitHub",
+    "description": "GitHub button"
+  },
+  "buyMeCoffee": {
+    "message": "☕ اشترِ لي قهوة",
+    "description": "Coffee button"
+  },
+  "reportBug": {
+    "message": "🐞 الإبلاغ عن خطأ",
+    "description": "Bug report button"
+  },
+  "bugInfoText": {
+    "message": "إذا واجهت خطأ، استخدم الزر الذي يحمل هذه الأيقونة في وحدة التحكم. (أو انقر هنا)",
+    "description": "Bug info hint text"
+  },
+  "contactDeveloper": {
+    "message": "هل تريد التواصل مع المطور؟",
+    "description": "Contact section label"
+  },
+  "controllerLabel": {
+    "message": "وحدة التحكم",
+    "description": "Toggle label for the controller"
+  },
+  "statusEnabled": {
+    "message": "مفعل",
+    "description": "Status text when toggle is on"
+  },
+  "statusDisabled": {
+    "message": "معطل",
+    "description": "Status text when toggle is off"
+  },
+  "madeWith": {
+    "message": "صُنع بـ ❤️ بواسطة",
+    "description": "Footer credit text"
+  },
+  "thanksContributors": {
+    "message": "🙌 شكرًا للمساهمين:",
+    "description": "Marquee contributors prefix"
+  },
+  "updateAvailableVersion": {
+    "message": "🎉 يتوفر الإصدار $VERSION$! يرجى تحديث الإضافة.",
+    "description": "Update notification with version number",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  }
+}

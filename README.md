@@ -1,92 +1,174 @@
 <p align="center">
-  <img src="assets/50k-users.png" alt="50 000 users" width="600"/>
+  <img src="assets/50k-users.png" alt="50,000 users" width="600"/>
 </p>
 
-# Netflix Password-Sharing (household) Bypass Extension
+# Netflix Password-Sharing (Household) Bypass Extension
 
-An extension that allows bypassing Netflix's password-sharing restrictions.
-If you like this project, consider giving it a star ⭐ or a tip if you feel generous!
+An open-source browser extension that allows bypassing Netflix's password-sharing (Household) restrictions.
 
+If you like this project, consider giving it a ⭐ or supporting it with a tip!
 
-## 📥 Installation on Chrome, Edge, Brave , or any other Chromium-based browser
-
-[![Download on Chrome](https://img.shields.io/badge/Download-Chrome-blue?logo=googlechrome)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
-[![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/knjoabokknkpkhbbdclmnjcoeedmgema)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
-[![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/knjoabokknkpkhbbdclmnjcoeedmgema)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
-
-## 📥 Installation on Firefox Browser
-
-[![Download on Firefox](https://img.shields.io/badge/Download-Firefox-orange?logo=firefox)](https://addons.mozilla.org/fr/firefox/addon/nikflix/)
-[![Mozilla Add-on Stars](https://img.shields.io/amo/stars/nikflix)](https://addons.mozilla.org/fr/firefox/addon/nikflix/)
-[![Mozilla Add-on Users](https://img.shields.io/amo/users/nikflix)](https://addons.mozilla.org/fr/firefox/addon/nikflix/)
-
-----
-## 🌐 Website
-
-You can check out our website here:  
-https://nikflix.hergol.me
 ---
 
-## ✨ Features
 
-- Bypasses Netflix account-sharing restrictions
-- Works directly in the browser with no complex configuration
--  Get Around the Netflix Password-Sharing Ban (Netflix household).
+## 📥 Installation on Chrome, Edge, Brave, and other Chromium-based browsers
+
+[![Download on Chrome](https://img.shields.io/badge/Download-Chrome-blue?logo=googlechrome)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
+
+[![Chrome Web Store Rating](https://img.shields.io/chrome-web-store/rating/knjoabokknkpkhbbdclmnjcoeedmgema)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
+
+[![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/knjoabokknkpkhbbdclmnjcoeedmgema)](https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema?hl=en-GB&authuser=0)
+
+---
+
+## 📥 Installation on Firefox
+
+[![Download on Firefox](https://img.shields.io/badge/Download-Firefox-orange?logo=firefox)](https://addons.mozilla.org/firefox/addon/nikflix/)
+
+[![Mozilla Add-on Stars](https://img.shields.io/amo/stars/nikflix)](https://addons.mozilla.org/firefox/addon/nikflix/)
+
+[![Mozilla Add-on Users](https://img.shields.io/amo/users/nikflix)](https://addons.mozilla.org/firefox/addon/nikflix/)
+
+---
+
+## 🌐 Website
+
+Visit our website:
+
+https://nikflix.hergol.me
+
+---
+
+# ✨ Features
+
+- Bypass Netflix Household restrictions.
+- Works directly in your browser.
+- No complex configuration required.
+- Supports Chromium-based browsers and Firefox.
+- Open source.
+- Modern TypeScript codebase powered by WXT.
+
 <p align="center">
-  <img src="assets/demo.png" alt="DEMO" width="300"/>
+  <img src="assets/demo.png" alt="Demo" width="300"/>
 </p>
 
-----
+---
 
 # 📝 Changelog
+## [1.9.4] - 2026-07-31
+
+### 🚀 Major Rewrite
+
+- ✓ Complete project rewrite.
+- ✓ Migrated from JavaScript to **TypeScript**.
+- ✓ Migrated to the **WXT Framework**.
+- ✓ Cleaner architecture.
+- ✓ Easier maintenance.
+- ✓ Improved developer experience.
+- ✓ Simplified browser compatibility.
+
+### ✨ New Features
+
+- ✓ Added a dynamic contributors list.
+
+### 🛠️ Fixes
+
+#### Thanks to @reservedbytes
+
+- ✓ Fixed controller delay and `null` video `TypeError`.
+- ✓ Fixed click dead zones and made small UI improvements.
+- ✓ Fixed popup failing to load due to an i18n import casing issue.
+- ✓ Fixed clashing player UIs on accounts without the Household restriction.
+- ✓ Fixed the controller not rebuilding when Netflix automatically changes episodes.
+
+#### Thanks to @AdmirableAmbiguity
+
+- ✓ Fixed the fullscreen overlay scrollbar issue.
 
 ## [1.9.3] - 2026-05-12
-- ✓ Fix: resolved service worker crashes and improved compatibility with the Teleparty sidebar (thanks to [RenatoGarciaLopes](https://github.com/RenatoGarciaLopes))
-- ✓ Chromium: added i18n support to automatically detect and translate the user’s language. You can add your own language support in `#translate`
+
+- ✓ Fixed service worker crashes.
+- ✓ Improved compatibility with the Teleparty sidebar (thanks to RenatoGarciaLopes).
+- ✓ Added Chromium i18n support with automatic language detection.
+---
 
 # 🌍 Translation
-To add your own language translation:
+
+Want to translate Nikflix?
 
 1. Go to the `_locales` folder.
-2. Create a new folder using your language code (for example: `fr`, `es`, `de`, etc.).
-3. Inside that folder, create a `messages.json` file.
-4. Copy the structure from another existing language file.
-5. Translate the values and save the file.
+2. Create a folder using your language code (`fr`, `es`, `de`, etc.).
+3. Add a `messages.json` file.
+4. Copy an existing translation.
+5. Translate the values.
 
 Example:
-```txt
+
+```text
 _locales/
- ├── en/
- │    └── messages.json
- ├── fr/
- │    └── messages.json
- ```
+├── en/
+│   └── messages.json
+├── fr/
+│   └── messages.json
+```
+
+---
 
 ## 👥 Contributors
+
 <a href="https://github.com/YidirK/Nikflix/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=YidirK/Nikflix" />
-</a> 
+</a>
 
+---
 
-## 💬 Note
-Several people have contacted me to inform me about a technique that directly blocks Netflix API, which is used to check whether you are part of the Netflix household.
-However, I prefer not to use this method for two reasons:
-- It doesn’t always work, and its effectiveness depends on the region.
-- From a legal standpoint, my extension is less risky because we simply modify the content that has already been sent and add our own content on top. We don’t block any requests, which is legally safer. I wanted to avoid any legal issues for myself and also protect my users from being banned.
-##  🤝 Contributing
-Contributions are welcome! Feel free to submit a Pull Request or report an issue.
+## 💬 Technical Note
 
+Several people have suggested blocking the Netflix API responsible for checking whether a user belongs to a Netflix Household.
+
+I intentionally chose **not** to use this approach for several reasons:
+
+- It is unreliable and its effectiveness varies depending on the region.
+- It is easier for Netflix to detect.
+- From a legal perspective, Nikflix is designed to modify the page after Netflix has already delivered its content, rather than blocking or interfering with network requests.
+- This approach reduces legal risks for both the project and its users.
+
+---
+
+## 🤝 Contributing
+
+Contributions are always welcome!
+
+Whether it's:
+
+- Fixing bugs
+- Improving compatibility
+- Adding new translations
+- Refactoring code
+- Improving documentation
+
+Feel free to open an Issue or submit a Pull Request.
+
+---
 
 ## ⚠️ Disclaimer
 
-This extension may violate Netflix's terms of service. Use at your own risk.
+This extension may violate Netflix's Terms of Service.
+
+Use it at your own risk.
 
 ---
 
 ## 📄 License
-This project is under license.
-See LICENSE file for details.
+
+This project is released under the LICENSE included in this repository.
 
 ---
-### ⭐ Enjoying the extension? Show your support with a star — or a tip if you feel generous! ⭐
+
+### ⭐ Enjoying Nikflix?
+
+If this project helped you, please consider giving it a GitHub ⭐.
+
+You can also support future development with a small donation.
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S61G68F3)
