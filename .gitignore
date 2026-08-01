@@ -1,2 +1,3 @@
 # Local Netlify folder
 node_modules
+.output

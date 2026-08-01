@@ -1,0 +1,118 @@
+{
+  "site": {
+    "title": "Nikflix - Elude las restricciones del hogar de Netflix (Gratis y de código abierto)",
+    "description": "Extensión gratuita y de código abierto para eludir las restricciones del hogar de Netflix y disfrutar de tus contenidos sin interrupciones en cualquier dispositivo."
+  },
+  "nav": {
+    "download": "Descargar extensión",
+    "chromeStore": "Chrome Web Store",
+    "firefoxAddons": "Complementos de Firefox",
+    "github": "Repositorio en GitHub",
+    "faq": "Preguntas frecuentes",
+    "changelog": "Registro de cambios",
+    "contributors": "Colaboradores",
+    "donate": "Donar"
+  },
+  "hero": {
+    "badge": "Gratis y de código abierto",
+    "title": "Elude las restricciones del <gradient>hogar de Netflix</gradient>",
+    "subtitle": "Disfruta de Netflix desde cualquier lugar y en cualquier dispositivo. Nikflix te permite compartir tu cuenta entre distintos hogares sin restricciones molestas.",
+    "installChrome": "Añadir a Chrome / Edge",
+    "installFirefox": "Añadir a Firefox",
+    "sourceCode": "Ver código fuente en GitHub",
+    "activeUsers": "usuarios activos eludiendo las restricciones del hogar"
+  },
+  "hero2": {
+    "title": "¿Tu dispositivo no forma parte del",
+    "titlespan": "hogar de Netflix?",
+    "subtitle": "¡No hay problema! Nuestra extensión",
+    "subtitlespan": "Nikflix",
+    "subtitle2": ", disponible gratuitamente en Chrome Web Store y Firefox Add-ons, funciona en los principales navegadores. Es 100% de código abierto, por lo que cualquiera puede comprobar cómo funciona. Disfruta de Netflix como antes, sin interrupciones."
+  },
+  "features": {
+    "title": "¿Por qué elegir Nikflix?",
+    "subtitle": "Diseñado para ser ligero, seguro, transparente y completamente gratuito.",
+    "legalTitle": "100% legal y seguro",
+    "legalDesc": "Solo modifica las solicitudes del navegador en el lado del cliente. No recopila credenciales de cuenta ni datos personales.",
+    "openSourceTitle": "Transparencia de código abierto",
+    "openSourceDesc": "Inspecciona cada línea de código en GitHub. Creado priorizando la privacidad y la confianza de la comunidad.",
+    "universalTitle": "Funciona en todas partes",
+    "universalDesc": "Compatible con Chrome, Firefox, Edge, Brave, Opera y todos los navegadores basados en Chromium.",
+    "instantTitle": "Sin configuración",
+    "instantDesc": "Instala la extensión y disfruta de una reproducción ininterrumpida al instante."
+  },
+  "github": {
+    "title": "Código abierto e impulsado por la comunidad",
+    "subtitle": "Nikflix es posible gracias a increíbles colaboradores de código abierto.",
+    "stars": "Estrellas en GitHub",
+    "contributors": "Colaboradores",
+    "viewRepo": "Ver en GitHub"
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "subtitle": "Todo lo que necesitas saber sobre Nikflix.",
+    "items": [
+      {
+        "question": "¿Es legal usar esta extensión?",
+        "answer": "Hemos diseñado esta extensión para que sea lo más legal posible. Solo modifica el contenido enviado por Netflix en tu navegador, lo cual es legal. Sin embargo, no nos hacemos responsables de las consecuencias derivadas de su uso."
+      },
+      {
+        "question": "¿La extensión es gratuita?",
+        "answer": "¡Sí! Los tiempos son difíciles, especialmente para los estudiantes. Nikflix es 100% gratuito. Si te resulta útil, puedes apoyar el desarrollo con una donación."
+      },
+      {
+        "question": "¿La extensión es de código abierto?",
+        "answer": "Sí, Nikflix es de código abierto. Todo el código está disponible en GitHub para que cualquiera pueda revisarlo y contribuir."
+      },
+      {
+        "question": "¿Qué debo hacer si encuentro un error?",
+        "answer": "La ventana emergente de la extensión incluye un botón de reinicio rápido que soluciona la mayoría de los problemas. Si el problema persiste, abre un informe en GitHub o ponte en contacto con el soporte."
+      },
+      {
+        "question": "Netflix dice que mi dispositivo no forma parte del hogar. ¿Qué debo hacer?",
+        "answer": "¡Precisamente para eso existe Nikflix! Instala la extensión en Chrome, Firefox, Edge o Brave y disfruta de Netflix sin restricciones."
+      },
+      {
+        "question": "¿La extensión funciona en todos los navegadores?",
+        "answer": "Nikflix es compatible con Chrome, Firefox, Edge, Brave, Opera y todos los navegadores basados en Chromium en Windows, macOS y Linux."
+      },
+      {
+        "question": "¿Puedo usar Netflix en casa de un amigo con esta extensión?",
+        "answer": "¡Sí! Disfruta de Netflix en casa de tus amigos, durante las vacaciones o desde cualquier red Wi-Fi sin bloqueos por hogar."
+      },
+      {
+        "question": "¿Pueden bloquear mi cuenta de Netflix?",
+        "answer": "Nikflix solo modifica las solicitudes del navegador de forma local y no altera las credenciales de tu cuenta. Miles de usuarios activos la han utilizado durante meses sin problemas."
+      },
+      {
+        "question": "¿La extensión ralentiza el rendimiento de Netflix?",
+        "answer": "No. Nikflix es ligera y está optimizada para ofrecer el mejor rendimiento. La calidad del streaming permanece igual."
+      },
+      {
+        "question": "¿La extensión es segura? ¿Roba mis datos?",
+        "answer": "Nikflix es 100% de código abierto. No recopilamos NINGÚN dato personal y respetamos completamente la privacidad de los usuarios."
+      }
+    ]
+  },
+  "changelog": {
+    "title": "Registro de cambios y actualizaciones",
+    "subtitle": "Últimas actualizaciones y correcciones introducidas en Nikflix.",
+    "Check": "Ver en GitHub",
+    "notfond": "No hay versiones disponibles por el momento."
+  },
+  "changelogVersions": {
+    "1.9.4": {
+      "date": "FEBRERO DE 2026",
+      "changes": [
+        "Se añadió la opción de reproducción automática del siguiente episodio",
+        "Se añadieron los atajos de teclado para pantalla completa (F) y silencio (M)",
+        "Las pantallas de restricción CSS ahora se ocultan sin interrumpir el vídeo",
+        "Optimización del rendimiento y la velocidad de la interfaz"
+      ]
+    }
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "disclaimer": "Nikflix es un proyecto independiente y de código abierto que no está afiliado ni respaldado por Netflix, Inc."
+  }
+}

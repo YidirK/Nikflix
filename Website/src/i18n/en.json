@@ -1,0 +1,118 @@
+{
+  "site": {
+    "title": "Nikflix - Bypass Netflix Household Restrictions (Free & Open Source)",
+    "description": "Free & open-source extension to bypass Netflix household restrictions and watch seamlessly on any device."
+  },
+  "nav": {
+    "download": "Download Extension",
+    "chromeStore": "Chrome Web Store",
+    "firefoxAddons": "Firefox Add-ons",
+    "github": "GitHub Repository",
+    "faq": "FAQ",
+    "changelog": "Changelog",
+    "contributors": "Contributors",
+    "donate": "Donate"
+  },
+  "hero": {
+    "badge": "Free & Open Source",
+    "title": "Bypass <gradient>Netflix Household</gradient> Restrictions",
+    "subtitle": "Watch Netflix seamlessly anywhere, on any device. Nikflix lets you share your account across households without frustrating restrictions.",
+    "installChrome": "Add to Chrome / Edge",
+    "installFirefox": "Add to Firefox",
+    "sourceCode": "View Source on GitHub",
+    "activeUsers": "active users bypassing household restrictions"
+  },
+ "hero2" : {
+   "title": "Your device is not part of the",
+   "titlespan": "Netflix Household?",
+   "subtitle" : "No problem! Our extension",
+   "subtitlespan": "Nikflix",
+   "subtitle2": ", available for free on the Chrome Web Store and Firefox Add-ons, works on all major browsers. It is 100% open source, meaning anyone can verify how it works. Watch Netflix like before, seamlessly."
+ },
+  "features": {
+    "title": "Why Choose Nikflix?",
+    "subtitle": "Designed to be lightweight, secure, transparent, and completely free.",
+    "legalTitle": "100% Legal & Safe",
+    "legalDesc": "Modifies only client-side browser requests. No account credentials or personal data collected.",
+    "openSourceTitle": "Open Source Transparency",
+    "openSourceDesc": "Inspect every line of code on GitHub. Built with privacy and community trust first.",
+    "universalTitle": "Works Everywhere",
+    "universalDesc": "Compatible with Chrome, Firefox, Edge, Brave, Opera, and all Chromium browsers.",
+    "instantTitle": "Zero Configuration",
+    "instantDesc": "Install the extension and enjoy uninterrupted streaming instantly."
+  },
+  "github": {
+    "title": "Open Source & Community Driven",
+    "subtitle": "Nikflix is powered by amazing open source contributors.",
+    "stars": "GitHub Stars",
+    "contributors": "Contributors",
+    "viewRepo": "View on GitHub"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about Nikflix.",
+    "items": [
+      {
+        "question": "Is it legal to use this extension?",
+        "answer": "We designed this extension to be as legal as possible. It only modifies content sent by Netflix in your browser, which is legal. However, we are not responsible for any consequences from its use."
+      },
+      {
+        "question": "Is the extension free?",
+        "answer": "Yes! Times are tough, especially for students. Nikflix is 100% free. If you find it useful, you can support development with a donation."
+      },
+      {
+        "question": "Is the extension open source?",
+        "answer": "Yes, Nikflix is open source. The full code is available on GitHub for anyone to audit and contribute to."
+      },
+      {
+        "question": "What should I do if I encounter a bug?",
+        "answer": "The extension pop-up has a quick restart button that fixes most issues. If problems persist, open an issue on GitHub or contact support."
+      },
+      {
+        "question": "Netflix says my device is not part of the household, what should I do?",
+        "answer": "That's exactly why Nikflix exists! Install the extension on Chrome, Firefox, Edge, or Brave, and watch without restrictions."
+      },
+      {
+        "question": "Does the extension work on all browsers?",
+        "answer": "Nikflix supports Chrome, Firefox, Edge, Brave, Opera, and all Chromium-based browsers on Windows, macOS, and Linux."
+      },
+      {
+        "question": "Can I use Netflix at a friend's house with this extension?",
+        "answer": "Yes! Stream anywhere: at friends' houses, on vacation, or on any Wi-Fi network without household blocks."
+      },
+      {
+        "question": "Will my Netflix account be banned?",
+        "answer": "Nikflix only modifies browser requests locally without altering your account credentials. Thousands of active users have used it for months safely."
+      },
+      {
+        "question": "Does the extension slow down Netflix performance?",
+        "answer": "No, Nikflix is lightweight and performance-optimized. Streaming quality remains unchanged."
+      },
+      {
+        "question": "Is the extension safe? Does it steal my data?",
+        "answer": "Nikflix is 100% open source. We collect ZERO personal data and respect user privacy completely."
+      }
+    ]
+  },
+  "changelog": {
+    "title": "Changelog & Updates",
+    "subtitle": "Recent updates and fixes introduced in Nikflix.",
+    "Check": "Check on Github",
+    "notfond": "No releases available at the moment."
+  },
+  "changelogVersions": {
+    "1.9.4": {
+      "date": "FEBRUARY 2026",
+      "changes": [
+        "Added autoplay next episode option",
+        "Added fullscreen (F) and mute (M) keyboard shortcuts",
+        "CSS restriction screens hidden without video interruptions",
+        "UI performance & speed optimizations"
+      ]
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "disclaimer": "Nikflix is an independent open-source project and is not affiliated with or endorsed by Netflix, Inc."
+  }
+}

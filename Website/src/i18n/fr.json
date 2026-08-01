@@ -1,0 +1,118 @@
+{
+  "site": {
+    "title": "Nikflix - Contourner la restriction de foyer Netflix (Gratuit & Open Source)",
+    "description": "Extension gratuite et open-source pour contourner les restrictions de foyer Netflix et regarder sur n'importe quel appareil."
+  },
+  "nav": {
+    "download": "Télécharger l'extension",
+    "chromeStore": "Chrome Web Store",
+    "firefoxAddons": "Modules Firefox",
+    "github": "Dépôt GitHub",
+    "faq": "FAQ",
+    "changelog": "Mises à jour",
+    "contributors": "Contributeurs",
+    "donate": "Faire un don"
+  },
+  "hero": {
+    "badge": "Gratuit & Open Source",
+    "title": "Contournez la restriction <gradient>foyer Netflix</gradient>",
+    "subtitle": "Regardez Netflix en toute simplicité où que vous soyez, sur n'importe quel appareil. Nikflix vous permet de partager votre compte sans blocages agaçants.",
+    "installChrome": "Ajouter à Chrome / Edge",
+    "installFirefox": "Ajouter à Firefox",
+    "sourceCode": "Voir le code sur GitHub",
+    "activeUsers": "utilisateurs actifs contournant la restriction de foyer"
+  },
+  "hero2" : {
+    "title": "Votre appareil ne fait pas partie du foyer ",
+    "titlespan": "Netflix lié à ce compte ?",
+    "subtitle" : "Pas de problème ! Notre extension",
+    "subtitlespan": "Nikflix",
+    "subtitle2": ", disponible gratuitement sur le Chrome Web Store et le store de Firefox, fonctionne sur tous les navigateurs basés sur Chromium ainsi que sur Firefox. Elle est open source, ce qui signifie que tout le monde peut consulter son code et vérifier son fonctionnement. Grâce à Nikflix, vous pouvez contourner la limitation et regarder Netflix comme avant."
+  },
+  "features": {
+    "title": "Pourquoi choisir Nikflix ?",
+    "subtitle": "Conçu pour être léger, sécurisé, transparent et 100% gratuit.",
+    "legalTitle": "100% Légal & Sûr",
+    "legalDesc": "Modifie uniquement les requêtes dans le navigateur. Aucune identifiant ni donnée personnelle collectée.",
+    "openSourceTitle": "Transparence Open Source",
+    "openSourceDesc": "Inspectez chaque ligne de code sur GitHub. Construit avec le respect de la vie privée en priorité.",
+    "universalTitle": "Fonctionne partout",
+    "universalDesc": "Compatible avec Chrome, Firefox, Edge, Brave, Opera et tous les navigateurs Chromium.",
+    "instantTitle": "Configuration zéro",
+    "instantDesc": "Installez l'extension et profitez de votre streaming immédiatement sans réglages complexes."
+  },
+  "github": {
+    "title": "Open Source & Communautaire",
+    "subtitle": "Nikflix est propulsé par de fantastiques contributeurs open source.",
+    "stars": "Étoiles GitHub",
+    "contributors": "Contributeurs",
+    "viewRepo": "Voir le projet sur GitHub"
+  },
+  "faq": {
+    "title": "Foire Aux Questions",
+    "subtitle": "Tout ce que vous devez savoir sur Nikflix.",
+    "items": [
+      {
+        "question": "Est-ce légal d'utiliser cette extension ?",
+        "answer": "Nous avons conçu cette extension pour qu'elle reste la plus légale possible. Elle ne fait que modifier le contenu envoyé par Netflix dans votre navigateur. Cependant, nous ne sommes pas responsables des conséquences de son utilisation."
+      },
+      {
+        "question": "L'extension est-elle gratuite ?",
+        "answer": "Oui ! Les temps sont difficiles, surtout pour les étudiants. Cette extension est 100% gratuite. Vous pouvez nous soutenir en faisant un don."
+      },
+      {
+        "question": "L'extension est-elle open source ?",
+        "answer": "Oui, Nikflix est open source. Le code est accessible à tous sur GitHub pour être vérifié et amélioré."
+      },
+      {
+        "question": "Que faire si j'ai un bug ?",
+        "answer": "Un bouton de redémarrage dans la pop-up de l'extension résout la plupart des problèmes. Si besoin, vous pouvez ouvrir un ticket sur GitHub."
+      },
+      {
+        "question": "Netflix indique que mon appareil ne fait pas partie du foyer, que faire ?",
+        "answer": "C'est exactement pour cela que Nikflix a été créé ! Installez l'extension sur Chrome, Firefox, Edge ou Brave pour regarder Netflix sans restriction."
+      },
+      {
+        "question": "L'extension fonctionne-t-elle sur tous les navigateurs ?",
+        "answer": "Nikflix fonctionne sur Chrome, Firefox, Edge, Brave, Opera et tous les navigateurs basés sur Chromium sous Windows, macOS et Linux."
+      },
+      {
+        "question": "Puis-je utiliser Netflix chez des amis avec cette extension ?",
+        "answer": "Oui ! Regardez vos contenus partout : chez des amis, en vacances ou sur n'importe quel réseau Wi-Fi sans être bloqué."
+      },
+      {
+        "question": "Mon compte Netflix risque-t-il d'être banni ?",
+        "answer": "L'extension modifie uniquement ce que votre navigateur envoie localement, sans altérer votre compte. Des milliers d'utilisateurs l'utilisent en toute sécurité."
+      },
+      {
+        "question": "L'extension ralentit-elle la lecture ?",
+        "answer": "Non, Nikflix est optimisé pour ne pas impacter la vitesse ou la qualité de votre streaming."
+      },
+      {
+        "question": "L'extension est-elle sûre ?",
+        "answer": "Nikflix est 100% open source et ne collecte AUCUNE donnée personnelle. Votre vie privée est garantie."
+      }
+    ]
+  },
+  "changelog": {
+    "title": "Journal des modifications",
+    "subtitle": "Dernières nouveautés et améliorations apportées à Nikflix.",
+    "check": "Voir sur Github",
+    "notfond": "Aucune release trouvée pour le moment."
+  },
+  "changelogVersions": {
+    "1.9.4": {
+      "date": "FÉVRIER 2026",
+      "changes": [
+        "Ajout de l'option de lecture automatique de l'épisode suivant",
+        "Raccourcis clavier plein écran (F) et muet (M)",
+        "Masquage des écrans de restriction via CSS sans interruption vidéo",
+        "Optimisation de la vitesse et correction d'interface"
+      ]
+    }
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "disclaimer": "Nikflix est un projet open source indépendant non affilié et non approuvé par Netflix, Inc."
+  }
+}

@@ -1,0 +1,138 @@
+---
+import type { Locale } from '../utils/i18n';
+import { locales, defaultLocale, localeMeta, getLocalizedPath } from '../utils/i18n';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Locale;
+}
+
+const { title, description, lang = defaultLocale } = Astro.props;
+const meta = localeMeta(lang);
+const currentPath = Astro.url.pathname;
+
+
+
+
+const baseUrl = Astro.site ? Astro.site.toString() : 'https://nikflix.hergol.me';
+
+
+const canonicalURL = new URL(getLocalizedPath(currentPath, lang), baseUrl).href;
+const ogImage = new URL('/og-image.png', baseUrl).href;
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Nikflix',
+  inLanguage: meta.hreflang,
+  operatingSystem: 'Windows, macOS, Linux',
+  applicationCategory: 'BrowserApplication',
+  downloadUrl: 'https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  description,
+  softwareVersion: '1.9.4',
+  author: {
+    '@type': 'Person',
+    name: 'Yidir Kahlouche',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'hergol',
+  },
+  image: ogImage,
+  sameAs: [
+    'https://github.com/YidirK/Nikflix',
+    'https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema',
+    'https://addons.mozilla.org/fr/firefox/addon/nikflix/',
+  ],
+};
+---
+
+
+<html lang={meta.hreflang} dir={meta.dir} class="scroll-smooth bg-white text-gray-900">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+  <link rel="icon" type="image/png" href="/Nikflix-64.png" />
+  <link rel="apple-touch-icon" href="/Nikflix-64.png" />
+
+
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta name="keywords" content="Nikflix, Netflix Household, Netflix Extension, Bypass Netflix, Open Source, Chrome Extension, Firefox Add-on" />
+
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="author" content="Yidir Kahlouche" />
+
+
+  <link rel="canonical" href={canonicalURL} />
+
+
+  {locales.map((l) => {
+    const lMeta = localeMeta(l);
+    const localizedUrl = new URL(getLocalizedPath(currentPath, l), baseUrl).href;
+    return (
+        <link
+            rel="alternate"
+            hreflang={lMeta.hreflang}
+            href={localizedUrl}
+        />
+    );
+  })}
+
+
+  <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(getLocalizedPath(currentPath, defaultLocale), baseUrl).href}
+  />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:locale" content={meta.ogLocale} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Nikflix - Bypass Netflix Household Restrictions" />
+  <meta property="og:site_name" content="Nikflix" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content={canonicalURL} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-white">
+<slot />
+
+<!-- Ko-fi widget -->
+<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js" is:inline></script>
+<script is:inline>
+  window.addEventListener('load', () => {
+    if (window.kofiWidgetOverlay) {
+      window.kofiWidgetOverlay.draw('yidirk', {
+        type: 'floating-chat',
+        'floating-chat.donateButton.text': 'Support',
+        'floating-chat.donateButton.background-color': '#059669',
+        'floating-chat.donateButton.text-color': '#ffffff',
+      });
+    }
+  });
+</script>
+</body>
+</html>

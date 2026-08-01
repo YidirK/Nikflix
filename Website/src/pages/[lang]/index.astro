@@ -1,0 +1,19 @@
+---
+
+import Layout from '../../layouts/Layout.astro';
+import HomeContent from '../../components/HomeContent.astro';
+import { locales, getTranslations, type Locale } from '../../utils/i18n';
+
+export function getStaticPaths() {
+  return locales.map((lang: Locale) => ({
+    params: { lang },
+  }));
+}
+
+const { lang } = Astro.params as { lang: Locale };
+const t = getTranslations(lang);
+---
+
+<Layout title={t.site.title} description={t.site.description} lang={lang}>
+  <HomeContent lang={lang} t={t} />
+</Layout>

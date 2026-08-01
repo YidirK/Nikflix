@@ -4,8 +4,11 @@ import "wxt/browser";
 declare module "wxt/browser" {
   export type PublicPath =
     | "/"
+    | "/_locales/ar/messages.json"
     | "/_locales/en/messages.json"
+    | "/_locales/es/messages.json"
     | "/_locales/fr/messages.json"
+    | "/_locales/pt/messages.json"
     | "/content-scripts/content.js"
     | "/icons/Nikflix-48.png"
     | "/icons/Nikflix-48OFF.ico"

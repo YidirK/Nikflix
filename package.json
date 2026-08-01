@@ -13,6 +13,7 @@
     "build:all": "npm run build && npm run build:firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
+    "zip:all": "wxt zip && wxt zip -b firefox",
     "compile": "tsc --noEmit"
   },
   "devDependencies": {
