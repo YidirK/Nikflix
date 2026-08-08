@@ -9,13 +9,16 @@ declare module "wxt/browser" {
     | "/_locales/es/messages.json"
     | "/_locales/fr/messages.json"
     | "/_locales/pt/messages.json"
+    | "/background.js"
     | "/content-scripts/content.js"
     | "/icons/Nikflix-48.png"
     | "/icons/Nikflix-48OFF.ico"
     | "/icons/Nikflix-64.png"
+    | "/netflix-apiBlocker.js"
     | "/netflix-audioChange.js"
     | "/netflix-seeker.js"
     | "/netflix-substitleChange.js"
+    | "/onboarding.html"
     | "/popup.html"
   type HtmlPublicPath = Extract<PublicPath, `${string}.html`>
   export interface WxtRuntime {

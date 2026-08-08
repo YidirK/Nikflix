@@ -1,7 +1,7 @@
 import '../src/styles/netflix-controller.css';
 import { injectEarlyCSS, CLASSES_TO_REMOVE, removeElementsByClasses } from '../src/modules/modal-blocker';
 import { state } from '../src/modules/player-state';
-import { doYourJob, cleanController, createBackButton, createTipsButton, showMessage } from '../src/modules/player-ui';
+import { doYourJob, cleanController, createBackButton, createTipsButton, showMessage, isOnNetflixWatch } from '../src/modules/player-ui';
 import { setupKeyboardShortcuts } from '../src/modules/shortcuts';
 import { getIdFromUrl } from '../src/modules/episodes';
 
@@ -9,8 +9,6 @@ export default defineContentScript({
   matches: ['*://*.netflix.com/*'],
   cssInjectionMode: 'manifest',
   main() {
-    injectEarlyCSS();
-
     function injectScript(fileName: string): void {
       const script = document.createElement("script");
       script.src = chrome.runtime.getURL(fileName);
@@ -63,68 +61,128 @@ export default defineContentScript({
       });
     }
 
-    const observerOptions = { childList: true, subtree: true };
-    const observer = new MutationObserver((mutations) => {
-      if (state.mutationTimeout) clearTimeout(state.mutationTimeout as number);
+    // Read block mode and start accordingly
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      chrome.storage.local.get(['blockMode'], (result) => {
+        const blockMode: 'css' | 'api' = result.blockMode === 'api' ? 'api' : 'css';
+        startExtension(blockMode);
+      });
+    } else {
+      startExtension('css');
+    }
 
-      const episodeId = getIdFromUrl();
-      if (episodeId !== state.currentEpisodeId) {
-        if (state.currentEpisodeId !== null) {
-          cleanController();
-          state.currentEpisodeDuration = null;
-        }
-        state.currentEpisodeId = episodeId;
+    function startExtension(blockMode: 'css' | 'api') {
+      if (blockMode === 'css') {
+        // CSS mode: inject early CSS hide rules and run full controller
+        injectEarlyCSS();
+        startCSSMode();
+      } else {
+        // API mode: network request is blocked by declarativeNetRequest.
+        // We only inject the Tips button (the original Netflix controller handles playback).
+        startAPIMode();
       }
+    }
 
-      const hasRestrictionNode = mutations.some((mutation) =>
-        Array.from(mutation.addedNodes).some((node) => {
-          if (node.nodeType !== Node.ELEMENT_NODE) return false;
-          const cls = (node as HTMLElement).className || "";
-          return typeof cls === "string" && CLASSES_TO_REMOVE.some((c) => cls.includes(c));
-        })
-      );
+    function startCSSMode() {
+      const observerOptions = { childList: true, subtree: true };
+      const observer = new MutationObserver((mutations) => {
+        if (state.mutationTimeout) clearTimeout(state.mutationTimeout as number);
 
-      if (hasRestrictionNode) {
-        removeElementsByClasses(CLASSES_TO_REMOVE);
-        const video = document.querySelector("video");
-        if (video) {
-          video.play();
-          if (state.controllerTimerId) clearTimeout(state.controllerTimerId as number);
-          state.controllerTimerId = null;
+        const episodeId = getIdFromUrl();
+        if (episodeId !== state.currentEpisodeId) {
+          if (state.currentEpisodeId !== null) {
+            cleanController();
+            state.currentEpisodeDuration = null;
+          }
+          state.currentEpisodeId = episodeId;
         }
-      }
 
-      state.mutationTimeout = setTimeout(() => {
-        const hasRelevantChanges = mutations.some((mutation) =>
+        const hasRestrictionNode = mutations.some((mutation) =>
           Array.from(mutation.addedNodes).some((node) => {
-            if (node.nodeName === "VIDEO") return true;
-            if (node.nodeType === Node.ELEMENT_NODE) {
-              const nodeClassName = (node as HTMLElement).className || "";
-              return (
-                (node as Element).querySelector("video") ||
-                CLASSES_TO_REMOVE.some(
-                  (c) => typeof nodeClassName === "string" && nodeClassName.includes(c)
-                )
-              );
-            }
-            return false;
+            if (node.nodeType !== Node.ELEMENT_NODE) return false;
+            const cls = (node as HTMLElement).className || "";
+            return typeof cls === "string" && CLASSES_TO_REMOVE.some((c) => cls.includes(c));
           })
         );
 
-        if (hasRelevantChanges || !state.isControllerAdded) {
-          doYourJob();
+        if (hasRestrictionNode) {
+          removeElementsByClasses(CLASSES_TO_REMOVE);
+          const video = document.querySelector("video");
+          if (video) {
+            video.play();
+            if (state.controllerTimerId) clearTimeout(state.controllerTimerId as number);
+            state.controllerTimerId = null;
+          }
         }
-      }, 100);
-    });
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
+        state.mutationTimeout = setTimeout(() => {
+          const hasRelevantChanges = mutations.some((mutation) =>
+            Array.from(mutation.addedNodes).some((node) => {
+              if (node.nodeName === "VIDEO") return true;
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                const nodeClassName = (node as HTMLElement).className || "";
+                return (
+                  (node as Element).querySelector("video") ||
+                  CLASSES_TO_REMOVE.some(
+                    (c) => typeof nodeClassName === "string" && nodeClassName.includes(c)
+                  )
+                );
+              }
+              return false;
+            })
+          );
+
+          if (hasRelevantChanges || !state.isControllerAdded) {
+            doYourJob();
+          }
+        }, 100);
+      });
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          observer.observe(document.body, observerOptions);
+          doYourJob();
+        });
+      } else {
         observer.observe(document.body, observerOptions);
         doYourJob();
+      }
+    }
+
+    function startAPIMode() {
+      // In API mode, inject main-world fetch/XHR interceptor for CLCSInterstitialPlaybackAndPostPlayback
+      injectScript("netflix-apiBlocker.js");
+
+      function maybeInjectTipsButton() {
+        if (isOnNetflixWatch()) {
+          if (!state.tipsButton || !document.getElementById("nikflix-tips-button")) {
+            createTipsButton();
+          }
+          if (state.tipsButton) {
+            state.tipsButton.style.opacity = "1";
+            state.tipsButton.style.display = "flex";
+          }
+        } else if (state.tipsButton) {
+          state.tipsButton.style.display = "none";
+        }
+      }
+
+      // Watch for navigation/URL changes (Netflix is a SPA)
+      const observer = new MutationObserver(() => {
+        maybeInjectTipsButton();
       });
-    } else {
-      observer.observe(document.body, observerOptions);
-      doYourJob();
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => {
+          observer.observe(document.body, { childList: true, subtree: true });
+          maybeInjectTipsButton();
+        });
+      } else {
+        observer.observe(document.body, { childList: true, subtree: true });
+        maybeInjectTipsButton();
+      }
+
+      setInterval(maybeInjectTipsButton, 1000);
     }
   },
 });

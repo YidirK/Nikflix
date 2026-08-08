@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nikflix — Choose Your Blocking Mode</title>
+  <link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="page-wrapper">
+
+    <div class="hero">
+      <div class="logo-wrap">
+        <span class="logo-icon">🎬</span>
+        <h1 class="logo-text" data-i18n="extensionName">Nikflix</h1>
+      </div>
+      <p class="hero-sub" data-i18n="onboardingTitle">Welcome! Before you start, choose how you want to bypass the Netflix household restriction.</p>
+    </div>
+
+    <div class="cards-row">
+
+      <!-- CSS / DOM Mode -->
+      <div class="card" id="card-css" data-mode="css">
+        <div class="card-badge recommended" data-i18n="recommended">Recommended</div>
+        <div class="card-icon">🎨</div>
+        <h2 class="card-title" data-i18n="cssBlockTitle">CSS &amp; DOM Block</h2>
+        <p class="card-desc" data-i18n="cssBlockDesc">
+          Hides and removes Netflix's restriction modal directly in your browser using CSS and DOM manipulation.
+          The network request still completes normally — we simply make the modal invisible.
+        </p>
+        <div class="card-legal">
+          <span class="legal-badge legal-safe" data-i18n="legalSafeBadge">✅ More Legal</span>
+          <p class="legal-text" data-i18n="legalSafeText">
+            Only modifies what is displayed, not what is sent over the network.
+            The Netflix page works fully; we just hide the block screen. This is the safest approach legally.
+          </p>
+        </div>
+        <div class="card-pros">
+          <div class="pro-item" data-i18n="cssPro1">⚡ Nikflix custom controller active</div>
+          <div class="pro-item" data-i18n="cssPro2">🎛️ Full playback controls</div>
+          <div class="pro-item" data-i18n="tipsIncluded">💡 Tips button included</div>
+        </div>
+        <div class="card-check" id="check-css">✓</div>
+      </div>
+
+      <!-- API Block Mode -->
+      <div class="card" id="card-api" data-mode="api">
+        <div class="card-icon">🔒</div>
+        <h2 class="card-title" data-i18n="apiBlockTitle">API Block</h2>
+        <p class="card-desc" data-i18n="apiBlockDesc">
+          Completely blocks the GraphQL endpoint web.prod.cloud.netflix.com/graphql at the network level. The restriction check never reaches Netflix's servers.
+        </p>
+        <div class="card-legal">
+          <span class="legal-badge legal-warn" data-i18n="legalWarnBadge">⚠️ More Radical</span>
+          <p class="legal-text" data-i18n="legalWarnText">
+            Intercepts and drops the network request entirely using the browser's declarativeNetRequest API. The restriction modal never loads.
+          </p>
+        </div>
+        <div class="card-pros">
+          <div class="pro-item" data-i18n="apiPro1">🚫 Modal never loads</div>
+          <div class="pro-item" data-i18n="apiPro2">🎮 Netflix original controller</div>
+          <div class="pro-item" data-i18n="tipsIncluded">💡 Tips button included</div>
+        </div>
+        <div class="card-check" id="check-api" style="display:none">✓</div>
+      </div>
+
+    </div>
+
+    <div class="confirm-section">
+      <button class="confirm-btn" id="confirm-btn">
+        <span id="confirm-text" data-i18n="confirmCssBtn">Confirm — CSS &amp; DOM Block</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <p class="confirm-note" data-i18n="confirmNote">You can always change this later in the extension popup.</p>
+    </div>
+
+  </div>
+
+  <script src="main.ts" type="module"></script>
+</body>
+</html>

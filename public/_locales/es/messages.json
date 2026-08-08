@@ -63,5 +63,89 @@
         "content": "$1"
       }
     }
+  },
+  "onboardingTitle": {
+    "message": "¡Bienvenido! Antes de comenzar, elige cómo deseas omitir la restricción de hogar de Netflix.",
+    "description": "Onboarding subtitle"
+  },
+  "recommended": {
+    "message": "Recomendado",
+    "description": "Badge text"
+  },
+  "cssBlockTitle": {
+    "message": "Bloqueo CSS y DOM",
+    "description": "CSS block card title"
+  },
+  "cssBlockDesc": {
+    "message": "Oculta y elimina el modal de restricción de Netflix directamente en tu navegador mediante CSS y DOM. La solicitud de red se completa normalmente; simplemente hacemos invisible el modal.",
+    "description": "CSS block card description"
+  },
+  "legalSafeBadge": {
+    "message": "✅ Más legal",
+    "description": "Legal status safe badge"
+  },
+  "legalSafeText": {
+    "message": "Solo modifica lo que se muestra, no lo que se envía por la red. La página de Netflix funciona completamente; solo ocultamos la pantalla de bloqueo. Es el enfoque más seguro legalmente.",
+    "description": "Legal status safe description"
+  },
+  "cssPro1": {
+    "message": "⚡ Controlador personalizado de Nikflix activo",
+    "description": "CSS block pro 1"
+  },
+  "cssPro2": {
+    "message": "🎛️ Controles de reproducción completos",
+    "description": "CSS block pro 2"
+  },
+  "tipsIncluded": {
+    "message": "💡 Botón de propinas incluido",
+    "description": "Tips button feature label"
+  },
+  "apiBlockTitle": {
+    "message": "Bloqueo API",
+    "description": "API block card title"
+  },
+  "apiBlockDesc": {
+    "message": "Bloquea completamente el punto final GraphQL web.prod.cloud.netflix.com/graphql a nivel de red. La verificación de restricción nunca llega a los servidores de Netflix.",
+    "description": "API block card description"
+  },
+  "legalWarnBadge": {
+    "message": "⚠️ Más radical",
+    "description": "Legal status warning badge"
+  },
+  "legalWarnText": {
+    "message": "Intercepta y descarta por completo la solicitud de red mediante la API declarativeNetRequest del navegador. El modal de restricción nunca se carga.",
+    "description": "Legal status warning description"
+  },
+  "apiPro1": {
+    "message": "🚫 El modal nunca se carga",
+    "description": "API block pro 1"
+  },
+  "apiPro2": {
+    "message": "🎮 Controlador original de Netflix",
+    "description": "API block pro 2"
+  },
+  "confirmCssBtn": {
+    "message": "Confirmar — Bloqueo CSS y DOM",
+    "description": "Confirm button text for CSS mode"
+  },
+  "confirmApiBtn": {
+    "message": "Confirmar — Bloqueo API",
+    "description": "Confirm button text for API mode"
+  },
+  "confirmNote": {
+    "message": "Siempre puedes cambiar esto más tarde en la ventana emergente de la extensión.",
+    "description": "Confirmation note"
+  },
+  "blockingModeSection": {
+    "message": "🔒 Modo de bloqueo",
+    "description": "Mode section title"
+  },
+  "cssModeDescPopup": {
+    "message": "Oculta el modal · Controlador Nikflix",
+    "description": "CSS mode short description for popup"
+  },
+  "apiModeDescPopup": {
+    "message": "Bloquea GraphQL · Controlador Netflix",
+    "description": "API mode short description for popup"
   }
-}
+}

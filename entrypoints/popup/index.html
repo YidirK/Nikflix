@@ -55,7 +55,31 @@
     </div>
 </div>
 
-<div class="controller-toggle" style="margin-bottom: 4px;">
+<!-- ── Block mode selector ── -->
+<div class="mode-section">
+    <div class="mode-section-title" data-i18n="blockingModeSection">🔒 Blocking Mode</div>
+    <div class="mode-cards">
+        <button class="mode-card" id="mode-css" data-mode="css">
+            <div class="mode-card-icon">🎨</div>
+            <div class="mode-card-body">
+                <div class="mode-card-name" data-i18n="cssBlockTitle">CSS Block</div>
+                <div class="mode-card-desc" data-i18n="cssModeDescPopup">Hides the modal · Nikflix controller</div>
+            </div>
+            <div class="mode-card-check" id="check-css">✓</div>
+        </button>
+        <button class="mode-card" id="mode-api" data-mode="api">
+            <div class="mode-card-icon">🔒</div>
+            <div class="mode-card-body">
+                <div class="mode-card-name" data-i18n="apiBlockTitle">API Block</div>
+                <div class="mode-card-desc" data-i18n="apiModeDescPopup">Blocks GraphQL · Netflix controller</div>
+            </div>
+            <div class="mode-card-check" id="check-api">✓</div>
+        </button>
+    </div>
+</div>
+
+
+<div class="controller-toggle" id="controller-toggle-wrap" style="margin-bottom: 4px;">
     <span class="toggle-label" data-i18n="controllerLabel">Controller</span>
     <label class="toggle-switch">
         <input type="checkbox" id="controllerToggle" checked>

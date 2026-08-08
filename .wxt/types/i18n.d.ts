@@ -222,8 +222,218 @@ declare module "wxt/browser" {
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;
+    /**
+     * Onboarding subtitle
+     *
+     * "Welcome! Before you start, choose how you want to bypass the Netflix household restriction."
+     */
     getMessage(
-      messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "extensionName" | "extensionDescription" | "header" | "updateAvailable" | "checkCode" | "buyMeCoffee" | "reportBug" | "bugInfoText" | "contactDeveloper" | "controllerLabel" | "statusEnabled" | "statusDisabled" | "madeWith" | "thanksContributors" | "updateAvailableVersion",
+      messageName: "onboardingTitle",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Badge text
+     *
+     * "Recommended"
+     */
+    getMessage(
+      messageName: "recommended",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * CSS block card title
+     *
+     * "CSS & DOM Block"
+     */
+    getMessage(
+      messageName: "cssBlockTitle",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * CSS block card description
+     *
+     * "Hides and removes Netflix's restriction modal directly in your browser using CSS and DOM manipulation. The network request still completes normally — we simply make the modal invisible."
+     */
+    getMessage(
+      messageName: "cssBlockDesc",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Legal status safe badge
+     *
+     * "✅ More Legal"
+     */
+    getMessage(
+      messageName: "legalSafeBadge",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Legal status safe description
+     *
+     * "Only modifies what is displayed, not what is sent over the network. The Netflix page works fully; we just hide the block screen. This is the safest approach legally."
+     */
+    getMessage(
+      messageName: "legalSafeText",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * CSS block pro 1
+     *
+     * "⚡ Nikflix custom controller active"
+     */
+    getMessage(
+      messageName: "cssPro1",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * CSS block pro 2
+     *
+     * "🎛️ Full playback controls"
+     */
+    getMessage(
+      messageName: "cssPro2",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Tips button feature label
+     *
+     * "💡 Tips button included"
+     */
+    getMessage(
+      messageName: "tipsIncluded",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * API block card title
+     *
+     * "API Block"
+     */
+    getMessage(
+      messageName: "apiBlockTitle",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * API block card description
+     *
+     * "Completely blocks the GraphQL endpoint web.prod.cloud.netflix.com/graphql at the network level. The restriction check never reaches Netflix's servers."
+     */
+    getMessage(
+      messageName: "apiBlockDesc",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Legal status warning badge
+     *
+     * "⚠️ More Radical"
+     */
+    getMessage(
+      messageName: "legalWarnBadge",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Legal status warning description
+     *
+     * "Intercepts and drops the network request entirely using the browser's declarativeNetRequest API. The restriction modal never loads."
+     */
+    getMessage(
+      messageName: "legalWarnText",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * API block pro 1
+     *
+     * "🚫 Modal never loads"
+     */
+    getMessage(
+      messageName: "apiPro1",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * API block pro 2
+     *
+     * "🎮 Netflix original controller"
+     */
+    getMessage(
+      messageName: "apiPro2",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Confirm button text for CSS mode
+     *
+     * "Confirm — CSS & DOM Block"
+     */
+    getMessage(
+      messageName: "confirmCssBtn",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Confirm button text for API mode
+     *
+     * "Confirm — API Block"
+     */
+    getMessage(
+      messageName: "confirmApiBtn",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Confirmation note
+     *
+     * "You can always change this later in the extension popup."
+     */
+    getMessage(
+      messageName: "confirmNote",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Mode section title
+     *
+     * "🔒 Blocking Mode"
+     */
+    getMessage(
+      messageName: "blockingModeSection",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * CSS mode short description for popup
+     *
+     * "Hides the modal · Nikflix controller"
+     */
+    getMessage(
+      messageName: "cssModeDescPopup",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * API mode short description for popup
+     *
+     * "Blocks GraphQL · Netflix controller"
+     */
+    getMessage(
+      messageName: "apiModeDescPopup",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    getMessage(
+      messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "extensionName" | "extensionDescription" | "header" | "updateAvailable" | "checkCode" | "buyMeCoffee" | "reportBug" | "bugInfoText" | "contactDeveloper" | "controllerLabel" | "statusEnabled" | "statusDisabled" | "madeWith" | "thanksContributors" | "updateAvailableVersion" | "onboardingTitle" | "recommended" | "cssBlockTitle" | "cssBlockDesc" | "legalSafeBadge" | "legalSafeText" | "cssPro1" | "cssPro2" | "tipsIncluded" | "apiBlockTitle" | "apiBlockDesc" | "legalWarnBadge" | "legalWarnText" | "apiPro1" | "apiPro2" | "confirmCssBtn" | "confirmApiBtn" | "confirmNote" | "blockingModeSection" | "cssModeDescPopup" | "apiModeDescPopup",
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;

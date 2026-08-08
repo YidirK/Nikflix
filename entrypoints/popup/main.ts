@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   checkForUpdate();
   loadContributors();
+  initBlockModeSelector();
 });
 
 async function checkForUpdate() {
@@ -175,4 +176,49 @@ if (toggle && statusText && typeof chrome !== 'undefined' && chrome.storage) {
     statusText.textContent = toggle.checked ? 'Enable' : 'Disable';
     statusText.className = toggle.checked ? 'status-text status-active' : 'status-text status-inactive';
   });
+}
+
+// ── Block mode selector ───────────────────────────────────────────────
+type BlockMode = 'css' | 'api';
+
+function applyModeUI(mode: BlockMode) {
+  const btnCss = document.getElementById('mode-css');
+  const btnApi = document.getElementById('mode-api');
+  const controllerWrap = document.getElementById('controller-toggle-wrap');
+
+  if (btnCss) btnCss.classList.toggle('active', mode === 'css');
+  if (btnApi) btnApi.classList.toggle('active', mode === 'api');
+
+  // In API mode, hide the controller toggle (Netflix original controller is used)
+  if (controllerWrap) {
+    controllerWrap.style.display = mode === 'api' ? 'none' : 'flex';
+  }
+}
+
+async function setBlockMode(mode: BlockMode) {
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    await chrome.storage.local.set({ blockMode: mode });
+  }
+  if (typeof chrome !== 'undefined' && chrome.runtime) {
+    chrome.runtime.sendMessage({ type: 'SET_BLOCK_MODE', mode });
+  }
+  applyModeUI(mode);
+}
+
+function initBlockModeSelector() {
+  const btnCss = document.getElementById('mode-css');
+  const btnApi = document.getElementById('mode-api');
+
+  btnCss?.addEventListener('click', () => setBlockMode('css'));
+  btnApi?.addEventListener('click', () => setBlockMode('api'));
+
+  // Load saved mode
+  if (typeof chrome !== 'undefined' && chrome.storage) {
+    chrome.storage.local.get(['blockMode'], (result) => {
+      const mode: BlockMode = result.blockMode === 'api' ? 'api' : 'css';
+      applyModeUI(mode);
+    });
+  } else {
+    applyModeUI('css');
+  }
 }

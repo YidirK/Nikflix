@@ -63,5 +63,89 @@
         "content": "$1"
       }
     }
+  },
+  "onboardingTitle": {
+    "message": "مرحبًا بك! قبل البدء، اختر كيفية تجاوز قيود منزل Netflix.",
+    "description": "Onboarding subtitle"
+  },
+  "recommended": {
+    "message": "موصى به",
+    "description": "Badge text"
+  },
+  "cssBlockTitle": {
+    "message": "حظر CSS و DOM",
+    "description": "CSS block card title"
+  },
+  "cssBlockDesc": {
+    "message": "يخفي ويزيل نافذة قيود Netflix مباشرة في متصفحك باستخدام CSS وتعديل DOM. يكتمل طلب الشبكة كالمعتاد ولكن تصبح النافذة غير مرئية.",
+    "description": "CSS block card description"
+  },
+  "legalSafeBadge": {
+    "message": "✅ أكثر قانونية",
+    "description": "Legal status safe badge"
+  },
+  "legalSafeText": {
+    "message": "يعدل فقط ما يتم عرضه، وليس ما يتم إرساله عبر الشبكة. تعمل صفحة Netflix بالكامل، نحن فقط نخفي شاشة الحظر. هذا هو الخيار الأكثر أمانًا قانونيًا.",
+    "description": "Legal status safe description"
+  },
+  "cssPro1": {
+    "message": "⚡ وحدة تحكم Nikflix المخصصة مفعلة",
+    "description": "CSS block pro 1"
+  },
+  "cssPro2": {
+    "message": "🎛️ عناصر تحكم كاملة في التشغيل",
+    "description": "CSS block pro 2"
+  },
+  "tipsIncluded": {
+    "message": "💡 زر الدعم متضمن",
+    "description": "Tips button feature label"
+  },
+  "apiBlockTitle": {
+    "message": "حظر API",
+    "description": "API block card title"
+  },
+  "apiBlockDesc": {
+    "message": "يحظر نقطة نهاية GraphQL web.prod.cloud.netflix.com/graphql تمامًا على مستوى الشبكة. لا يصل فحص القيود مطلقًا إلى خوادم Netflix.",
+    "description": "API block card description"
+  },
+  "legalWarnBadge": {
+    "message": "⚠️ أكثر جذريّة",
+    "description": "Legal status warning badge"
+  },
+  "legalWarnText": {
+    "message": "يعترض طلب الشبكة ويسقطه بالكامل باستخدام declarativeNetRequest API. لا يتم تحميل نافذة القيود مطلقًا.",
+    "description": "Legal status warning description"
+  },
+  "apiPro1": {
+    "message": "🚫 النافذة لا تُحمل أبداً",
+    "description": "API block pro 1"
+  },
+  "apiPro2": {
+    "message": "🎮 مشغل Netflix الأصلي",
+    "description": "API block pro 2"
+  },
+  "confirmCssBtn": {
+    "message": "تأكيد — حظر CSS و DOM",
+    "description": "Confirm button text for CSS mode"
+  },
+  "confirmApiBtn": {
+    "message": "تأكيد — حظر API",
+    "description": "Confirm button text for API mode"
+  },
+  "confirmNote": {
+    "message": "يمكنك دائمًا تغيير هذا لاحقًا من نافذة الإضافة.",
+    "description": "Confirmation note"
+  },
+  "blockingModeSection": {
+    "message": "🔒 وضع الحظر",
+    "description": "Mode section title"
+  },
+  "cssModeDescPopup": {
+    "message": "إخفاء النافذة · مشغل Nikflix",
+    "description": "CSS mode short description for popup"
+  },
+  "apiModeDescPopup": {
+    "message": "حظر GraphQL · مشغل Netflix",
+    "description": "API mode short description for popup"
   }
-}
+}

@@ -63,5 +63,90 @@
         "content": "$1"
       }
     }
+  },
+  "onboardingTitle": {
+    "message": "Welcome! Before you start, choose how you want to bypass the Netflix household restriction.",
+    "description": "Onboarding subtitle"
+  },
+  "recommended": {
+    "message": "Recommended",
+    "description": "Badge text"
+  },
+  "cssBlockTitle": {
+    "message": "CSS & DOM Block",
+    "description": "CSS block card title"
+  },
+  "cssBlockDesc": {
+    "message": "Hides and removes Netflix's restriction modal directly in your browser using CSS and DOM manipulation. The network request still completes normally — we simply make the modal invisible.",
+    "description": "CSS block card description"
+  },
+  "legalSafeBadge": {
+    "message": "✅ More Legal",
+    "description": "Legal status safe badge"
+  },
+  "legalSafeText": {
+    "message": "Only modifies what is displayed, not what is sent over the network. The Netflix page works fully; we just hide the block screen. This is the safest approach legally.",
+    "description": "Legal status safe description"
+  },
+  "cssPro1": {
+    "message": "⚡ Nikflix custom controller active",
+    "description": "CSS block pro 1"
+  },
+  "cssPro2": {
+    "message": "🎛️ Full playback controls",
+    "description": "CSS block pro 2"
+  },
+  "tipsIncluded": {
+    "message": "💡 Tips button included",
+    "description": "Tips button feature label"
+  },
+  "apiBlockTitle": {
+    "message": "API Block",
+    "description": "API block card title"
+  },
+  "apiBlockDesc": {
+    "message": "Completely blocks the GraphQL endpoint web.prod.cloud.netflix.com/graphql at the network level. The restriction check never reaches Netflix's servers.",
+    "description": "API block card description"
+  },
+  "legalWarnBadge": {
+    "message": "⚠️ More Radical",
+    "description": "Legal status warning badge"
+  },
+  "legalWarnText": {
+    "message": "Intercepts and drops the network request entirely using the browser's declarativeNetRequest API. The restriction modal never loads.",
+    "description": "Legal status warning description"
+  },
+  "apiPro1": {
+    "message": "🚫 Modal never loads",
+    "description": "API block pro 1"
+  },
+  "apiPro2": {
+    "message": "🎮 Netflix original controller",
+    "description": "API block pro 2"
+  },
+  "confirmCssBtn": {
+    "message": "Confirm — CSS & DOM Block",
+    "description": "Confirm button text for CSS mode"
+  },
+  "confirmApiBtn": {
+    "message": "Confirm — API Block",
+    "description": "Confirm button text for API mode"
+  },
+  "confirmNote": {
+    "message": "You can always change this later in the extension popup.",
+    "description": "Confirmation note"
+  },
+  "blockingModeSection": {
+    "message": "🔒 Blocking Mode",
+    "description": "Mode section title"
+  },
+  "cssModeDescPopup": {
+    "message": "Hides the modal · Nikflix controller",
+    "description": "CSS mode short description for popup"
+  },
+  "apiModeDescPopup": {
+    "message": "Blocks GraphQL · Netflix controller",
+    "description": "API mode short description for popup"
   }
 }
+

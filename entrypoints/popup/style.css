@@ -8,7 +8,7 @@ body {
     margin: 0;
     padding: 0;
     width: 380px;
-    height: 500px;
+    height: 540px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     display: flex;
@@ -347,3 +347,112 @@ input:checked + .slider:before {
 
 .status-active  { color: #10b981; font-weight: 600; }
 .status-inactive { color: rgba(255, 255, 255, 0.5); }
+
+/* ── Block mode selector cards ───────────────────────────────────────── */
+.mode-section {
+    width: 260px;
+    margin: 6px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.mode-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-left: 2px;
+}
+
+.mode-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.mode-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: inherit;
+}
+
+.mode-card::before {
+    display: none;
+}
+
+.mode-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.mode-card.active {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: #10b981;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.25);
+}
+
+.mode-card-icon {
+    font-size: 18px;
+    min-width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mode-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.mode-card-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.mode-card-desc {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+}
+
+.mode-card-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.mode-card.active .mode-card-check {
+    display: flex;
+}
+
+

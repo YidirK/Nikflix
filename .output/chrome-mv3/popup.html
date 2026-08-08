@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Nikflix | Bypass the account-sharing restrictions</title>
-  <script type="module" crossorigin src="/chunks/popup-c1RjTImC.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/popup-C7QXYuj9.css">
+  <script type="module" crossorigin src="/chunks/popup-_Pw6fpRy.js"></script>
+  <link rel="modulepreload" crossorigin href="/chunks/i18n-Dnds9Mbp.js">
+  <link rel="stylesheet" crossorigin href="/assets/popup-_fNUfa8A.css">
 </head>
 <body>
 <header data-i18n="header">🎬 Nikflix</header>
@@ -56,7 +57,31 @@
     </div>
 </div>
 
-<div class="controller-toggle" style="margin-bottom: 4px;">
+<!-- ── Block mode selector ── -->
+<div class="mode-section">
+    <div class="mode-section-title" data-i18n="blockingModeSection">🔒 Blocking Mode</div>
+    <div class="mode-cards">
+        <button class="mode-card" id="mode-css" data-mode="css">
+            <div class="mode-card-icon">🎨</div>
+            <div class="mode-card-body">
+                <div class="mode-card-name" data-i18n="cssBlockTitle">CSS Block</div>
+                <div class="mode-card-desc" data-i18n="cssModeDescPopup">Hides the modal · Nikflix controller</div>
+            </div>
+            <div class="mode-card-check" id="check-css">✓</div>
+        </button>
+        <button class="mode-card" id="mode-api" data-mode="api">
+            <div class="mode-card-icon">🔒</div>
+            <div class="mode-card-body">
+                <div class="mode-card-name" data-i18n="apiBlockTitle">API Block</div>
+                <div class="mode-card-desc" data-i18n="apiModeDescPopup">Blocks GraphQL · Netflix controller</div>
+            </div>
+            <div class="mode-card-check" id="check-api">✓</div>
+        </button>
+    </div>
+</div>
+
+
+<div class="controller-toggle" id="controller-toggle-wrap" style="margin-bottom: 4px;">
     <span class="toggle-label" data-i18n="controllerLabel">Controller</span>
     <label class="toggle-switch">
         <input type="checkbox" id="controllerToggle" checked>

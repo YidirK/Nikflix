@@ -55,6 +55,19 @@ https://nikflix.hergol.me
 ---
 
 # 📝 Changelog
+
+## [2.0.1] - 2026-08-09
+
+### 🚀 Dual Blocking Modes & Onboarding
+
+- ✓ **First-time Onboarding Page**: A beautiful onboarding screen opens on first install allowing users to choose between **CSS & DOM Block** and **API Block**.
+- ✓ **API Blocking Mode**: Intercepts and blocks the `CLCSInterstitialPlaybackAndPostPlayback` GraphQL endpoint (`web.prod.cloud.netflix.com/graphql`) at the network and main-world level.
+- ✓ **Popup Mode Selector**: Switch between CSS and API blocking modes seamlessly at any time from the extension popup.
+- ✓ **Multilingual Support**: Fully translated into English, French, Spanish, Arabic (with RTL), and Portuguese.
+
+#### Special Thanks to @Buckibarnes17
+- 🙌 Special thanks to **@Buckibarnes17** for the idea and code implementation inspiration for the API restriction blocking mechanism (`CLCSInterstitialPlaybackAndPostPlayback`)!
+
 ## [1.9.4] - 2026-07-31
 
 ### 🚀 Major Rewrite
@@ -124,14 +137,11 @@ _locales/
 
 ## 💬 Technical Note
 
-Several people have suggested blocking the Netflix API responsible for checking whether a user belongs to a Netflix Household.
+Nikflix offers two blocking modes so users can choose what works best for them:
 
-I intentionally chose **not** to use this approach for several reasons:
+- **CSS & DOM Block (Recommended)**: Modifies the page element display after Netflix renders content. It leaves network traffic untouched, making it legally safer and less detectable.
+- **API Block**: Intercepts the `CLCSInterstitialPlaybackAndPostPlayback` GraphQL endpoint (`web.prod.cloud.netflix.com/graphql`). It prevents the restriction payload from reaching Netflix's player, keeping the original Netflix player intact. Special thanks to **@Buckibarnes17** for the inspiration on this approach.
 
-- It is unreliable and its effectiveness varies depending on the region.
-- It is easier for Netflix to detect.
-- From a legal perspective, Nikflix is designed to modify the page after Netflix has already delivered its content, rather than blocking or interfering with network requests.
-- This approach reduces legal risks for both the project and its users.
 
 ---
 
