@@ -84,16 +84,27 @@ async function getData() {
 const CONTRIBUTORS_URL = "https://api.github.com/repos/YidirK/Nikflix/contributors";
 const CONTRIBUTORS_TTL = 24 * 60 * 60 * 1000;
 const OWNER = "YidirK";
+const FALLBACK_CONTRIBUTORS = ["reservedbytes", "AdmirableAmbiguity", "RenatoGarciaLopes", "Buckibarnes17"];
 
 async function loadContributors() {
   const container = document.getElementById('contributors');
   if (!container) return;
 
-  if (typeof chrome !== 'undefined' && chrome.storage) {
-    const cached = (await chrome.storage.local.get("contributors")).contributors;
-    if (cached) {
-      renderContributors(container, cached.logins);
-      if (Date.now() - cached.fetchedAt < CONTRIBUTORS_TTL) return;
+  // Immediately render fallback list so text is never empty on Firefox or Chrome
+  renderContributors(container, FALLBACK_CONTRIBUTORS);
+
+  if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+    try {
+      const data = await new Promise<any>((resolve) => {
+        chrome.storage.local.get("contributors", (res) => resolve(res));
+      });
+      const cached = data?.contributors;
+      if (cached && Array.isArray(cached.logins) && cached.logins.length > 0) {
+        renderContributors(container, cached.logins);
+        if (Date.now() - cached.fetchedAt < CONTRIBUTORS_TTL) return;
+      }
+    } catch (e) {
+      console.warn("Storage check failed, fetching fresh data:", e);
     }
   }
 
@@ -105,12 +116,13 @@ async function loadContributors() {
       .filter((contributor: any) => contributor.type === "User" && contributor.login !== OWNER)
       .map((contributor: any) => contributor.login);
 
-    renderContributors(container, logins);
-    if (typeof chrome !== 'undefined' && chrome.storage) {
-      chrome.storage.local.set({ contributors: { logins, fetchedAt: Date.now() } });
+    const finalLogins = logins.length > 0 ? logins : FALLBACK_CONTRIBUTORS;
+    renderContributors(container, finalLogins);
+    if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ contributors: { logins: finalLogins, fetchedAt: Date.now() } });
     }
   } catch (error) {
-    console.error("Error loading contributors:", error);
+    console.error("Error loading contributors, keeping fallback:", error);
   }
 }
 

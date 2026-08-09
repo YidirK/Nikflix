@@ -39,23 +39,47 @@ document.addEventListener('DOMContentLoaded', () => {
     (confirmBtn as HTMLButtonElement).style.opacity = '0.7';
 
     // Save to storage
-    if (typeof chrome !== 'undefined' && chrome.storage) {
-      await chrome.storage.local.set({ blockMode: selectedMode });
+    try {
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        await chrome.storage.local.set({ blockMode: selectedMode });
+      }
+    } catch (e) {
+      console.error('[Nikflix] Failed to save storage:', e);
     }
 
     // Tell background script to apply rule
-    if (typeof chrome !== 'undefined' && chrome.runtime) {
-      await chrome.runtime.sendMessage({ type: 'SET_BLOCK_MODE', mode: selectedMode });
+    try {
+      if (typeof chrome !== 'undefined' && chrome.runtime) {
+        await chrome.runtime.sendMessage({ type: 'SET_BLOCK_MODE', mode: selectedMode });
+      }
+    } catch (e) {
+      console.error('[Nikflix] Failed to send block mode message:', e);
     }
 
     // Redirect to Netflix
+    const netflixUrl = 'https://www.netflix.com';
+    const doRedirect = () => {
+      window.location.href = netflixUrl;
+    };
+
     if (typeof chrome !== 'undefined' && chrome.tabs) {
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tabs[0]?.id) {
-        chrome.tabs.update(tabs[0].id, { url: 'https://www.netflix.com' });
+      try {
+        if (chrome.tabs.getCurrent) {
+          chrome.tabs.getCurrent((tab) => {
+            if (tab && tab.id) {
+              chrome.tabs.update(tab.id, { url: netflixUrl }).catch(() => doRedirect());
+            } else {
+              chrome.tabs.update({ url: netflixUrl }).catch(() => doRedirect());
+            }
+          });
+        } else {
+          chrome.tabs.update({ url: netflixUrl }).catch(() => doRedirect());
+        }
+      } catch (e) {
+        doRedirect();
       }
     } else {
-      window.location.href = 'https://www.netflix.com';
+      doRedirect();
     }
   });
 });

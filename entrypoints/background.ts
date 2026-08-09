@@ -41,31 +41,28 @@ export default defineBackground(() => {
 
   async function enableApiBlock() {
     try {
+      const blockAction = (chrome.declarativeNetRequest?.RuleActionType?.BLOCK || 'block') as any;
+      const xhrResource = (chrome.declarativeNetRequest?.ResourceType?.XMLHTTPREQUEST || 'xmlhttprequest') as any;
+
       await chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: [1, 2],
         addRules: [
           {
             id: 1,
             priority: 1,
-            action: { type: chrome.declarativeNetRequest.RuleActionType.BLOCK },
+            action: { type: blockAction },
             condition: {
               urlFilter: '*web.prod.cloud.netflix.com/graphql*',
-              resourceTypes: [
-                chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
-                chrome.declarativeNetRequest.ResourceType.FETCH,
-              ],
+              resourceTypes: [xhrResource],
             },
           },
           {
             id: 2,
             priority: 1,
-            action: { type: chrome.declarativeNetRequest.RuleActionType.BLOCK },
+            action: { type: blockAction },
             condition: {
               urlFilter: '||web.prod.cloud.netflix.com/graphql',
-              resourceTypes: [
-                chrome.declarativeNetRequest.ResourceType.XMLHTTPREQUEST,
-                chrome.declarativeNetRequest.ResourceType.FETCH,
-              ],
+              resourceTypes: [xhrResource],
             },
           },
         ],

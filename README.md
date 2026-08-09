@@ -55,6 +55,9 @@ https://nikflix.hergol.me
 ---
 
 # 📝 Changelog
+## [2.0.2] - 2026-08-09
+### 🛠️ Fixes
+- ✓ **Firefox Compatibility**: Fixed onboarding confirmation and redirection behavior on Firefox.
 
 ## [2.0.1] - 2026-08-09
 
