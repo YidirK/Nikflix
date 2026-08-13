@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://nikflix.hergol.me/sitemap-index.xml
+Sitemap: https://nikflix.hergol.me/sitemap-0.xml

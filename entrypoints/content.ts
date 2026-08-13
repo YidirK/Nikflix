@@ -61,29 +61,32 @@ export default defineContentScript({
       });
     }
 
+    let currentBlockMode: 'css' | 'api' = 'css';
+
     // Read block mode and start accordingly
     if (typeof chrome !== 'undefined' && chrome.storage) {
       chrome.storage.local.get(['blockMode'], (result) => {
-        const blockMode: 'css' | 'api' = result.blockMode === 'api' ? 'api' : 'css';
-        startExtension(blockMode);
+        currentBlockMode = result.blockMode === 'api' ? 'api' : 'css';
+        startExtension(currentBlockMode);
       });
     } else {
       startExtension('css');
     }
 
     function startExtension(blockMode: 'css' | 'api') {
+      injectEarlyCSS();
       if (blockMode === 'css') {
-        // CSS mode: inject early CSS hide rules and run full controller
-        injectEarlyCSS();
-        startCSSMode();
+        startCSSMode(true);
       } else {
-        // API mode: network request is blocked by declarativeNetRequest.
-        // We only inject the Tips button (the original Netflix controller handles playback).
+        // API mode:
+        // On Home/Browse pages: CSS DOM cleaner runs to hide restriction popups.
+        // On Watch (/watch): API blocker script intercepts GraphQL restriction call.
+        startCSSMode(false);
         startAPIMode();
       }
     }
 
-    function startCSSMode() {
+    function startCSSMode(buildCustomController: boolean) {
       const observerOptions = { childList: true, subtree: true };
       const observer = new MutationObserver((mutations) => {
         if (state.mutationTimeout) clearTimeout(state.mutationTimeout as number);
@@ -108,49 +111,51 @@ export default defineContentScript({
         if (hasRestrictionNode) {
           removeElementsByClasses(CLASSES_TO_REMOVE);
           const video = document.querySelector("video");
-          if (video) {
+          if (video && buildCustomController) {
             video.play();
             if (state.controllerTimerId) clearTimeout(state.controllerTimerId as number);
             state.controllerTimerId = null;
           }
         }
 
-        state.mutationTimeout = setTimeout(() => {
-          const hasRelevantChanges = mutations.some((mutation) =>
-            Array.from(mutation.addedNodes).some((node) => {
-              if (node.nodeName === "VIDEO") return true;
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                const nodeClassName = (node as HTMLElement).className || "";
-                return (
-                  (node as Element).querySelector("video") ||
-                  CLASSES_TO_REMOVE.some(
-                    (c) => typeof nodeClassName === "string" && nodeClassName.includes(c)
-                  )
-                );
-              }
-              return false;
-            })
-          );
+        if (buildCustomController) {
+          state.mutationTimeout = setTimeout(() => {
+            const hasRelevantChanges = mutations.some((mutation) =>
+              Array.from(mutation.addedNodes).some((node) => {
+                if (node.nodeName === "VIDEO") return true;
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                  const nodeClassName = (node as HTMLElement).className || "";
+                  return (
+                    (node as Element).querySelector("video") ||
+                    CLASSES_TO_REMOVE.some(
+                      (c) => typeof nodeClassName === "string" && nodeClassName.includes(c)
+                    )
+                  );
+                }
+                return false;
+              })
+            );
 
-          if (hasRelevantChanges || !state.isControllerAdded) {
-            doYourJob();
-          }
-        }, 100);
+            if (hasRelevantChanges || !state.isControllerAdded) {
+              doYourJob();
+            }
+          }, 100);
+        }
       });
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
           observer.observe(document.body, observerOptions);
-          doYourJob();
+          if (buildCustomController) doYourJob();
         });
       } else {
         observer.observe(document.body, observerOptions);
-        doYourJob();
+        if (buildCustomController) doYourJob();
       }
     }
 
     function startAPIMode() {
-      // In API mode, inject main-world fetch/XHR interceptor for CLCSInterstitialPlaybackAndPostPlayback
+      // Inject main-world fetch/XHR interceptor for CLCSInterstitialPlaybackAndPostPlayback
       injectScript("netflix-apiBlocker.js");
 
       function maybeInjectTipsButton() {
@@ -167,7 +172,6 @@ export default defineContentScript({
         }
       }
 
-      // Watch for navigation/URL changes (Netflix is a SPA)
       const observer = new MutationObserver(() => {
         maybeInjectTipsButton();
       });

@@ -15,7 +15,9 @@ export default defineUnlistedScript(() => {
       ? resource.href
       : (resource as Request)?.url || '';
 
-    if (url.includes(RESTRICTION_HOST) && url.includes(RESTRICTION_PATH)) {
+    const isOnWatch = window.location.pathname.includes('/watch');
+
+    if (isOnWatch && url.includes(RESTRICTION_HOST) && url.includes(RESTRICTION_PATH)) {
       const isRestrictionOp = url.includes(RESTRICTION_OPERATION);
       const bodyStr = typeof config?.body === 'string' ? config.body : '';
       const isBodyOp = bodyStr.includes(RESTRICTION_OPERATION);
@@ -43,7 +45,9 @@ export default defineUnlistedScript(() => {
 
   XMLHttpRequest.prototype.send = function (body?: any) {
     const url = (this as any)._nikflixUrl || '';
-    if (url.includes(RESTRICTION_HOST) && url.includes(RESTRICTION_PATH)) {
+    const isOnWatch = window.location.pathname.includes('/watch');
+
+    if (isOnWatch && url.includes(RESTRICTION_HOST) && url.includes(RESTRICTION_PATH)) {
       const isRestrictionOp = url.includes(RESTRICTION_OPERATION);
       const bodyStr = typeof body === 'string' ? body : '';
       const isBodyOp = bodyStr.includes(RESTRICTION_OPERATION);

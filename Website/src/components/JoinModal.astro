@@ -1,0 +1,128 @@
+---
+import type { Locale } from '../utils/i18n';
+import DownloadIcon from './icons/ChromeIcon.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+const modalContent = {
+  fr: {
+    badge: '🔥 53,000+ Utilisateurs',
+    title: 'Rejoins plus de 53K niqueurs de Netflix !!',
+    subtitle: 'Regarde tes séries et films préférés sans la moindre restriction de foyer. Extension 100% gratuite, légale & open source !',
+    chromeBtn: 'Ajouter à Chrome',
+    firefoxBtn: 'Ajouter à Firefox',
+    close: 'Fermer',
+  },
+  en: {
+    badge: '🔥 53,000+ Active Users',
+    title: 'Join over 53K Netflix bypassers !!',
+    subtitle: 'Watch your favorite movies & shows anywhere without annoying household blocks. 100% free & open-source!',
+    chromeBtn: 'Add to Chrome',
+    firefoxBtn: 'Add to Firefox',
+    close: 'Close',
+  },
+  es: {
+    badge: '🔥 53,000+ Usuarios Activos',
+    title: '¡¡Únete a más de 53K usuarios de Netflix!!',
+    subtitle: 'Disfruta de tus series sin restricciones de hogar. ¡Extensión 100% gratuita y de código abierto!',
+    chromeBtn: 'Añadir a Chrome',
+    firefoxBtn: 'Añadir a Firefox',
+    close: 'Cerrar',
+  },
+};
+
+const content = modalContent[lang] || modalContent.fr;
+---
+
+<div
+  id="nikflix-join-modal"
+  class="fixed bottom-6 right-6 z-[999] max-w-md w-[calc(100vw-3rem)] transform translate-y-20 opacity-0 transition-all duration-500 ease-out pointer-events-none"
+  aria-hidden="true"
+>
+  <div class="relative bg-gray-900/95 backdrop-blur-2xl text-white p-6 rounded-2xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 overflow-hidden">
+    <!-- Background Glow -->
+    <div class="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none"></div>
+    <div class="absolute -bottom-12 -left-12 w-32 h-32 bg-teal-500/20 rounded-full blur-2xl pointer-events-none"></div>
+
+    <!-- Close Button -->
+    <button
+      id="close-join-modal"
+      class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center transition-colors duration-200"
+      aria-label={content.close}
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold mb-3">
+      <span>{content.badge}</span>
+    </div>
+
+    <!-- Title & Subtitle -->
+    <h3 class="text-xl font-black text-white tracking-tight leading-snug mb-2 pr-6">
+      {content.title}
+    </h3>
+    <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-5">
+      {content.subtitle}
+    </p>
+
+    <!-- CTAs -->
+    <div class="flex flex-col sm:flex-row items-center gap-2.5">
+      <a
+        href="https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg shadow-emerald-600/30 hover:-translate-y-0.5"
+      >
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 16C14.21 16 16 14.21 16 12C16 9.79 14.21 8 12 8C9.79 8 8 9.79 8 12C8 14.21 9.79 16 12 16Z" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>{content.chromeBtn}</span>
+      </a>
+
+      <a
+        href="https://addons.mozilla.org/fr/firefox/addon/nikflix/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-full sm:flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/10 font-bold text-xs sm:text-sm transition-all duration-200 hover:-translate-y-0.5"
+      >
+        <span>{content.firefoxBtn}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('nikflix-join-modal');
+    const closeBtn = document.getElementById('close-join-modal');
+    const DISMISS_KEY = 'nikflix_join_modal_dismissed_v1';
+
+    if (!modal || localStorage.getItem(DISMISS_KEY)) return;
+
+    function showModal() {
+      modal.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      modal.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideModal() {
+      modal.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      modal.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      modal.setAttribute('aria-hidden', 'true');
+      localStorage.setItem(DISMISS_KEY, 'true');
+    }
+
+    // Show modal after 2.5 seconds
+    setTimeout(showModal, 2500);
+
+    closeBtn?.addEventListener('click', hideModal);
+  });
+</script>

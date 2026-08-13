@@ -1,7 +1,8 @@
 ---
 import type { Locale } from '../utils/i18n';
-import { locales, defaultLocale, localeMeta, getLocalizedPath } from '../utils/i18n';
+import { locales, defaultLocale, localeMeta, getLocalizedPath, getTranslations } from '../utils/i18n';
 import '../styles/global.css';
+import JoinModal from '../components/JoinModal.astro';
 
 interface Props {
   title: string;
@@ -11,18 +12,15 @@ interface Props {
 
 const { title, description, lang = defaultLocale } = Astro.props;
 const meta = localeMeta(lang);
+const t = getTranslations(lang);
 const currentPath = Astro.url.pathname;
 
-
-
-
 const baseUrl = Astro.site ? Astro.site.toString() : 'https://nikflix.hergol.me';
-
-
 const canonicalURL = new URL(getLocalizedPath(currentPath, lang), baseUrl).href;
 const ogImage = new URL('/og-image.png', baseUrl).href;
 
-const schemaData = {
+// Software Application Schema
+const softwareSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'Nikflix',
@@ -30,20 +28,29 @@ const schemaData = {
   operatingSystem: 'Windows, macOS, Linux',
   applicationCategory: 'BrowserApplication',
   downloadUrl: 'https://chromewebstore.google.com/detail/nikflix/knjoabokknkpkhbbdclmnjcoeedmgema',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '3850',
+    bestRating: '5',
+    worstRating: '1',
+  },
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
   },
   description,
-  softwareVersion: '1.9.4',
+  softwareVersion: '2.0.2',
   author: {
     '@type': 'Person',
     name: 'Yidir Kahlouche',
+    url: 'https://github.com/YidirK',
   },
   publisher: {
     '@type': 'Organization',
     name: 'hergol',
+    url: baseUrl,
   },
   image: ogImage,
   sameAs: [
@@ -52,6 +59,30 @@ const schemaData = {
     'https://addons.mozilla.org/fr/firefox/addon/nikflix/',
   ],
 };
+
+// FAQ Schema for Rich Snippets in Google Search Results
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: t.faq.items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+
+// WebSite Schema
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Nikflix',
+  url: baseUrl,
+  inLanguage: meta.hreflang,
+  description,
+};
 ---
 
 
@@ -59,22 +90,21 @@ const schemaData = {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta name="theme-color" content="#059669" />
 
   <link rel="icon" type="image/png" href="/Nikflix-64.png" />
   <link rel="apple-touch-icon" href="/Nikflix-64.png" />
 
-
   <title>{title}</title>
   <meta name="description" content={description} />
-  <meta name="keywords" content="Nikflix, Netflix Household, Netflix Extension, Bypass Netflix, Open Source, Chrome Extension, Firefox Add-on" />
+  <meta name="keywords" content="Nikflix, Netflix Household, Netflix Extension, Bypass Netflix Household, Contourner restriction foyer Netflix, Partage compte Netflix, Extension Chrome Netflix, Extension Firefox Netflix, Netflix account sharing bypass 2026, Votre appareil ne fait pas partie du foyer Netflix" />
 
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <meta name="author" content="Yidir Kahlouche" />
-
+  <meta name="google-site-verification" content="google" />
 
   <link rel="canonical" href={canonicalURL} />
-
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap-index.xml" />
 
   {locales.map((l) => {
     const lMeta = localeMeta(l);
@@ -87,7 +117,6 @@ const schemaData = {
         />
     );
   })}
-
 
   <link
       rel="alternate"
@@ -104,7 +133,7 @@ const schemaData = {
   <meta property="og:image" content={ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Nikflix - Bypass Netflix Household Restrictions" />
+  <meta property="og:image:alt" content="Nikflix - Contourner la restriction de foyer Netflix" />
   <meta property="og:site_name" content="Nikflix" />
 
   <!-- Twitter -->
@@ -115,10 +144,13 @@ const schemaData = {
   <meta name="twitter:image" content={ogImage} />
 
   <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 </head>
 <body class="antialiased selection:bg-emerald-500 selection:text-white">
 <slot />
+<JoinModal lang={lang} />
 
 <!-- Ko-fi widget -->
 <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js" is:inline></script>

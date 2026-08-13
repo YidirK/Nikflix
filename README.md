@@ -55,9 +55,14 @@ https://nikflix.hergol.me
 ---
 
 # 📝 Changelog
-## [2.0.2] - 2026-08-09
-### 🛠️ Fixes
-- ✓ **Firefox Compatibility**: Fixed onboarding confirmation and redirection behavior on Firefox.
+## [2.0.3] - 2026-08-13
+
+### 🚀 Hybrid Blocking & UI Enhancements
+
+- ✓ **Hybrid API/CSS Mode**: On Home/Browse pages (`/browse`), CSS DOM cleaner is used so movie detail popups and previews load smoothly without network blockage. API restriction interception (`CLCSInterstitialPlaybackAndPostPlayback`) is scoped strictly to `/watch` pages.
+- ✓ **Firefox Compatibility**: Fixed onboarding confirmation and tab redirection behavior on Firefox.
+- ✓ **Enlarged Popup UI**: Expanded extension popup dimensions (`420px × 680px`) and element layout for a cleaner, readable experience.
+- ✓ **Manifest Permissions Cleanup**: Optimized extension permissions by retaining `declarativeNetRequestWithHostAccess` and removing redundant global `declarativeNetRequest`.
 
 ## [2.0.1] - 2026-08-09
 
@@ -143,7 +148,7 @@ _locales/
 Nikflix offers two blocking modes so users can choose what works best for them:
 
 - **CSS & DOM Block (Recommended)**: Modifies the page element display after Netflix renders content. It leaves network traffic untouched, making it legally safer and less detectable.
-- **API Block**: Intercepts the `CLCSInterstitialPlaybackAndPostPlayback` GraphQL endpoint (`web.prod.cloud.netflix.com/graphql`). It prevents the restriction payload from reaching Netflix's player, keeping the original Netflix player intact. Special thanks to **@Buckibarnes17** for the inspiration on this approach.
+- **API Block**: Intercepts the `CLCSInterstitialPlaybackAndPostPlayback` GraphQL endpoint (`web.prod.cloud.netflix.com/graphql`) on `/watch` pages while running CSS DOM cleanup on Home/Browse so movie title modals open seamlessly. Special thanks to **@Buckibarnes17** for the inspiration on this approach.
 
 
 ---

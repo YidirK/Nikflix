@@ -6,9 +6,9 @@
 
 body {
     margin: 0;
-    padding: 12px 16px;
-    width: 400px;
-    height: 640px;
+    padding: 14px 18px;
+    width: 420px;
+    height: 680px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     display: flex;
@@ -64,14 +64,14 @@ button {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 11px 18px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     font-size: 13px;
     font-weight: 600;
-    width: 240px;
+    width: 260px;
     box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
@@ -129,7 +129,7 @@ button:active {
     margin: 8px 0;
     overflow: hidden;
     width: 100%;
-    max-width: 360px;
+    max-width: 380px;
     box-sizing: border-box;
     position: relative;
     z-index: 1;
@@ -196,7 +196,7 @@ footer a {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 260px;
+    width: 290px;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -235,7 +235,7 @@ footer a {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 260px;
+    width: 290px;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(59, 130, 246, 0.2);
@@ -286,7 +286,7 @@ footer a {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     z-index: 1;
-    width: 260px;
+    width: 290px;
 }
 
 .controller-toggle:hover {
@@ -362,7 +362,7 @@ input:checked + .slider:before {
 
 /* ── Block mode selector cards ───────────────────────────────────────── */
 .mode-section {
-    width: 280px;
+    width: 300px;
     margin: 6px 0;
     display: flex;
     flex-direction: column;
