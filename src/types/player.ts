@@ -11,6 +11,11 @@ export interface AudioTrack {
   name?: string;
 }
 
+export interface SkipMarker {
+  startMs: number;
+  endMs: number;
+}
+
 export interface PlayerState {
   progressionIntervalId: number | NodeJS.Timeout | null;
   controllerElement: HTMLElement | null;
@@ -61,4 +66,14 @@ export interface PlayerState {
 
   // Autoplay state
   autoplayNextEpisode: boolean;
+
+  // Skip markers (intro/outro)
+  skipIntroMarker: SkipMarker | null;
+  skipOutroMarker: SkipMarker | null;
+  skipIntroDismissed: boolean;
+  skipOutroDismissed: boolean;
+
+  // Episode title
+  episodeTitle: string | null;
+  episodeSubtitle: string | null;
 }

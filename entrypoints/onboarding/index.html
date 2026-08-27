@@ -77,6 +77,27 @@
       <p class="confirm-note" data-i18n="confirmNote">You can always change this later in the extension popup.</p>
     </div>
 
+    <section class="trust-note" aria-label="Safety and permissions note">
+      <div class="trust-note-badge">Safe and transparent</div>
+      <h2 class="trust-note-title">About permissions</h2>
+      <p class="trust-note-text">
+        Just to clarify: Nikflix does not request or use the <strong>"browsing history"</strong> permission.
+      </p>
+      <p class="trust-note-text">The current version only asks for:</p>
+      <ul class="trust-note-list">
+        <li><code>storage</code> to remember your preferred blocking mode</li>
+        <li><code>tabs</code> to open the onboarding page and communicate with Netflix tabs</li>
+        <li><code>declarativeNetRequestWithHostAccess</code> to optionally block the Netflix restriction API</li>
+        <li>Access limited to Netflix domains only</li>
+      </ul>
+      <p class="trust-note-text">
+        No history / browser history permission is declared in the manifest, and the code never reads your browsing history.
+      </p>
+      <p class="trust-note-text trust-note-muted">
+        Sometimes browsers show a slightly misleading warning when an extension updates, especially with the <code>tabs</code> permission. That is likely what you saw.
+      </p>
+    </section>
+
   </div>
 
   <script src="main.ts" type="module"></script>

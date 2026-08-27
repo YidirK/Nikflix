@@ -3,7 +3,7 @@ import { injectEarlyCSS, CLASSES_TO_REMOVE, removeElementsByClasses } from '../s
 import { state } from '../src/modules/player-state';
 import { doYourJob, cleanController, createBackButton, createTipsButton, showMessage, isOnNetflixWatch } from '../src/modules/player-ui';
 import { setupKeyboardShortcuts } from '../src/modules/shortcuts';
-import { getIdFromUrl } from '../src/modules/episodes';
+import { getIdFromUrl, getCachedDuration } from '../src/modules/episodes';
 
 export default defineContentScript({
   matches: ['*://*.netflix.com/*'],
@@ -75,19 +75,35 @@ export default defineContentScript({
 
     function startExtension(blockMode: 'css' | 'api') {
       injectEarlyCSS();
+      removeElementsByClasses(CLASSES_TO_REMOVE);
+
       if (blockMode === 'css') {
         startCSSMode(true);
       } else {
         // API mode:
-        // On Home/Browse pages: CSS DOM cleaner runs to hide restriction popups.
-        // On Watch (/watch): API blocker script intercepts GraphQL restriction call.
+        // On Home/Browse pages ("où choisir le film"): CSS DOM cleaner runs to remove restriction popups.
+        // On Watch (/watch): API blocker script intercepts GraphQL restriction calls.
         startCSSMode(false);
         startAPIMode();
       }
     }
 
     function startCSSMode(buildCustomController: boolean) {
-      const observerOptions = { childList: true, subtree: true };
+      // 1. Double check CSS modal cleaner immediately
+      removeElementsByClasses(CLASSES_TO_REMOVE);
+
+      // 2. Double check CSS modal cleaner periodically (double-check verification loop for Home/Browse/Movie selection modals)
+      setInterval(() => {
+        removeElementsByClasses(CLASSES_TO_REMOVE);
+      }, 400);
+
+      const observerOptions = {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class'],
+      };
+
       const observer = new MutationObserver((mutations) => {
         if (state.mutationTimeout) clearTimeout(state.mutationTimeout as number);
 
@@ -98,15 +114,25 @@ export default defineContentScript({
             state.currentEpisodeDuration = null;
           }
           state.currentEpisodeId = episodeId;
+          if (episodeId) {
+            const cached = getCachedDuration(episodeId);
+            if (cached) {
+              state.currentEpisodeDuration = cached;
+            }
+          }
         }
 
-        const hasRestrictionNode = mutations.some((mutation) =>
-          Array.from(mutation.addedNodes).some((node) => {
+        const hasRestrictionNode = mutations.some((mutation) => {
+          if (mutation.type === "attributes") {
+            const cls = (mutation.target as HTMLElement).className || "";
+            return typeof cls === "string" && CLASSES_TO_REMOVE.some((c) => cls.includes(c));
+          }
+          return Array.from(mutation.addedNodes).some((node) => {
             if (node.nodeType !== Node.ELEMENT_NODE) return false;
             const cls = (node as HTMLElement).className || "";
             return typeof cls === "string" && CLASSES_TO_REMOVE.some((c) => cls.includes(c));
-          })
-        );
+          });
+        });
 
         if (hasRestrictionNode) {
           removeElementsByClasses(CLASSES_TO_REMOVE);
@@ -146,17 +172,25 @@ export default defineContentScript({
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
           observer.observe(document.body, observerOptions);
+          removeElementsByClasses(CLASSES_TO_REMOVE);
           if (buildCustomController) doYourJob();
         });
       } else {
         observer.observe(document.body, observerOptions);
+        removeElementsByClasses(CLASSES_TO_REMOVE);
         if (buildCustomController) doYourJob();
       }
     }
 
     function startAPIMode() {
-      // Inject main-world fetch/XHR interceptor for CLCSInterstitialPlaybackAndPostPlayback
-      injectScript("netflix-apiBlocker.js");
+      let apiScriptInjected = false;
+
+      function checkAndInjectApiBlocker() {
+        if (isOnNetflixWatch() && !apiScriptInjected) {
+          apiScriptInjected = true;
+          injectScript("netflix-apiBlocker.js");
+        }
+      }
 
       function maybeInjectTipsButton() {
         if (isOnNetflixWatch()) {
@@ -173,20 +207,26 @@ export default defineContentScript({
       }
 
       const observer = new MutationObserver(() => {
+        checkAndInjectApiBlocker();
         maybeInjectTipsButton();
       });
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
           observer.observe(document.body, { childList: true, subtree: true });
+          checkAndInjectApiBlocker();
           maybeInjectTipsButton();
         });
       } else {
         observer.observe(document.body, { childList: true, subtree: true });
+        checkAndInjectApiBlocker();
         maybeInjectTipsButton();
       }
 
-      setInterval(maybeInjectTipsButton, 1000);
+      setInterval(() => {
+        checkAndInjectApiBlocker();
+        maybeInjectTipsButton();
+      }, 800);
     }
   },
 });

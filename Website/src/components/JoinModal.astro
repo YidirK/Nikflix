@@ -16,6 +16,15 @@ const modalContent = {
     chromeBtn: 'Ajouter à Chrome',
     firefoxBtn: 'Ajouter à Firefox',
     close: 'Fermer',
+    trustTitle: 'Permission clarification',
+    trustLead: `Nikflix ne demande pas et n'utilise pas la permission "browsing history".`,
+    trustItems: [
+      'storage: remembers your preferred blocking mode',
+      'tabs: opens onboarding and talks to Netflix tabs',
+      'declarativeNetRequestWithHostAccess: optionally blocks the Netflix restriction API',
+      'Access is limited to Netflix domains only',
+    ],
+    trustFoot: `No browser history permission is declared in the manifest, and the code never reads your browsing history.`,
   },
   en: {
     badge: '🔥 53,000+ Active Users',
@@ -24,6 +33,15 @@ const modalContent = {
     chromeBtn: 'Add to Chrome',
     firefoxBtn: 'Add to Firefox',
     close: 'Close',
+    trustTitle: 'Permission clarification',
+    trustLead: 'Nikflix does not request or use the "browsing history" permission.',
+    trustItems: [
+      'storage: remembers your preferred blocking mode',
+      'tabs: opens onboarding and talks to Netflix tabs',
+      'declarativeNetRequestWithHostAccess: optionally blocks the Netflix restriction API',
+      'Access is limited to Netflix domains only',
+    ],
+    trustFoot: 'No browser history permission is declared in the manifest, and the code never reads your browsing history.',
   },
   es: {
     badge: '🔥 53,000+ Usuarios Activos',
@@ -32,6 +50,15 @@ const modalContent = {
     chromeBtn: 'Añadir a Chrome',
     firefoxBtn: 'Añadir a Firefox',
     close: 'Cerrar',
+    trustTitle: 'Aclaracion de permisos',
+    trustLead: 'Nikflix no solicita ni usa el permiso de "browsing history".',
+    trustItems: [
+      'storage: recuerda tu modo de bloqueo preferido',
+      'tabs: abre el onboarding y se comunica con las pestañas de Netflix',
+      'declarativeNetRequestWithHostAccess: bloquea opcionalmente la API de restriccion de Netflix',
+      'El acceso se limita solo a dominios de Netflix',
+    ],
+    trustFoot: 'No se declara ningun permiso de historial en el manifiesto y el codigo nunca lee tu historial de navegacion.',
   },
 };
 
@@ -71,6 +98,28 @@ const content = modalContent[lang] || modalContent.fr;
     <p class="text-xs sm:text-sm text-gray-300 leading-relaxed mb-5">
       {content.subtitle}
     </p>
+
+    <div class="mb-5 rounded-2xl border border-emerald-500/20 bg-white/5 p-4">
+      <div class="mb-2 inline-flex items-center gap-2 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-300">
+        <span>Safe</span>
+        <span class="text-emerald-500/50">•</span>
+        <span>{content.trustTitle}</span>
+      </div>
+      <p class="text-xs text-gray-200 leading-relaxed">
+        {content.trustLead}
+      </p>
+      <ul class="mt-3 space-y-1.5 text-[11px] sm:text-xs text-gray-300 leading-relaxed">
+        {content.trustItems.map((item) => (
+          <li class="flex items-start gap-2">
+            <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400"></span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-3 text-[11px] sm:text-xs text-gray-400 leading-relaxed">
+        {content.trustFoot}
+      </p>
+    </div>
 
     <!-- CTAs -->
     <div class="flex flex-col sm:flex-row items-center gap-2.5">

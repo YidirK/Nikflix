@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/50k-users.png" alt="50,000 users" width="600"/>
+  <img src="assets/63k-users.png" alt="63,000 users" width="600"/>
 </p>
 
 # Netflix Password-Sharing (Household) Bypass Extension
@@ -55,62 +55,44 @@ https://nikflix.hergol.me
 ---
 
 # 📝 Changelog
-## [2.0.3] - 2026-08-13
 
-### 🚀 Hybrid Blocking & UI Enhancements
+## [2.0.5] - 2026-08-26
 
-- ✓ **Hybrid API/CSS Mode**: On Home/Browse pages (`/browse`), CSS DOM cleaner is used so movie detail popups and previews load smoothly without network blockage. API restriction interception (`CLCSInterstitialPlaybackAndPostPlayback`) is scoped strictly to `/watch` pages.
-- ✓ **Firefox Compatibility**: Fixed onboarding confirmation and tab redirection behavior on Firefox.
-- ✓ **Enlarged Popup UI**: Expanded extension popup dimensions (`420px × 680px`) and element layout for a cleaner, readable experience.
-- ✓ **Manifest Permissions Cleanup**: Optimized extension permissions by retaining `declarativeNetRequestWithHostAccess` and removing redundant global `declarativeNetRequest`.
+### 🔀 Hybrid API & CSS Block System
 
-## [2.0.1] - 2026-08-09
+* ✓ **Hybrid blocking system for API Block mode**:
 
-### 🚀 Dual Blocking Modes & Onboarding
+  * The **Menu** now uses the **CSS Block** system to preserve Netflix's native menu functionality.
+  * The **Watch** page switches to the **API Block** system, allowing the original Netflix controller to be used.
+  * Fixes issues reported in:
 
-- ✓ **First-time Onboarding Page**: A beautiful onboarding screen opens on first install allowing users to choose between **CSS & DOM Block** and **API Block**.
-- ✓ **API Blocking Mode**: Intercepts and blocks the `CLCSInterstitialPlaybackAndPostPlayback` GraphQL endpoint (`web.prod.cloud.netflix.com/graphql`) at the network and main-world level.
-- ✓ **Popup Mode Selector**: Switch between CSS and API blocking modes seamlessly at any time from the extension popup.
-- ✓ **Multilingual Support**: Fully translated into English, French, Spanish, Arabic (with RTL), and Portuguese.
+    * [#134](https://github.com/YidirK/Nikflix/issues/134)
+    * [#133](https://github.com/YidirK/Nikflix/issues/133)
+    * [#131](https://github.com/YidirK/Nikflix/issues/131)
 
-#### Special Thanks to @Buckibarnes17
-- 🙌 Special thanks to **@Buckibarnes17** for the idea and code implementation inspiration for the API restriction blocking mechanism (`CLCSInterstitialPlaybackAndPostPlayback`)!
+### ⏱️ Timestamp Preservation
 
-## [1.9.4] - 2026-07-31
+* ✓ **Added a timestamp preservation system**:
 
-### 🚀 Major Rewrite
+  * Netflix changed part of its internal code, which could break the original controller.
+  * Nikflix now saves the relevant timestamp in `localStorage` before Netflix removes it.
+  * This allows the controller to continue working correctly.
+  * This fix is related to [#132](https://github.com/YidirK/Nikflix/issues/132).
+  * ⚠️ **This system is still being tested** and may require further improvements.
 
-- ✓ Complete project rewrite.
-- ✓ Migrated from JavaScript to **TypeScript**.
-- ✓ Migrated to the **WXT Framework**.
-- ✓ Cleaner architecture.
-- ✓ Easier maintenance.
-- ✓ Improved developer experience.
-- ✓ Simplified browser compatibility.
+## [2.0.4] - 2026-08-17
 
-### ✨ New Features
+### 🎬 Complete Player & UI Redesign
 
-- ✓ Added a dynamic contributors list.
+* ✓ **Smart Skip Intro & Skip Outro / Next Episode**:
 
-### 🛠️ Fixes
+  * Parses intro and outro/credits markers from Netflix's metadata API (`memberapi`).
+  * Floating Netflix-styled action buttons appear dynamically during intro and ending credits windows.
+* ✓ **All-New Netflix-Style Episodes & Seasons Modal**:
 
-#### Thanks to @reservedbytes
+  * Season selector dropdown with instantaneous episode filtering.
+  * 16:9 episode thumbnails with duration badges, synopsis preview, and active "En cours" playing indicator with auto-scroll.
 
-- ✓ Fixed controller delay and `null` video `TypeError`.
-- ✓ Fixed click dead zones and made small UI improvements.
-- ✓ Fixed popup failing to load due to an i18n import casing issue.
-- ✓ Fixed clashing player UIs on accounts without the Household restriction.
-- ✓ Fixed the controller not rebuilding when Netflix automatically changes episodes.
-
-#### Thanks to @AdmirableAmbiguity
-
-- ✓ Fixed the fullscreen overlay scrollbar issue.
-
-## [1.9.3] - 2026-05-12
-
-- ✓ Fixed service worker crashes.
-- ✓ Improved compatibility with the Teleparty sidebar (thanks to RenatoGarciaLopes).
-- ✓ Added Chromium i18n support with automatic language detection.
 ---
 
 # 🌍 Translation
@@ -152,7 +134,18 @@ Nikflix offers two blocking modes so users can choose what works best for them:
 
 
 ---
+## Note 
+Just to clarify: Nikflix does not request or use the "browsing history" permission.
 
+The current version only asks for:
+- storage (to remember your preferred blocking mode)
+- tabs (to open the onboarding page and communicate with Netflix tabs)
+- declarativeNetRequestWithHostAccess (to optionally block the Netflix restriction API)
+- Access limited to Netflix domains only
+
+No history / browser history permission is declared in the manifest, and the code never reads your browsing history.
+
+Sometimes browsers show a slightly misleading warning when an extension updates (especially with the tabs permission). That’s likely what you saw.
 ## 🤝 Contributing
 
 Contributions are always welcome!

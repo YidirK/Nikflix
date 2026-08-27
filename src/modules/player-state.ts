@@ -51,6 +51,16 @@ export function createInitialState(): PlayerState {
 
     // Autoplay next episode state
     autoplayNextEpisode: false,
+
+    // Skip markers (intro/outro)
+    skipIntroMarker: null,
+    skipOutroMarker: null,
+    skipIntroDismissed: false,
+    skipOutroDismissed: false,
+
+    // Episode title
+    episodeTitle: null,
+    episodeSubtitle: null,
   };
 }
 

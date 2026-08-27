@@ -1,4 +1,9 @@
 import { state } from './player-state';
+import { spawnPixelCat } from './pixel-cat';
+
+let easterEggBuffer = "";
+let easterEggResetTimer: number | null = null;
+const EASTER_EGG_WORD = "cat";
 
 export function sendSeekKeyToNetflix(
   direction: 'left' | 'right',
@@ -59,6 +64,19 @@ export function setupKeyboardShortcuts(
 
     if (state.controllerElement) {
       showControllerFn();
+    }
+    if (e.key.length === 1 && /[a-z]/i.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      easterEggBuffer = (easterEggBuffer + e.key.toLowerCase()).slice(-EASTER_EGG_WORD.length);
+
+      if (easterEggResetTimer) clearTimeout(easterEggResetTimer);
+      easterEggResetTimer = window.setTimeout(() => {
+        easterEggBuffer = "";
+      }, 1500);
+
+      if (easterEggBuffer === EASTER_EGG_WORD) {
+        easterEggBuffer = "";
+        spawnPixelCat();
+      }
     }
 
     switch (e.key) {
