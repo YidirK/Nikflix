@@ -4,12 +4,11 @@ export default defineConfig({
   manifest: {
     name: 'Nikflix (Household Bypass)',
     description: 'Bypass the account-sharing restrictions on Netflix.',
-    version: '2.0.5',
+    version: '2.0.6',
     default_locale: 'en',
     permissions: [
       'storage',
       'declarativeNetRequestWithHostAccess',
-      'tabs',
     ],
     host_permissions: [
       '*://*.netflix.com/*',

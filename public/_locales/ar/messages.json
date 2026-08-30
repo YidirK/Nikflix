@@ -147,5 +147,124 @@
   "apiModeDescPopup": {
     "message": "حظر GraphQL · مشغل Netflix",
     "description": "API mode short description for popup"
+  },
+  "nowPlaying": {
+    "message": "قيد التشغيل",
+    "description": "Badge shown on the currently playing episode in the episodes list"
+  },
+  "season": {
+    "message": "الموسم $NUM$",
+    "description": "Fallback label for a season without a title",
+    "placeholders": {
+      "num": {
+        "content": "$1"
+      }
+    }
+  },
+  "closeTooltip": {
+    "message": "إغلاق",
+    "description": "Title of the button that closes the episodes list"
+  },
+  "backTooltip": {
+    "message": "رجوع",
+    "description": "Title of the controller's back button"
+  },
+  "supportNikflix": {
+    "message": "ادعم Nikflix ❤️",
+    "description": "Title of the tip/donation button"
+  },
+  "playTooltip": {
+    "message": "تشغيل (مسافة)",
+    "description": "Title of the play button"
+  },
+  "pauseTooltip": {
+    "message": "إيقاف مؤقت (مسافة)",
+    "description": "Title of the pause button"
+  },
+  "rewindTooltip": {
+    "message": "الرجوع 10 ثوانٍ (يسار)",
+    "description": "Title of the rewind button"
+  },
+  "forwardTooltip": {
+    "message": "التقدم 10 ثوانٍ (يمين)",
+    "description": "Title of the forward button"
+  },
+  "volumeTooltip": {
+    "message": "الصوت (M للكتم)",
+    "description": "Title of the volume icon"
+  },
+  "nextEpisodeTooltip": {
+    "message": "الحلقة التالية (N)",
+    "description": "Title of the next-episode button"
+  },
+  "episodesTooltip": {
+    "message": "الحلقات والمواسم",
+    "description": "Title of the episodes list button"
+  },
+  "subtitlesTooltip": {
+    "message": "الصوت والترجمة",
+    "description": "Title of the audio and subtitles button"
+  },
+  "speedTooltip": {
+    "message": "سرعة التشغيل: $SPEED$x",
+    "description": "Title of the playback speed button",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "speedMessage": {
+    "message": "السرعة: $SPEED$x",
+    "description": "Message shown when the playback speed changes",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoplayTooltipOn": {
+    "message": "التشغيل التلقائي: مفعل",
+    "description": "Title of the autoplay button when enabled"
+  },
+  "autoplayTooltipOff": {
+    "message": "التشغيل التلقائي: معطل",
+    "description": "Title of the autoplay button when disabled"
+  },
+  "autoplayMessageOn": {
+    "message": "تم تفعيل التشغيل التلقائي",
+    "description": "Message shown when autoplay is enabled"
+  },
+  "autoplayMessageOff": {
+    "message": "تم تعطيل التشغيل التلقائي",
+    "description": "Message shown when autoplay is disabled"
+  },
+  "fullscreenTooltip": {
+    "message": "ملء الشاشة (F)",
+    "description": "Title of the fullscreen button"
+  },
+  "skipIntro": {
+    "message": "تخطي المقدمة",
+    "description": "Text of the floating skip-intro button"
+  },
+  "nextEpisodeLabel": {
+    "message": "الحلقة التالية",
+    "description": "Text of the floating skip-outro/next-episode button"
+  },
+  "introSkippedMessage": {
+    "message": "تم تخطي المقدمة",
+    "description": "Message shown after skipping the intro"
+  },
+  "nextEpisodePlayingMessage": {
+    "message": "جارٍ تشغيل الحلقة التالية...",
+    "description": "Message shown just before autoplaying the next episode"
+  },
+  "rewindMessage": {
+    "message": "-10 ثوانٍ",
+    "description": "Message shown when rewinding 10 seconds"
+  },
+  "forwardMessage": {
+    "message": "+10 ثوانٍ",
+    "description": "Message shown when fast-forwarding 10 seconds"
   }
-}
+}

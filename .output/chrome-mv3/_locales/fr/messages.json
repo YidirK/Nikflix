@@ -147,6 +147,124 @@
   "apiModeDescPopup": {
     "message": "Bloque GraphQL · Contrôleur Netflix",
     "description": "Description courte mode API pour le popup"
+  },
+  "nowPlaying": {
+    "message": "En cours",
+    "description": "Badge affiché sur l'épisode en cours de lecture dans la liste des épisodes"
+  },
+  "season": {
+    "message": "Saison $NUM$",
+    "description": "Libellé de secours pour une saison sans titre",
+    "placeholders": {
+      "num": {
+        "content": "$1"
+      }
+    }
+  },
+  "closeTooltip": {
+    "message": "Fermer",
+    "description": "Titre du bouton pour fermer la liste des épisodes"
+  },
+  "backTooltip": {
+    "message": "Retour",
+    "description": "Titre du bouton retour du contrôleur"
+  },
+  "supportNikflix": {
+    "message": "Soutenir Nikflix ❤️",
+    "description": "Titre du bouton de don"
+  },
+  "playTooltip": {
+    "message": "Lecture (Espace)",
+    "description": "Titre du bouton lecture"
+  },
+  "pauseTooltip": {
+    "message": "Pause (Espace)",
+    "description": "Titre du bouton pause"
+  },
+  "rewindTooltip": {
+    "message": "Reculer de 10 secondes (Gauche)",
+    "description": "Titre du bouton retour rapide"
+  },
+  "forwardTooltip": {
+    "message": "Avancer de 10 secondes (Droite)",
+    "description": "Titre du bouton avance rapide"
+  },
+  "volumeTooltip": {
+    "message": "Volume (M pour couper)",
+    "description": "Titre de l'icône de volume"
+  },
+  "nextEpisodeTooltip": {
+    "message": "Épisode suivant (N)",
+    "description": "Titre du bouton épisode suivant"
+  },
+  "episodesTooltip": {
+    "message": "Épisodes et saisons",
+    "description": "Titre du bouton liste des épisodes"
+  },
+  "subtitlesTooltip": {
+    "message": "Audio et sous-titres",
+    "description": "Titre du bouton audio et sous-titres"
+  },
+  "speedTooltip": {
+    "message": "Vitesse de lecture: $SPEED$x",
+    "description": "Titre du bouton vitesse de lecture",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "speedMessage": {
+    "message": "Vitesse: $SPEED$x",
+    "description": "Message affiché lors du changement de vitesse",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoplayTooltipOn": {
+    "message": "Lecture auto: ACTIVÉE",
+    "description": "Titre du bouton lecture auto quand activée"
+  },
+  "autoplayTooltipOff": {
+    "message": "Lecture auto: DÉSACTIVÉE",
+    "description": "Titre du bouton lecture auto quand désactivée"
+  },
+  "autoplayMessageOn": {
+    "message": "Lecture auto activée",
+    "description": "Message affiché quand la lecture auto est activée"
+  },
+  "autoplayMessageOff": {
+    "message": "Lecture auto désactivée",
+    "description": "Message affiché quand la lecture auto est désactivée"
+  },
+  "fullscreenTooltip": {
+    "message": "Plein écran (F)",
+    "description": "Titre du bouton plein écran"
+  },
+  "skipIntro": {
+    "message": "Passer l'intro",
+    "description": "Texte du bouton flottant pour sauter l'introduction"
+  },
+  "nextEpisodeLabel": {
+    "message": "Épisode suivant",
+    "description": "Texte du bouton flottant pour passer à l'épisode suivant"
+  },
+  "introSkippedMessage": {
+    "message": "Introduction ignorée",
+    "description": "Message affiché après avoir sauté l'intro"
+  },
+  "nextEpisodePlayingMessage": {
+    "message": "Lecture de l'épisode suivant...",
+    "description": "Message affiché juste avant l'enchaînement automatique"
+  },
+  "rewindMessage": {
+    "message": "-10 sec",
+    "description": "Message affiché lors du retour rapide de 10 secondes"
+  },
+  "forwardMessage": {
+    "message": "+10 sec",
+    "description": "Message affiché lors de l'avance rapide de 10 secondes"
   }
 }
-

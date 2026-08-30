@@ -147,6 +147,124 @@
   "apiModeDescPopup": {
     "message": "Blocks GraphQL · Netflix controller",
     "description": "API mode short description for popup"
+  },
+  "nowPlaying": {
+    "message": "Playing",
+    "description": "Badge shown on the currently playing episode in the episodes list"
+  },
+  "season": {
+    "message": "Season $NUM$",
+    "description": "Fallback label for a season without a title",
+    "placeholders": {
+      "num": {
+        "content": "$1"
+      }
+    }
+  },
+  "closeTooltip": {
+    "message": "Close",
+    "description": "Title of the button that closes the episodes list"
+  },
+  "backTooltip": {
+    "message": "Back",
+    "description": "Title of the controller's back button"
+  },
+  "supportNikflix": {
+    "message": "Support Nikflix ❤️",
+    "description": "Title of the tip/donation button"
+  },
+  "playTooltip": {
+    "message": "Play (Space)",
+    "description": "Title of the play button"
+  },
+  "pauseTooltip": {
+    "message": "Pause (Space)",
+    "description": "Title of the pause button"
+  },
+  "rewindTooltip": {
+    "message": "Rewind 10 seconds (Left)",
+    "description": "Title of the rewind button"
+  },
+  "forwardTooltip": {
+    "message": "Forward 10 seconds (Right)",
+    "description": "Title of the forward button"
+  },
+  "volumeTooltip": {
+    "message": "Volume (M to mute)",
+    "description": "Title of the volume icon"
+  },
+  "nextEpisodeTooltip": {
+    "message": "Next episode (N)",
+    "description": "Title of the next-episode button"
+  },
+  "episodesTooltip": {
+    "message": "Episodes and seasons",
+    "description": "Title of the episodes list button"
+  },
+  "subtitlesTooltip": {
+    "message": "Audio and subtitles",
+    "description": "Title of the audio and subtitles button"
+  },
+  "speedTooltip": {
+    "message": "Playback speed: $SPEED$x",
+    "description": "Title of the playback speed button",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "speedMessage": {
+    "message": "Speed: $SPEED$x",
+    "description": "Message shown when the playback speed changes",
+    "placeholders": {
+      "speed": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoplayTooltipOn": {
+    "message": "Autoplay: ON",
+    "description": "Title of the autoplay button when enabled"
+  },
+  "autoplayTooltipOff": {
+    "message": "Autoplay: OFF",
+    "description": "Title of the autoplay button when disabled"
+  },
+  "autoplayMessageOn": {
+    "message": "Autoplay enabled",
+    "description": "Message shown when autoplay is enabled"
+  },
+  "autoplayMessageOff": {
+    "message": "Autoplay disabled",
+    "description": "Message shown when autoplay is disabled"
+  },
+  "fullscreenTooltip": {
+    "message": "Fullscreen (F)",
+    "description": "Title of the fullscreen button"
+  },
+  "skipIntro": {
+    "message": "Skip intro",
+    "description": "Text of the floating skip-intro button"
+  },
+  "nextEpisodeLabel": {
+    "message": "Next episode",
+    "description": "Text of the floating skip-outro/next-episode button"
+  },
+  "introSkippedMessage": {
+    "message": "Intro skipped",
+    "description": "Message shown after skipping the intro"
+  },
+  "nextEpisodePlayingMessage": {
+    "message": "Playing next episode...",
+    "description": "Message shown just before autoplaying the next episode"
+  },
+  "rewindMessage": {
+    "message": "-10 sec",
+    "description": "Message shown when rewinding 10 seconds"
+  },
+  "forwardMessage": {
+    "message": "+10 sec",
+    "description": "Message shown when fast-forwarding 10 seconds"
   }
 }
-

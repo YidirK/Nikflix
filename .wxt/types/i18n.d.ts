@@ -432,8 +432,268 @@ declare module "wxt/browser" {
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;
+    /**
+     * Badge shown on the currently playing episode in the episodes list
+     *
+     * "Playing"
+     */
     getMessage(
-      messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "extensionName" | "extensionDescription" | "header" | "updateAvailable" | "checkCode" | "buyMeCoffee" | "reportBug" | "bugInfoText" | "contactDeveloper" | "controllerLabel" | "statusEnabled" | "statusDisabled" | "madeWith" | "thanksContributors" | "updateAvailableVersion" | "onboardingTitle" | "recommended" | "cssBlockTitle" | "cssBlockDesc" | "legalSafeBadge" | "legalSafeText" | "cssPro1" | "cssPro2" | "tipsIncluded" | "apiBlockTitle" | "apiBlockDesc" | "legalWarnBadge" | "legalWarnText" | "apiPro1" | "apiPro2" | "confirmCssBtn" | "confirmApiBtn" | "confirmNote" | "blockingModeSection" | "cssModeDescPopup" | "apiModeDescPopup",
+      messageName: "nowPlaying",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Fallback label for a season without a title
+     *
+     * "Season $NUM$"
+     */
+    getMessage(
+      messageName: "season",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the button that closes the episodes list
+     *
+     * "Close"
+     */
+    getMessage(
+      messageName: "closeTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the controller's back button
+     *
+     * "Back"
+     */
+    getMessage(
+      messageName: "backTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the tip/donation button
+     *
+     * "Support Nikflix ❤️"
+     */
+    getMessage(
+      messageName: "supportNikflix",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the play button
+     *
+     * "Play (Space)"
+     */
+    getMessage(
+      messageName: "playTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the pause button
+     *
+     * "Pause (Space)"
+     */
+    getMessage(
+      messageName: "pauseTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the rewind button
+     *
+     * "Rewind 10 seconds (Left)"
+     */
+    getMessage(
+      messageName: "rewindTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the forward button
+     *
+     * "Forward 10 seconds (Right)"
+     */
+    getMessage(
+      messageName: "forwardTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the volume icon
+     *
+     * "Volume (M to mute)"
+     */
+    getMessage(
+      messageName: "volumeTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the next-episode button
+     *
+     * "Next episode (N)"
+     */
+    getMessage(
+      messageName: "nextEpisodeTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the episodes list button
+     *
+     * "Episodes and seasons"
+     */
+    getMessage(
+      messageName: "episodesTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the audio and subtitles button
+     *
+     * "Audio and subtitles"
+     */
+    getMessage(
+      messageName: "subtitlesTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the playback speed button
+     *
+     * "Playback speed: $SPEED$x"
+     */
+    getMessage(
+      messageName: "speedTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown when the playback speed changes
+     *
+     * "Speed: $SPEED$x"
+     */
+    getMessage(
+      messageName: "speedMessage",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the autoplay button when enabled
+     *
+     * "Autoplay: ON"
+     */
+    getMessage(
+      messageName: "autoplayTooltipOn",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the autoplay button when disabled
+     *
+     * "Autoplay: OFF"
+     */
+    getMessage(
+      messageName: "autoplayTooltipOff",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown when autoplay is enabled
+     *
+     * "Autoplay enabled"
+     */
+    getMessage(
+      messageName: "autoplayMessageOn",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown when autoplay is disabled
+     *
+     * "Autoplay disabled"
+     */
+    getMessage(
+      messageName: "autoplayMessageOff",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Title of the fullscreen button
+     *
+     * "Fullscreen (F)"
+     */
+    getMessage(
+      messageName: "fullscreenTooltip",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Text of the floating skip-intro button
+     *
+     * "Skip intro"
+     */
+    getMessage(
+      messageName: "skipIntro",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Text of the floating skip-outro/next-episode button
+     *
+     * "Next episode"
+     */
+    getMessage(
+      messageName: "nextEpisodeLabel",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown after skipping the intro
+     *
+     * "Intro skipped"
+     */
+    getMessage(
+      messageName: "introSkippedMessage",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown just before autoplaying the next episode
+     *
+     * "Playing next episode..."
+     */
+    getMessage(
+      messageName: "nextEpisodePlayingMessage",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown when rewinding 10 seconds
+     *
+     * "-10 sec"
+     */
+    getMessage(
+      messageName: "rewindMessage",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    /**
+     * Message shown when fast-forwarding 10 seconds
+     *
+     * "+10 sec"
+     */
+    getMessage(
+      messageName: "forwardMessage",
+      substitutions?: string | string[],
+      options?: GetMessageOptions,
+    ): string;
+    getMessage(
+      messageName: "@@extension_id" | "@@ui_locale" | "@@bidi_dir" | "@@bidi_reversed_dir" | "@@bidi_start_edge" | "@@bidi_end_edge" | "extensionName" | "extensionDescription" | "header" | "updateAvailable" | "checkCode" | "buyMeCoffee" | "reportBug" | "bugInfoText" | "contactDeveloper" | "controllerLabel" | "statusEnabled" | "statusDisabled" | "madeWith" | "thanksContributors" | "updateAvailableVersion" | "onboardingTitle" | "recommended" | "cssBlockTitle" | "cssBlockDesc" | "legalSafeBadge" | "legalSafeText" | "cssPro1" | "cssPro2" | "tipsIncluded" | "apiBlockTitle" | "apiBlockDesc" | "legalWarnBadge" | "legalWarnText" | "apiPro1" | "apiPro2" | "confirmCssBtn" | "confirmApiBtn" | "confirmNote" | "blockingModeSection" | "cssModeDescPopup" | "apiModeDescPopup" | "nowPlaying" | "season" | "closeTooltip" | "backTooltip" | "supportNikflix" | "playTooltip" | "pauseTooltip" | "rewindTooltip" | "forwardTooltip" | "volumeTooltip" | "nextEpisodeTooltip" | "episodesTooltip" | "subtitlesTooltip" | "speedTooltip" | "speedMessage" | "autoplayTooltipOn" | "autoplayTooltipOff" | "autoplayMessageOn" | "autoplayMessageOff" | "fullscreenTooltip" | "skipIntro" | "nextEpisodeLabel" | "introSkippedMessage" | "nextEpisodePlayingMessage" | "rewindMessage" | "forwardMessage",
       substitutions?: string | string[],
       options?: GetMessageOptions,
     ): string;

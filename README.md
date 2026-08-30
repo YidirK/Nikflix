@@ -56,7 +56,24 @@ https://nikflix.hergol.me
 
 # 📝 Changelog
 
-## [2.0.5] - 2026-08-26
+# 📝 Changelog
+
+## [2.0.6] - 2026-08-30
+
+### 🌍 FIX laungague
+
+* ✓ **Fixed the controller interface being displayed in French** regardless of the selected language.
+  - **Added i18n support** for the entire controller interface.
+  - **Added translations for controller tooltips** and interface elements.
+  
+### 🔒 Permissions & Privacy
+
+* ✓ **Removed the `tabs` permission** from the extension.
+ - This permission was causing browsers to display the **"Read your browsing history"** permission warning during installation.
+ - The extension **did not use this permission to access or read users' browsing history**, but the permission warning caused confusion and was reported by several users.
+
+
+## [2.0.5] - 2026-08-27
 
 ### 🔀 Hybrid API & CSS Block System
 

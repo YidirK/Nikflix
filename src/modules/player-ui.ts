@@ -42,8 +42,8 @@ export async function showEpisodesList(): Promise<void> {
 
   try {
     const response = await fetch(
-      `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
-      { credentials: "include" }
+        `https://www.netflix.com/nq/website/memberapi/release/metadata?movieid=${curEpisodeId}`,
+        { credentials: "include" }
     );
     const data = await response.json();
 
@@ -68,20 +68,20 @@ export async function showEpisodesList(): Promise<void> {
     const renderSeasonEpisodes = (season: any) => {
       const episodes = season.episodes || [];
       return episodes
-        .map((episode: any) => {
-          const isCurrent = episode.id.toString() === curEpisodeId.toString();
-          const thumbUrl = getEpisodeThumb(episode);
-          const runtimeStr = formatRuntime(episode.runtime);
-          const synopsis = episode.synopsis || episode.summary || "";
+          .map((episode: any) => {
+            const isCurrent = episode.id.toString() === curEpisodeId.toString();
+            const thumbUrl = getEpisodeThumb(episode);
+            const runtimeStr = formatRuntime(episode.runtime);
+            const synopsis = episode.synopsis || episode.summary || "";
 
-          return `
+            return `
             <div class="netflix-ep-card ${isCurrent ? "current" : ""}" data-episode-id="${episode.id}">
               <div class="netflix-ep-thumb-wrapper">
                 ${
-                  thumbUrl
+                thumbUrl
                     ? `<img class="netflix-ep-thumb" src="${thumbUrl}" alt="Episode ${episode.seq}" loading="lazy" />`
                     : `<div class="netflix-ep-thumb-placeholder"><span>${episode.seq}</span></div>`
-                }
+            }
                 <div class="netflix-ep-play-overlay">
                   <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M8 5v14l11-7z"/></svg>
                 </div>
@@ -91,14 +91,14 @@ export async function showEpisodesList(): Promise<void> {
                 <div class="netflix-ep-header-row">
                   <span class="netflix-ep-seq">${episode.seq}.</span>
                   <span class="netflix-ep-name">${episode.title}</span>
-                  ${isCurrent ? `<span class="netflix-ep-playing-badge">En cours</span>` : ""}
+                  ${isCurrent ? `<span class="netflix-ep-playing-badge">${t("nowPlaying")}</span>` : ""}
                 </div>
                 ${synopsis ? `<p class="netflix-ep-synopsis">${synopsis}</p>` : ""}
               </div>
             </div>
           `;
-        })
-        .join("");
+          })
+          .join("");
     };
 
     panel.innerHTML = `
@@ -106,29 +106,29 @@ export async function showEpisodesList(): Promise<void> {
         <div class="netflix-episodes-title-wrap">
           <h3 class="netflix-episodes-show-title">${data.video.title}</h3>
           ${
-            seasons.length > 1
-              ? `
+        seasons.length > 1
+            ? `
             <div class="netflix-season-select-container">
               <select id="netflix-season-dropdown" class="netflix-season-dropdown">
                 ${seasons
-                  .map(
+                .map(
                     (s: any, idx: number) => `
                   <option value="${idx}" ${idx === activeSeasonIndex ? "selected" : ""}>
-                    ${s.title || `Saison ${s.seq}`}
+                    ${s.title || t("season", String(s.seq))}
                   </option>
                 `
-                  )
-                  .join("")}
+                )
+                .join("")}
               </select>
               <svg class="netflix-dropdown-arrow" viewBox="0 0 24 24" width="16" height="16" fill="white">
                 <path d="M7 10l5 5 5-5z"/>
               </svg>
             </div>
           `
-              : `<span class="netflix-single-season-label">${seasons[0]?.title || `Saison ${seasons[0]?.seq || 1}`}</span>`
-          }
+            : `<span class="netflix-single-season-label">${seasons[0]?.title || t("season", String(seasons[0]?.seq || 1))}</span>`
+    }
         </div>
-        <button id="netflix-episodes-close-btn" class="netflix-episodes-close-btn" title="Fermer">
+        <button id="netflix-episodes-close-btn" class="netflix-episodes-close-btn" title="${t("closeTooltip")}">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
           </svg>
@@ -218,6 +218,19 @@ const ICONS = {
   skipIcon: '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" style="margin-right: 8px;"><path d="M4 18l8.5-6L4 6v12zM14 6v12h2V6h-2z"/></svg>'
 };
 
+/**
+ * i18n helper: wraps chrome.i18n.getMessage so the rest of the file can stay
+ * readable, and falls back gracefully to the raw key when chrome.i18n is not
+ * available (e.g. running outside the extension context).
+ */
+function t(key: string, substitutions?: string | string[]): string {
+  if (typeof chrome !== 'undefined' && chrome.i18n && chrome.i18n.getMessage) {
+    const message = chrome.i18n.getMessage(key, substitutions);
+    if (message) return message;
+  }
+  return key;
+}
+
 function getVolumeIcon(video: HTMLVideoElement): string {
   if (video.muted || video.volume === 0) return ICONS.volumeMuted;
   if (video.volume < 0.5) return ICONS.volumeLow;
@@ -250,10 +263,10 @@ export function updateProgression(): void {
   const skipIntroBtn = document.getElementById("nikflix-skip-intro-btn");
   if (skipIntroBtn) {
     if (
-      state.skipIntroMarker &&
-      !state.skipIntroDismissed &&
-      currentTimeMs >= state.skipIntroMarker.startMs &&
-      currentTimeMs < state.skipIntroMarker.endMs
+        state.skipIntroMarker &&
+        !state.skipIntroDismissed &&
+        currentTimeMs >= state.skipIntroMarker.startMs &&
+        currentTimeMs < state.skipIntroMarker.endMs
     ) {
       skipIntroBtn.classList.add("visible");
     } else {
@@ -433,7 +446,7 @@ export function createVideoOverlay(): void {
 }
 
 const NETFLIX_PASSTHROUGH_BUTTONS =
-  '[data-uia^="player-skip"], [data-uia$="seamless-button"], [data-uia$="seamless-button-draining"]';
+    '[data-uia^="player-skip"], [data-uia$="seamless-button"], [data-uia$="seamless-button-draining"]';
 const SEAMLESS_END_WINDOW_S = 120;
 
 export function updateSeamlessDistance(): void {
@@ -448,13 +461,13 @@ export function cancelNetflixCountdown(): void {
   if (!container) return;
   for (let i = 0; i < 8; i++) {
     container.dispatchEvent(
-      new MouseEvent("mousemove", {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
-        clientX: 200 + i * 20,
-        clientY: 300,
-      })
+        new MouseEvent("mousemove", {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          clientX: 200 + i * 20,
+          clientY: 300,
+        })
     );
   }
 }
@@ -464,13 +477,13 @@ export function forwardHover(from: Element | null, to: Element | null): void {
     for (const type of types) {
       const Ctor = type.startsWith("pointer") ? PointerEvent : MouseEvent;
       el.dispatchEvent(
-        new Ctor(type, {
-          bubbles: type.endsWith("over") || type.endsWith("out"),
-          cancelable: true,
-          composed: true,
-          relatedTarget: related || null,
-          ...(Ctor === PointerEvent ? { pointerId: 1, pointerType: "mouse", isPrimary: true } : {}),
-        })
+          new Ctor(type, {
+            bubbles: type.endsWith("over") || type.endsWith("out"),
+            cancelable: true,
+            composed: true,
+            relatedTarget: related || null,
+            ...(Ctor === PointerEvent ? { pointerId: 1, pointerType: "mouse", isPrimary: true } : {}),
+          })
       );
     }
   };
@@ -499,9 +512,9 @@ export function createVideoAreaOverlay(): HTMLElement | null {
   videoAreaOverlay.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     if (
-      target.closest("#mon-controleur-netflix") ||
-      target.closest("#netflix-subtitle-settings") ||
-      target.closest(".nikflix-skip-button")
+        target.closest("#mon-controleur-netflix") ||
+        target.closest("#netflix-subtitle-settings") ||
+        target.closest(".nikflix-skip-button")
     ) return;
 
     videoAreaOverlay.style.pointerEvents = "none";
@@ -553,13 +566,13 @@ export function createVideoAreaOverlay(): HTMLElement | null {
 
     if (hovered && below) {
       below.dispatchEvent(
-        new MouseEvent("mousemove", {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          clientX: e.clientX,
-          clientY: e.clientY,
-        })
+          new MouseEvent("mousemove", {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            clientX: e.clientX,
+            clientY: e.clientY,
+          })
       );
     }
 
@@ -585,15 +598,15 @@ export function createBackButton(): void {
   if (state.backButton) return;
   state.backButton = document.createElement("button");
   state.backButton.id = "netflix-back-button";
-  state.backButton.title = "Retour";
+  state.backButton.title = t("backTooltip");
   state.backButton.innerHTML = ICONS.back;
 
   state.backButton.addEventListener("click", () => {
     const netflixBackButton =
-      document.querySelector<HTMLElement>('button[data-uia="player-back-to-browse"]') ||
-      document.querySelector<HTMLElement>(".button-nfplayerBack") ||
-      document.querySelector<HTMLElement>("button.nf-player-container button") ||
-      document.querySelector<HTMLElement>('button[aria-label="Back to Browse"]');
+        document.querySelector<HTMLElement>('button[data-uia="player-back-to-browse"]') ||
+        document.querySelector<HTMLElement>(".button-nfplayerBack") ||
+        document.querySelector<HTMLElement>("button.nf-player-container button") ||
+        document.querySelector<HTMLElement>('button[aria-label="Back to Browse"]');
 
     if (netflixBackButton) {
       netflixBackButton.click();
@@ -622,7 +635,7 @@ export function createTipsButton(): void {
   if (state.tipsButton) return;
   state.tipsButton = document.createElement("button");
   state.tipsButton.id = "nikflix-tips-button";
-  state.tipsButton.title = "Soutenir Nikflix ❤️";
+  state.tipsButton.title = t("supportNikflix");
   state.tipsButton.innerHTML = `
    <svg viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M566 268.4v66.3H353.9v-66.3h-66.3v-79.5h357.9v79.5H566z" fill="#FFFFFF"></path><path d="M558.5 319.2l98.7 86.4c72.6 50.6 115.8 133.5 115.8 222 0 88-63.7 163-150.5 177.4-55 9.1-110.1 13.6-165.1 13.6s-110.1-4.5-165.1-13.6c-86.8-14.3-150.5-89.4-150.5-177.4 0-88.5 43.3-171.3 115.8-221.9l113.7-86.4h187.2z" fill="#FFFFFF"></path><path d="M457.4 845.1c-56.2 0-113.2-4.7-169.4-14C188 814.6 115.3 729 115.3 627.6c0-97.1 47.5-188.2 127.2-243.7l119.9-91.2h206l105.1 92c78.9 55.6 126 146.2 126 242.8 0 101.4-72.6 187-172.7 203.5-56.1 9.4-113.1 14.1-169.4 14.1z m-77.2-499.4l-106.5 81c-66.3 46.2-105.4 121.1-105.4 200.8 0 75.3 54 138.9 128.3 151.2 106.7 17.6 214.9 17.6 321.6 0 74.3-12.3 128.3-75.9 128.3-151.2 0-79.7-39.1-154.6-104.5-200.2l-2.3-1.8-91.2-79.8H380.2z" fill="#333333"></path><path d="M354 305l-66.7-57.3c-13.8-8.9-21-22.7-20.7-36.7m395.1 0.1c0 14.7-8.3 28.4-22.1 36.5L561.9 308" fill="#FFFFFF"></path><path d="M561.9 334.5c-7.9 0-15.7-3.5-21-10.3-9-11.6-6.9-28.2 4.7-37.2l80.5-62.2c5.7-3.3 9-8.5 9-13.7 0-14.6 11.9-26.5 26.5-26.5s26.5 11.9 26.5 26.5c0 23.6-12.5 45.3-33.6 58.4l-76.6 59.4c-4.6 3.8-10.3 5.6-16 5.6z m-208-3c-6.1 0-12.3-2.1-17.3-6.4l-65.4-56.3c-20-13.6-31.6-35.3-31.2-58.4 0.3-14.6 12.8-26.4 27-26 14.6 0.3 26.3 12.4 26 27-0.1 5.3 3 10.4 8.5 13.9l2.9 2.2 66.7 57.3c11.1 9.5 12.4 26.3 2.8 37.4-5.1 6.2-12.5 9.3-20 9.3z" fill="#333333"></path><path d="M365.4 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.9 26.5-26.5 26.5zM562.9 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9-13.1 0-22.9 7.4-22.9 13.9 0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34.1-67 75.9-67s75.9 30 75.9 67c0.1 14.7-11.8 26.5-26.5 26.5z" fill="#333333"></path><path d="M661.7 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.8-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.8 26.5-26.5 26.5zM464.2 229.3c-14.6 0-26.5-11.9-26.5-26.5 0-6.6-9.8-13.9-22.9-13.9s-22.9 7.4-22.9 13.9c0 14.6-11.9 26.5-26.5 26.5s-26.5-11.9-26.5-26.5c0-36.9 34-67 75.9-67s75.9 30 75.9 67c0 14.7-11.9 26.5-26.5 26.5z" fill="#333333"></path><path d="M679.1 621.5m-205.1 0a205.1 205.1 0 1 0 410.2 0 205.1 205.1 0 1 0-410.2 0Z" fill="#9dff5c"></path><path d="M679.1 853.1c-127.7 0-231.6-103.9-231.6-231.6 0-127.7 103.9-231.6 231.6-231.6s231.6 103.9 231.6 231.6c0 127.7-103.9 231.6-231.6 231.6z m0-410.2C580.6 442.9 500.4 523 500.4 621.5S580.5 800.1 679 800.1 857.7 720 857.7 621.5s-80.2-178.6-178.6-178.6z" fill="#333333"></path><path d="M720.47 621.453l-41.436 41.436-41.437-41.436 41.436-41.437z" fill="#FFFFFF"></path><path d="M679.079 737.919l-116.46-116.46 116.46-116.461 116.46 116.46-116.46 116.46z m-41.508-116.46l41.437 41.436 41.436-41.437-41.436-41.436-41.437 41.436z" fill="#333333"></path><path d="M591.6 302.3l76-20.4c14.1-3.8 28.7 4.6 32.5 18.7 3.8 14.1-4.6 28.7-18.7 32.5l-76 20.4c-14.1 3.8-28.7-4.6-32.5-18.7-3.8-14.2 4.6-28.7 18.7-32.5z" fill="#333333"></path></g></svg>
   `;
@@ -641,7 +654,7 @@ function createFloatingSkipButtons(): void {
     skipIntroBtn = document.createElement("button");
     skipIntroBtn.id = "nikflix-skip-intro-btn";
     skipIntroBtn.className = "nikflix-skip-button";
-    skipIntroBtn.innerHTML = `${ICONS.skipIcon}<span>Passer l'intro</span>`;
+    skipIntroBtn.innerHTML = `${ICONS.skipIcon}<span>${t("skipIntro")}</span>`;
     skipIntroBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       if (state.skipIntroMarker) {
@@ -649,7 +662,7 @@ function createFloatingSkipButtons(): void {
         window.dispatchEvent(new CustomEvent("netflixSeekTo", { detail: seekMs }));
         state.skipIntroDismissed = true;
         skipIntroBtn?.classList.remove("visible");
-        showMessage("Introduction ignorée");
+        showMessage(t("introSkippedMessage"));
       }
     });
     document.body.appendChild(skipIntroBtn);
@@ -661,7 +674,7 @@ function createFloatingSkipButtons(): void {
     skipOutroBtn = document.createElement("button");
     skipOutroBtn.id = "nikflix-skip-outro-btn";
     skipOutroBtn.className = "nikflix-skip-button";
-    skipOutroBtn.innerHTML = `${ICONS.skipIcon}<span>Épisode suivant</span>`;
+    skipOutroBtn.innerHTML = `${ICONS.skipIcon}<span>${t("nextEpisodeLabel")}</span>`;
     skipOutroBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       state.skipOutroDismissed = true;
@@ -760,17 +773,17 @@ export function addMediaController(): void {
 
   state.buttonPlayPause = document.createElement("button");
   state.buttonPlayPause.id = "netflix-play-pause";
-  state.buttonPlayPause.title = state.videoElement.paused ? "Lecture (Espace)" : "Pause (Espace)";
+  state.buttonPlayPause.title = state.videoElement.paused ? t("playTooltip") : t("pauseTooltip");
   state.buttonPlayPause.innerHTML = state.videoElement.paused ? ICONS.play : ICONS.pause;
 
   const rewindButton = document.createElement("button");
   rewindButton.id = "netflix-rewind-10";
-  rewindButton.title = "Reculer de 10 secondes (Gauche)";
+  rewindButton.title = t("rewindTooltip");
   rewindButton.innerHTML = ICONS.rewind10;
 
   const forwardButton = document.createElement("button");
   forwardButton.id = "netflix-forward-10";
-  forwardButton.title = "Avancer de 10 secondes (Droite)";
+  forwardButton.title = t("forwardTooltip");
   forwardButton.innerHTML = ICONS.forward10;
 
   const volumeContainer = document.createElement("div");
@@ -778,7 +791,7 @@ export function addMediaController(): void {
 
   const volumeIcon = document.createElement("div");
   volumeIcon.id = "netflix-volume-icon";
-  volumeIcon.title = "Volume (M pour couper)";
+  volumeIcon.title = t("volumeTooltip");
   volumeIcon.innerHTML = getVolumeIcon(state.videoElement);
 
   const volumeSliderContainer = document.createElement("div");
@@ -817,7 +830,7 @@ export function addMediaController(): void {
 
   const nextEpisodeButton = document.createElement("button");
   nextEpisodeButton.id = "netflix-next-episode";
-  nextEpisodeButton.title = "Épisode suivant (N)";
+  nextEpisodeButton.title = t("nextEpisodeTooltip");
   nextEpisodeButton.innerHTML = ICONS.nextEpisode;
   nextEpisodeButton.disabled = true;
   nextEpisodeButton.style.opacity = "0.5";
@@ -831,17 +844,17 @@ export function addMediaController(): void {
 
   const episodesButton = document.createElement("button");
   episodesButton.id = "netflix-episodes-button";
-  episodesButton.title = "Épisodes et saisons";
+  episodesButton.title = t("episodesTooltip");
   episodesButton.innerHTML = ICONS.episodes;
 
   const subtitleToggle = document.createElement("button");
   subtitleToggle.id = "netflix-subtitle-toggle";
-  subtitleToggle.title = "Audio et sous-titres";
+  subtitleToggle.title = t("subtitlesTooltip");
   subtitleToggle.innerHTML = ICONS.subtitles;
 
   const speedToggleButton = document.createElement("button");
   speedToggleButton.id = "netflix-speed-toggle";
-  speedToggleButton.title = "Vitesse de lecture: 1x";
+  speedToggleButton.title = t("speedTooltip", "1");
   speedToggleButton.innerHTML = ICONS.speed;
 
   const speedOptions = [1, 1.25, 1.5, 0.75, 0.5];
@@ -851,14 +864,15 @@ export function addMediaController(): void {
     currentSpeedIndex = (currentSpeedIndex + 1) % speedOptions.length;
     if (state.videoElement) {
       state.videoElement.playbackRate = speedOptions[currentSpeedIndex];
-      speedToggleButton.title = `Vitesse: ${speedOptions[currentSpeedIndex]}x`;
-      showMessage(`Vitesse: ${speedOptions[currentSpeedIndex]}x`);
+      const speedLabel = String(speedOptions[currentSpeedIndex]);
+      speedToggleButton.title = t("speedTooltip", speedLabel);
+      showMessage(t("speedMessage", speedLabel));
     }
   });
 
   const autoplayToggleButton = document.createElement("button");
   autoplayToggleButton.id = "netflix-autoplay-toggle";
-  autoplayToggleButton.title = "Lecture auto de l'épisode suivant: OFF";
+  autoplayToggleButton.title = t("autoplayTooltipOff");
   autoplayToggleButton.innerHTML = ICONS.autoplay;
 
   if (typeof chrome !== 'undefined' && chrome.storage) {
@@ -872,10 +886,10 @@ export function addMediaController(): void {
 
   function updateAutoplayButton() {
     if (state.autoplayNextEpisode) {
-      autoplayToggleButton.title = "Lecture auto: ACTIVÉE";
+      autoplayToggleButton.title = t("autoplayTooltipOn");
       autoplayToggleButton.style.opacity = "1";
     } else {
-      autoplayToggleButton.title = "Lecture auto: DÉSACTIVÉE";
+      autoplayToggleButton.title = t("autoplayTooltipOff");
       autoplayToggleButton.style.opacity = "0.5";
     }
   }
@@ -886,12 +900,12 @@ export function addMediaController(): void {
       chrome.storage.local.set({ autoplayNextEpisode: state.autoplayNextEpisode });
     }
     updateAutoplayButton();
-    showMessage(`Lecture auto ${state.autoplayNextEpisode ? "activée" : "désactivée"}`);
+    showMessage(state.autoplayNextEpisode ? t("autoplayMessageOn") : t("autoplayMessageOff"));
   });
 
   state.buttonFullScreen = document.createElement("button");
   state.buttonFullScreen.id = "netflix-plein-ecran";
-  state.buttonFullScreen.title = "Plein écran (F)";
+  state.buttonFullScreen.title = t("fullscreenTooltip");
   state.buttonFullScreen.innerHTML = document.fullscreenElement ? ICONS.exitFullscreen : ICONS.fullscreen;
 
   controlsRight.appendChild(nextEpisodeButton);
@@ -927,7 +941,7 @@ export function addMediaController(): void {
         const duration = getEffectiveDuration();
         const newTime = Math.max(0, (state.videoElement.currentTime - 10) * 1000);
         window.dispatchEvent(new CustomEvent("netflixSeekTo", { detail: Math.floor(newTime) }));
-        showMessage("-10 sec");
+        showMessage(t("rewindMessage"));
       }
     } else if (target === forwardButton || target.closest("#netflix-forward-10")) {
       if (state.videoElement) {
@@ -935,7 +949,7 @@ export function addMediaController(): void {
         const maxTimeMs = duration > 0 ? duration * 1000 : (state.videoElement.currentTime + 10) * 1000;
         const newTime = Math.min(maxTimeMs, (state.videoElement.currentTime + 10) * 1000);
         window.dispatchEvent(new CustomEvent("netflixSeekTo", { detail: Math.floor(newTime) }));
-        showMessage("+10 sec");
+        showMessage(t("forwardMessage"));
       }
     } else if (target === state.buttonFullScreen || target.closest("#netflix-plein-ecran")) {
       toggleFullScreen();
@@ -1004,7 +1018,7 @@ export function addMediaController(): void {
 
   state.videoElement.addEventListener("ended", () => {
     if (state.autoplayNextEpisode) {
-      showMessage("Lecture de l'épisode suivant...");
+      showMessage(t("nextEpisodePlayingMessage"));
       setTimeout(() => {
         jumpToNextEpisode();
       }, 1500);
