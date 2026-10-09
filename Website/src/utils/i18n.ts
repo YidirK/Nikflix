@@ -5,7 +5,7 @@ import es from "../i18n/es.json"
 
 export const locales = ['fr', 'en' ,'es'] as const;
 export type Locale = (typeof locales)[number];
-export const defaultLocale: Locale = 'en';
+export const defaultLocale: Locale = 'fr';
 
 export interface FAQItem {
   question: string;

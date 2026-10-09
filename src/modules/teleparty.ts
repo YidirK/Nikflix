@@ -1,5 +1,23 @@
+const TELEPARTY_CHAT_WIDTH = 340;
+const OFFSET_VAR = '--nf-chat-offset';
+
+function getTelepartyOffset(): number {
+  const tpFrame = document.getElementById('chat-wrapper');
+  if (!tpFrame) return 0;
+
+  const rect = tpFrame.getBoundingClientRect();
+  // Le chat est présent et visible
+  return rect.width > 0 && rect.left > 0 ? TELEPARTY_CHAT_WIDTH : 0;
+}
+
+function applyOffset(): number {
+  const offset = getTelepartyOffset();
+  document.documentElement.style.setProperty(OFFSET_VAR, offset + 'px');
+  return offset;
+}
+
 export function adjustOverlayForTeleparty(overlay: HTMLElement): void {
-  const tpFrame = document.getElementById('tpChatFrame');
+  const offset = applyOffset();
 
   overlay.style.position = overlay.style.position || 'fixed';
   overlay.style.left = '0';
@@ -8,32 +26,18 @@ export function adjustOverlayForTeleparty(overlay: HTMLElement): void {
   overlay.style.boxSizing = 'border-box';
   overlay.style.zIndex = overlay.style.zIndex || '99997';
   overlay.style.width = 'auto';
-
-  if (!tpFrame) {
-    overlay.style.right = '0';
-    return;
-  }
-
-  const rect = tpFrame.getBoundingClientRect();
-  if (rect.width > 0 && rect.left > 0) {
-    const chatWidth = Math.round(rect.width);
-    overlay.style.right = chatWidth + 'px';
-  } else {
-    overlay.style.right = '0';
-  }
+  overlay.style.right = offset + 'px';
 }
 
 export function watchTelepartyFrame(overlay: HTMLElement): void {
   adjustOverlayForTeleparty(overlay);
 
-  const tpFrame = document.getElementById('tpChatFrame');
+  const tpFrame = document.getElementById('chat-wrapper');
   let ro: ResizeObserver | null = null;
 
   if (tpFrame && window.ResizeObserver) {
     try {
-      ro = new ResizeObserver(() => {
-        adjustOverlayForTeleparty(overlay);
-      });
+      ro = new ResizeObserver(() => adjustOverlayForTeleparty(overlay));
       ro.observe(tpFrame);
     } catch {
       // Ignore observer errors
@@ -47,11 +51,8 @@ export function watchTelepartyFrame(overlay: HTMLElement): void {
     if (!overlay.isConnected) {
       clearInterval(intervalId);
       window.removeEventListener('resize', onWinResize);
-      if (ro && tpFrame) {
-        try {
-          ro.unobserve(tpFrame);
-        } catch {}
-      }
+      ro?.disconnect();
+      document.documentElement.style.removeProperty(OFFSET_VAR);
       return;
     }
     adjustOverlayForTeleparty(overlay);

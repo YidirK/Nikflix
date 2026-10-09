@@ -54,10 +54,24 @@ https://nikflix.hergol.me
 
 ---
 
-# 📝 Changelog
 
 # 📝 Changelog
 
+## [2.0.7] - 2026-10-10
+
+### Fixed
+- **API Block:** Fixed issues affecting API Block functionality.
+  Resolved:
+[issue #146](https://github.com/YidirK/Nikflix/issues/146).
+[issue #143](https://github.com/YidirK/Nikflix/issues/143).
+[issue #142](https://github.com/YidirK/Nikflix/issues/142).
+[issue #141](https://github.com/YidirK/Nikflix/issues/141).
+[issue #140](https://github.com/YidirK/Nikflix/issues/140).
+[issue #139](https://github.com/YidirK/Nikflix/issues/139).
+[issue #138](https://github.com/YidirK/Nikflix/issues/138).
+- **Website:** Fixed SEO issues and updated statistics.
+- **Teleparty Compatibility:** Restored compatibility with Teleparty. You can now use Teleparty normally, as shown in the screenshot.
+![image_2026-10-09_16-50-24.jpg](assets%2Fimage_2026-10-09_16-50-24.jpg)
 ## [2.0.6] - 2026-08-30
 
 ### 🌍 FIX laungague
@@ -71,44 +85,6 @@ https://nikflix.hergol.me
 * ✓ **Removed the `tabs` permission** from the extension.
  - This permission was causing browsers to display the **"Read your browsing history"** permission warning during installation.
  - The extension **did not use this permission to access or read users' browsing history**, but the permission warning caused confusion and was reported by several users.
-
-
-## [2.0.5] - 2026-08-27
-
-### 🔀 Hybrid API & CSS Block System
-
-* ✓ **Hybrid blocking system for API Block mode**:
-
-  * The **Menu** now uses the **CSS Block** system to preserve Netflix's native menu functionality.
-  * The **Watch** page switches to the **API Block** system, allowing the original Netflix controller to be used.
-  * Fixes issues reported in:
-
-    * [#134](https://github.com/YidirK/Nikflix/issues/134)
-    * [#133](https://github.com/YidirK/Nikflix/issues/133)
-    * [#131](https://github.com/YidirK/Nikflix/issues/131)
-
-### ⏱️ Timestamp Preservation
-
-* ✓ **Added a timestamp preservation system**:
-
-  * Netflix changed part of its internal code, which could break the original controller.
-  * Nikflix now saves the relevant timestamp in `localStorage` before Netflix removes it.
-  * This allows the controller to continue working correctly.
-  * This fix is related to [#132](https://github.com/YidirK/Nikflix/issues/132).
-  * ⚠️ **This system is still being tested** and may require further improvements.
-
-## [2.0.4] - 2026-08-17
-
-### 🎬 Complete Player & UI Redesign
-
-* ✓ **Smart Skip Intro & Skip Outro / Next Episode**:
-
-  * Parses intro and outro/credits markers from Netflix's metadata API (`memberapi`).
-  * Floating Netflix-styled action buttons appear dynamically during intro and ending credits windows.
-* ✓ **All-New Netflix-Style Episodes & Seasons Modal**:
-
-  * Season selector dropdown with instantaneous episode filtering.
-  * 16:9 episode thumbnails with duration badges, synopsis preview, and active "En cours" playing indicator with auto-scroll.
 
 ---
 

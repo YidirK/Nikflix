@@ -9,7 +9,8 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;
+    right: var(--nf-chat-offset, 0px);
+    width: auto;
     box-sizing: border-box;
     background: linear-gradient(to top,
         rgba(0, 0, 0, 0.95) 0%,
@@ -294,7 +295,7 @@
 .nikflix-skip-button {
     position: fixed;
     bottom: 96px;
-    right: 48px;
+    right: calc(48px + var(--nf-chat-offset, 0px));
     z-index: 10000;
     display: none;
     align-items: center;
@@ -369,7 +370,7 @@
 #nikflix-tips-button {
     position: fixed;
     top: 24px;
-    right: 24px;
+    right: calc(24px + var(--nf-chat-offset, 0px));
     z-index: 10000;
     background-color: rgba(0, 0, 0, 0.65);
     border: 1.5px solid rgba(255, 255, 255, 0.4);
@@ -397,7 +398,7 @@
 #netflix-message-overlay {
     position: fixed;
     top: 50%;
-    left: 50%;
+    left: calc((100% - var(--nf-chat-offset, 0px)) / 2);
     transform: translate(-50%, -50%) scale(0.95);
     background-color: rgba(0, 0, 0, 0.82);
     color: #ffffff;
@@ -431,7 +432,7 @@
 #netflix-episodes-list {
     position: fixed;
     bottom: 88px;
-    right: 32px;
+    right: calc(20px + var(--nf-chat-offset, 0px));
     width: 460px;
     max-height: 72vh;
     background-color: rgba(20, 20, 20, 0.96);
@@ -729,7 +730,7 @@
 #netflix-subtitle-settings {
     position: absolute;
     bottom: 80px;
-    right: 20px;
+    right: calc(20px + var(--nf-chat-offset, 0px));
     width: 350px;
     background-color: rgba(0, 0, 0, 0.9);
     border-radius: 5px;
@@ -847,8 +848,8 @@ input:checked + .subtitle-toggle-slider:before {
     bottom: 80px !important;  /* Position above the controller */
     top: auto !important; /* Override any top positioning from Netflix */
     left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
+    right: var(--nf-chat-offset, 0px) !important;
+    width: auto !important;
     display: flex !important;
     justify-content: center !important;
     align-items: flex-end !important; /* Align to bottom */
