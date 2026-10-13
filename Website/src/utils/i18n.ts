@@ -1,9 +1,9 @@
 import en from '../i18n/en.json';
 import fr from '../i18n/fr.json';
-import es from "../i18n/es.json"
+import es from '../i18n/es.json';
+import ar from '../i18n/ar.json';
 
-
-export const locales = ['fr', 'en' ,'es'] as const;
+export const locales = ['fr', 'en', 'es', 'ar'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'fr';
 
@@ -41,6 +41,13 @@ export interface Translations {
     sourceCode: string;
     activeUsers: string;
   };
+  hero2: {
+    title: string;
+    titlespan: string;
+    subtitle: string;
+    subtitlespan: string;
+    subtitle2: string;
+  };
   features: {
     title: string;
     subtitle: string;
@@ -68,6 +75,8 @@ export interface Translations {
   changelog: {
     title: string;
     subtitle: string;
+    check: string;
+    notfond: string;
   };
   changelogVersions: Record<string, ChangelogVersion>;
   footer: {
@@ -83,13 +92,13 @@ interface LocaleMeta {
   label: string;
 }
 
-
-const translations: Record<Locale, Translations> = { en, fr , es };
+const translations: Record<Locale, Translations> = { en, fr, es, ar };
 
 const LOCALE_META: Record<Locale, LocaleMeta> = {
   fr: { ogLocale: 'fr_FR', hreflang: 'fr', dir: 'ltr', label: 'FR' },
   en: { ogLocale: 'en_US', hreflang: 'en', dir: 'ltr', label: 'EN' },
   es: { ogLocale: 'es_ES', hreflang: 'es', dir: 'ltr', label: 'ES' },
+  ar: { ogLocale: 'ar_SA', hreflang: 'ar', dir: 'rtl', label: 'AR' },
 };
 
 export function getTranslations(locale: Locale = defaultLocale): Translations {
