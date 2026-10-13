@@ -4,7 +4,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 
-const SITE_LOCALES = ['fr', 'en', 'es'];
+const SITE_LOCALES = ['fr', 'en', 'es', 'ar'];
 const SITE_DEFAULT_LOCALE = 'fr';
 
 export default defineConfig({
@@ -21,6 +21,7 @@ export default defineConfig({
           fr: 'fr',
           en: 'en',
           es: 'es',
+          ar: 'ar',
         },
       },
     }),
