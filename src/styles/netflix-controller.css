@@ -1034,6 +1034,14 @@ input:checked + .subtitle-toggle-slider:before {
     font-size: 0.9em;
 }
 
+.netflix-speed-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    z-index: 10003;
+}
+
 #netflix-speed-toggle {
     background-color: transparent;
     border: none;
@@ -1049,6 +1057,10 @@ input:checked + .subtitle-toggle-slider:before {
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
+#netflix-speed-toggle * {
+    pointer-events: none;
+}
+
 #netflix-speed-toggle:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: scale(1.05);
@@ -1056,6 +1068,55 @@ input:checked + .subtitle-toggle-slider:before {
 
 #netflix-speed-toggle:active {
     transform: scale(0.95);
+}
+
+.netflix-speed-popup {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(20, 20, 20, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 6px 0;
+    min-width: 130px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    flex-direction: column;
+    z-index: 10005;
+    pointer-events: auto;
+    user-select: none;
+}
+
+.netflix-speed-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #e5e5e5;
+    cursor: pointer;
+    white-space: nowrap;
+    pointer-events: auto;
+    transition: background-color 0.15s ease;
+}
+
+.netflix-speed-option:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.netflix-speed-option.active {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.netflix-speed-option.active::after {
+    content: "✓";
+    margin-left: 12px;
+    color: #e50914;
+    font-size: 13px;
 }
 
 #netflix-progress-tooltip {
