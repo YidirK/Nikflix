@@ -514,7 +514,8 @@ export function createVideoAreaOverlay(): HTMLElement | null {
     if (
         target.closest("#mon-controleur-netflix") ||
         target.closest("#netflix-subtitle-settings") ||
-        target.closest(".nikflix-skip-button")
+        target.closest(".nikflix-skip-button") ||
+        target.closest(".netflix-speed-popup")
     ) return;
 
     videoAreaOverlay.style.pointerEvents = "none";
@@ -685,6 +686,125 @@ function createFloatingSkipButtons(): void {
   }
 }
 
+// Creates the playback speed button and flyout popup.
+function createSpeedController(): HTMLElement {
+  // Container: anchors the trigger button and relative flyout panel
+  const speedContainer = document.createElement("div");
+  speedContainer.className = "netflix-speed-container";
+  speedContainer.style.position = "relative";
+  speedContainer.style.display = "inline-flex";
+  speedContainer.style.alignItems = "center";
+
+  // Trigger Button: toggles popup visibility and displays current speed tooltip
+  const speedToggleButton = document.createElement("button");
+  speedToggleButton.id = "netflix-speed-toggle";
+  speedToggleButton.title = t("speedTooltip", "1");
+  speedToggleButton.innerHTML = ICONS.speed;
+  speedToggleButton.setAttribute("aria-haspopup", "true");
+  speedToggleButton.setAttribute("aria-expanded", "false");
+
+  // Prevent internal SVG and path elements from capturing click event targets
+  speedToggleButton.style.pointerEvents = "auto";
+  const speedIcons = speedToggleButton.querySelectorAll("*");
+  speedIcons.forEach((el) => {
+    (el as HTMLElement).style.pointerEvents = "none";
+  });
+
+  const speedOptions = [0.5, 0.75, 1, 1.25, 1.5];
+
+  // Flyout Panel: lists selectable playback speeds
+  const speedPopup = document.createElement("div");
+  speedPopup.className = "netflix-speed-popup";
+  speedPopup.style.display = "none";
+
+  const optionElements = new Map<number, HTMLDivElement>();
+
+  speedOptions.forEach((speed) => {
+    const item = document.createElement("div");
+    item.className = "netflix-speed-option";
+    item.dataset.speed = String(speed);
+    item.textContent = speed === 1 ? "1x (Normal)" : `${speed}x`;
+
+    const currentRate = state.videoElement?.playbackRate ?? 1;
+    if (speed === currentRate) {
+      item.classList.add("active");
+    }
+
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setPlaybackSpeed(speed);
+      closePopup();
+    });
+
+    speedPopup.appendChild(item);
+    optionElements.set(speed, item);
+  });
+
+  // Updates video playback rate and active UI indicator
+  function setPlaybackSpeed(speed: number) {
+    if (state.videoElement) {
+      state.videoElement.playbackRate = speed;
+    }
+
+    const speedLabel = String(speed);
+    speedToggleButton.title = t("speedTooltip", speedLabel);
+    showMessage(t("speedMessage", speedLabel));
+
+    optionElements.forEach((el, val) => {
+      el.classList.toggle("active", val === speed);
+    });
+  }
+
+  function openPopup() {
+    speedPopup.style.display = "flex";
+    speedToggleButton.setAttribute("aria-expanded", "true");
+  }
+
+  function closePopup() {
+    speedPopup.style.display = "none";
+    speedToggleButton.setAttribute("aria-expanded", "false");
+  }
+
+  // Toggle flyout on button click
+  speedToggleButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (speedPopup.style.display === "flex") {
+      closePopup();
+    } else {
+      openPopup();
+    }
+  });
+
+  // Dismiss popup when clicking anywhere outside the container
+  document.addEventListener("click", (e) => {
+    if (
+      speedPopup.style.display === "flex" &&
+      !speedContainer.contains(e.target as Node)
+    ) {
+      closePopup();
+    }
+  });
+
+  // Keep active option highlighted if rate is changed externally (e.g. keyboard shortcuts)
+  if (state.videoElement) {
+    state.videoElement.addEventListener("ratechange", () => {
+      if (!state.videoElement) return;
+      const currentRate = state.videoElement.playbackRate;
+      optionElements.forEach((el, val) => {
+        el.classList.toggle("active", val === currentRate);
+      });
+    });
+  }
+
+  // Assemble component hierarchy
+  speedContainer.appendChild(speedToggleButton);
+  speedContainer.appendChild(speedPopup);
+
+  return speedContainer;
+}
+
 export function addMediaController(): void {
   if (state.isControllerAdded) return;
 
@@ -852,23 +972,7 @@ export function addMediaController(): void {
   subtitleToggle.title = t("subtitlesTooltip");
   subtitleToggle.innerHTML = ICONS.subtitles;
 
-  const speedToggleButton = document.createElement("button");
-  speedToggleButton.id = "netflix-speed-toggle";
-  speedToggleButton.title = t("speedTooltip", "1");
-  speedToggleButton.innerHTML = ICONS.speed;
-
-  const speedOptions = [1, 1.25, 1.5, 0.75, 0.5];
-  let currentSpeedIndex = 0;
-
-  speedToggleButton.addEventListener("click", () => {
-    currentSpeedIndex = (currentSpeedIndex + 1) % speedOptions.length;
-    if (state.videoElement) {
-      state.videoElement.playbackRate = speedOptions[currentSpeedIndex];
-      const speedLabel = String(speedOptions[currentSpeedIndex]);
-      speedToggleButton.title = t("speedTooltip", speedLabel);
-      showMessage(t("speedMessage", speedLabel));
-    }
-  });
+  const speedContainer = createSpeedController();
 
   const autoplayToggleButton = document.createElement("button");
   autoplayToggleButton.id = "netflix-autoplay-toggle";
@@ -911,7 +1015,7 @@ export function addMediaController(): void {
   controlsRight.appendChild(nextEpisodeButton);
   controlsRight.appendChild(episodesButton);
   controlsRight.appendChild(subtitleToggle);
-  controlsRight.appendChild(speedToggleButton);
+  controlsRight.appendChild(speedContainer);
   controlsRight.appendChild(autoplayToggleButton);
   controlsRight.appendChild(state.buttonFullScreen);
 
