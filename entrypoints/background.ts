@@ -33,7 +33,7 @@ export default defineBackground(() => {
 
   async function setBlockMode(_mode: 'css' | 'api') {
     // Clear any network-level declarativeNetRequest rules.
-    // Precise page-scoped API blocking is handled in main-world script netflix-apiBlocker.ts on /watch pages.
+    // CLCS requests are handled in the main-world script entrypoints/clcs.content.ts (document_start).
     await disableApiBlock();
   }
 

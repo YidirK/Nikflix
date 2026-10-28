@@ -183,15 +183,6 @@ export default defineContentScript({
     }
 
     function startAPIMode() {
-      let apiScriptInjected = false;
-
-      function checkAndInjectApiBlocker() {
-        if (isOnNetflixWatch() && !apiScriptInjected) {
-          apiScriptInjected = true;
-          injectScript("netflix-apiBlocker.js");
-        }
-      }
-
       function maybeInjectTipsButton() {
         if (isOnNetflixWatch()) {
           if (!state.tipsButton || !document.getElementById("nikflix-tips-button")) {
@@ -207,24 +198,20 @@ export default defineContentScript({
       }
 
       const observer = new MutationObserver(() => {
-        checkAndInjectApiBlocker();
         maybeInjectTipsButton();
       });
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", () => {
           observer.observe(document.body, { childList: true, subtree: true });
-          checkAndInjectApiBlocker();
-          maybeInjectTipsButton();
+            maybeInjectTipsButton();
         });
       } else {
         observer.observe(document.body, { childList: true, subtree: true });
-        checkAndInjectApiBlocker();
         maybeInjectTipsButton();
       }
 
       setInterval(() => {
-        checkAndInjectApiBlocker();
         maybeInjectTipsButton();
       }, 800);
     }

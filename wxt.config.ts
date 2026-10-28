@@ -24,7 +24,6 @@ export default defineConfig({
           'netflix-seeker.js',
           'netflix-audioChange.js',
           'netflix-substitleChange.js',
-          'netflix-apiBlocker.js',
         ],
         matches: ['*://*.netflix.com/*'],
       },
